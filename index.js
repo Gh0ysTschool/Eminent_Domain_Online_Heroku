@@ -11,7 +11,7 @@ express()
 
 const WebSocket = require('ws');
 const games=[];
-const wss = new WebSocket.Server({ port: 3030 });
+const wss = new WebSocket.Server({ port: PORT });
 let generatenewgame = function(state){
   state.game_id= games.length;
   games.push({game:state});
