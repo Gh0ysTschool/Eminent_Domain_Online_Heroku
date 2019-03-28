@@ -1132,7 +1132,9 @@ var app = (function () {
 			app.generategamesequence();
 			//app.makews('ws://192.168.1.6:3030');
 			//'ws://temperate-isle.herokuapp.com/:3030';
-			app.makews('wss://stormy-sea-41713.herokuapp.com:3030');
+			//location.origin.replace(/^http/, 'ws')
+			//app.makews('wss://stormy-sea-41713.herokuapp.com:3030');
+			app.makews(location.origin.replace(/^http/, 'ws'));
 			app.generate_game_id();
 			//app.phasefinishfunction();
 		},
@@ -6359,7 +6361,7 @@ var app = (function () {
 	    
 	};
 	//let url = 'ws://temperate-isle.herokuapp.com:3030';
-	let url = 'wss://stormy-sea-41713.herokuapp.com:3030';
+	let url = location.origin.replace(/^http/, 'ws');//'wss://stormy-sea-41713.herokuapp.com:3030';
 	let lobby =
 	{
 	    screenname:'',
