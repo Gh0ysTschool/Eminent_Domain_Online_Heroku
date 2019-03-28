@@ -274,7 +274,7 @@ var app = (function () {
 			app.set({
 				'game':game
 	                });
-	                app.phasefinishfunction();//game.displayinfo.callback();
+	                app.phasefinishfunction(true);//game.displayinfo.callback();
 			//document.dispatchEvent(new Event('choicemade'));
 		},
 	            offer (
@@ -692,7 +692,7 @@ var app = (function () {
 		},
 		//pass_turn leadingplayer->nextplayer
 		pass_turn(){
-			if (!app.get().lobby.online || app.get().lobby.screenname == app.get().game.actingplayer.name ){
+			if (!app.get().lobby.online || app.get().lobby.screenname == app.get().game.acting_player.name ){
 				//app.togglepasstoplayer();
 				let game = app.get().game;
 				game.passt=false;
@@ -706,7 +706,7 @@ var app = (function () {
 		},
 		//pass_priority actingplayer->nextplayer
 		pass_priority(){
-			if (!app.get().lobby.online || app.get().lobby.screenname == app.get().game.actingplayer.name ){
+			if (!app.get().lobby.online || app.get().lobby.screenname == app.get().game.acting_player.name ){
 				//app.togglepasstoplayer();
 				let game = app.get().game;
 				game.passp=false;
@@ -956,7 +956,7 @@ var app = (function () {
 			app.set({'game':game});
 			callback(choices,arr);
 		},
-		phasefinishfunction(){
+		phasefinishfunction(send = false){
 			//check for game end condition
 			//if met, start a turn countdown to make sure everyone has had the same number of turns
 			//also track who started the game
@@ -977,7 +977,11 @@ var app = (function () {
 			// 	app.totalinfluence();
 			// 	nextphase = app.endgame;
 			// }
-			app.send({'game':game});
+			if (send){
+				app.send({'game':game});
+			} else {
+				app.set({'game':game});
+			}
 			game.nextphase();
 		},
 		generategamesequence(){
@@ -4271,7 +4275,7 @@ var app = (function () {
 	                                game.leadingplayer.rounds++;
 	                            }
 	                            app$1.set({'game':game});
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                }
 	            ]
@@ -4328,7 +4332,7 @@ var app = (function () {
 	                                player.hand=hand;
 	                                game.acting_player = player;
 	                                app$1.set({'game':game});
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 
 	                            }
 	                        }
@@ -4379,7 +4383,7 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {   
 									app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -4406,7 +4410,7 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {
 	                                app$1.colonize(app$1.get().game.subchoices[0], app$1.get().game.acting_player.limbo , app$1.get().game.acting_player.limbo.filter((el)=>{ return el.type == 'colonize'})[0]);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -4456,7 +4460,7 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.produce(app$1.get().game.subchoices);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -4483,7 +4487,7 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.trade(app$1.get().game.subchoices,app$1.get().game.acting_player);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -4514,7 +4518,7 @@ var app = (function () {
 	                            app$1.phasefinishfunction();
 	                        } else {    
 	                            app$1.politics(app$1.get().game.acting_player.limbo.filter((el)=>{ return el.type == 'politics'})[0], app$1.get().game.choices[0], app$1.get().game.acting_player);
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -4545,7 +4549,7 @@ var app = (function () {
 	                            app$1.phasefinishfunction();
 	                        } else {    
 	                            app$1.research(app$1.get().game.choices, app$1.get().game.acting_player);
-	                           app$1.phasefinishfunction();
+	                           app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -4559,7 +4563,7 @@ var app = (function () {
 	                               app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.survey(app$1.get().game.acting_player);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -4592,7 +4596,7 @@ var app = (function () {
 	                            app$1.phasefinishfunction();
 	                        } else {    
 	                            app$1.warfare(app$1.get().game.acting_player);
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -4619,7 +4623,7 @@ var app = (function () {
 	                            app$1.phasefinishfunction();
 	                        } else {    
 	                            app$1.conquer(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -4672,7 +4676,7 @@ var app = (function () {
 	                            app$1.phasefinishfunction();
 	                        } else {    
 	                            app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -4715,7 +4719,7 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {
 									app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -4742,7 +4746,7 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.colonize(app$1.get().game.subchoices[0], app$1.get().game.acting_player.limbo , app$1.get().game.acting_player.limbo.filter((el)=>{ return el.type == 'improved_colonize'})[0]);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -4775,7 +4779,7 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {   
 	                                app$1.produce(app$1.get().game.choices);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -4802,7 +4806,7 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {   
 	                                app$1.produce(app$1.get().game.choices);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -4818,7 +4822,7 @@ var app = (function () {
 	                                let game = app$1.get().game;
 	                                game.acting_player.influence.push(game.influence.pop());
 	                                app$1.set({'game':game});
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -4850,7 +4854,7 @@ var app = (function () {
 	                            app$1.phasefinishfunction();
 	                        } else {    
 								research(app$1.get().game.choices, app$1.get().game.acting_player, 3);
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -4866,7 +4870,7 @@ var app = (function () {
 	            				app$1.draw(app$1.get().game.acting_player);
 	            				app$1.draw(app$1.get().game.acting_player);
 	            				app$1.draw(app$1.get().game.acting_player);
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -4900,7 +4904,7 @@ var app = (function () {
 	                        } else {    
 	                            app$1.warfare(app$1.get().game.acting_player);
 	                            app$1.warfare(app$1.get().game.acting_player);
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -4927,7 +4931,7 @@ var app = (function () {
 	                            app$1.phasefinishfunction();
 	                        } else {    
 	                            app$1.conquer(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -4945,7 +4949,7 @@ var app = (function () {
 	                        } else {    
 	                            app$1.warfare(app$1.get().game.acting_player);
 	                            app$1.warfare(app$1.get().game.acting_player);
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -4963,7 +4967,7 @@ var app = (function () {
 	                                let planet = planet_deck.pop();
 	                                player.unsettled_planets.push(planet);
 	                                app$1.set({'game':game});
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -4996,7 +5000,7 @@ var app = (function () {
 	                            app$1.phasefinishfunction();
 	                        } else {    
 	                            app$1.conquer(app$1.get().game.choices[0], app$1.get().game.acting_player);
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -5023,7 +5027,7 @@ var app = (function () {
 	                            app$1.phasefinishfunction();
 	                        } else {    
 	                            app$1.conquer(app$1.get().game.choices[0], app$1.get().game.acting_player);
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -5060,7 +5064,7 @@ var app = (function () {
 	                                        app$1.settle_colonies(app$1.get().game.choices[0], app$1.get().game.acting_player);
 	                                    }
 	                                }
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -5111,7 +5115,7 @@ var app = (function () {
 	                                    game.stacks.pilecount[game.choices[0].type]--;
 	                                }
 	                                app$1.set({'game':game});
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -5143,7 +5147,7 @@ var app = (function () {
 	                                    game.stacks.pilecount[selected_center_card.type]--;
 	                                }
 	                                app$1.set({'game':game});
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -5188,7 +5192,7 @@ var app = (function () {
 	                            } else {    
 	                                let game = app$1.get().game;
 	                                game.acting_player.specialization = game.choices[0].name;
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -5205,7 +5209,7 @@ var app = (function () {
 	                            } else {    
 	                                app$1.draw(app$1.get().game.acting_player);
 	                                app$1.draw(app$1.get().game.acting_player);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -5222,7 +5226,7 @@ var app = (function () {
 	                                    'choices' /* label for where the choice is stored | set with game[label]=*/,
 	                                    app$1.phasefinishfunction /*callback that handles the choice or finishes the phase*/, 
 	                                );
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -5234,7 +5238,7 @@ var app = (function () {
 	                            } else {    
 	                                let { game:game, game: { choices:choices, acting_player:player } } = app$1.get();
 	                                app$1.research(choices,player,choices.length);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -5277,7 +5281,7 @@ var app = (function () {
 	                        }
 	                        game.acting_player.activerole = card.type;
 	                        app$1.set({'game':game});
-	                        app$1.phasefinishfunction();
+	                        app$1.phasefinishfunction(true);
 	                    }
 	                },
 	            ]
@@ -5353,7 +5357,7 @@ var app = (function () {
 	                            //TODO: tally up icons on planets
 	                            //TODO: tally up icons on technologies
 	                            app$1.set({'game':game});
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                }, 
@@ -5404,7 +5408,7 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {   
 									app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -5441,7 +5445,7 @@ var app = (function () {
 	                                        }                                    }
 	                                    app$1.colonize(planet, app$1.get().game.acting_player.limbo , app$1.get().game.acting_player.limbo.filter((el)=>{ return el.type == 'colonize'})[0]);
 	                                }
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -5502,7 +5506,7 @@ var app = (function () {
 	                                        }
 	                                    }
 	                                }
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -5544,7 +5548,7 @@ var app = (function () {
 	                                        app$1.get().game.acting_player.influence.push(app$1.get().game.influence.pop());
 	                                    }
 	                                }
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -5594,7 +5598,7 @@ var app = (function () {
 	                                    app$1.play(game.research_deck, game.acting_player.limbo, 'discard', game.choices[0].identifier);
 	                                }
 	                            }
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -5631,7 +5635,7 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.catalog_planet(app$1.get().game.acting_player);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -5666,7 +5670,7 @@ var app = (function () {
 	                            for (let i = 0; i < app$1.get().game.acting_player.boostingicons.warfare; i++){
 	                                app$1.warfare(app$1.get().game.acting_player);
 	                            }
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -5693,7 +5697,7 @@ var app = (function () {
 	                            app$1.phasefinishfunction();
 	                        } else {    
 	                            app$1.conquer(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -5713,7 +5717,7 @@ var app = (function () {
 	                        //app.togglepasstoplayer();
 	                        game.passp=false;
 	                        app$1.set({'game':game});
-	                        app$1.phasefinishfunction();
+	                        app$1.phasefinishfunction(true);
 	                    }
 	                },
 	            ]
@@ -5777,7 +5781,7 @@ var app = (function () {
 	                            app$1.phasefinishfunction();
 	                        } else {    
 	                            app$1.draw(app$1.get().game.acting_player);
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                }, //will auto pass to next phase if follow has been selected
@@ -5833,7 +5837,7 @@ var app = (function () {
 	                                //TODO: tally up icons on planets
 	                                //TODO: tally up icons on technologies
 	                                app$1.set({'game':game});
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                    }
@@ -5854,7 +5858,7 @@ var app = (function () {
 	                            } else if ( game.acting_player.permanents.filter( (el)=>{return el.type=='bureaucracy'} ).length == 0){
 	                                let game = app$1.get().game;
 	                                game.choices=['colonize'];
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            } else {    
 	                                app$1.offer(
 	                                    false /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
@@ -5889,7 +5893,7 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {   
 									app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -5925,7 +5929,7 @@ var app = (function () {
 	                                        }                                    }
 	                                    app$1.colonize(planet, app$1.get().game.acting_player.limbo , app$1.get().game.acting_player.limbo.filter((el)=>{ return el.type == 'colonize'})[0]);
 	                                }
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -5963,7 +5967,7 @@ var app = (function () {
 	                            game.acting_player.activerole='produce';
 	                            app$1.set({'game':game});
 	                            app$1.produce(game.subchoices,game.acting_player.boostingicons.produce);
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -5993,7 +5997,7 @@ var app = (function () {
 	                                game.acting_player.activerole='trade';
 	                                app$1.set({'game':game}); 
 	                                app$1.trade(game.subchoices,game.acting_player, game.acting_player.boostingicons.trade);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -6021,7 +6025,7 @@ var app = (function () {
 	                    'Researching your Technology':
 	                    ()=>{        
 	                        if (app$1.get().game.acting_player.activerole != 'survey' ){
-	                        app$1.phasefinishfunction();
+	                        	app$1.phasefinishfunction();
 	                        } else {    
 	                            let game = app$1.get().game;
 	                            if (game.choices[0].name!="Skip"){
@@ -6043,7 +6047,7 @@ var app = (function () {
 	                                    app$1.play(game.research_deck, game.acting_player.limbo, 'discard', game.choices[0].identifier);
 	                                }
 	                            }
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -6080,7 +6084,7 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.catalog_planet(app$1.get().game.acting_player);
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
 	                },
@@ -6098,7 +6102,7 @@ var app = (function () {
 	                            } else if ( app$1.get().game.acting_player.permanents.filter( (el)=>{return el.type=='bureaucracy'} ).length == 0){
 	                                let game = app$1.get().game;
 	                                game.choices=['Collect Starfighters'];
-	                                app$1.phasefinishfunction();
+	                                app$1.phasefinishfunction(true);
 	                            } else {    
 	                                app$1.offer(
 	                                    false /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
@@ -6119,7 +6123,7 @@ var app = (function () {
 	                            for (let i = 0; i < app$1.get().game.acting_player.boostingicons.warfare; i++){
 	                                app$1.warfare(app$1.get().game.acting_player);
 	                            }
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -6146,7 +6150,7 @@ var app = (function () {
 	                            app$1.phasefinishfunction();
 	                        } else {    
 	                            app$1.conquer(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -6165,7 +6169,7 @@ var app = (function () {
 	                        let game = app$1.get().game;
 	                        game.passp=false;
 	                        app$1.set({'game':game});
-	                        app$1.phasefinishfunction();
+	                        app$1.phasefinishfunction(true);
 	                    }
 	                },
 	            ]
@@ -6216,7 +6220,7 @@ var app = (function () {
 	                            app$1.phasefinishfunction();
 	                        } else {   
 	                            app$1.conquer(app$1.get().game.subchoices[0], app$1.get().game.acting_player); 
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                },
@@ -6244,7 +6248,7 @@ var app = (function () {
 	                                game.acting_player.discard.push(game.choices[i]);
 	                            }
 	                            app$1.set({'game':game});
-	                            app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
 	                }
@@ -6258,7 +6262,6 @@ var app = (function () {
 	                {
 	                    'Drawing up to your Hand Size':
 	                    ()=>{ 
-	                        console.log(app$1.get().game);
 	                        let game = app$1.get().game;
 	                        let handsize = game.acting_player.handsize;
 	                        for (let index in game.acting_player.settled_planets){
@@ -6280,7 +6283,7 @@ var app = (function () {
 	                            game.nextphase = app$1.endgame;
 	                        }
 	                        app$1.set({'game':game});
-	                        app$1.phasefinishfunction();
+	                        app$1.phasefinishfunction(true);
 	                    }
 	                },
 	                {
@@ -6300,7 +6303,7 @@ var app = (function () {
 	                        //app.togglepasstoplayer();
 	                        game.passt=false;
 	                        app$1.set({'game':game});
-	                        app$1.phasefinishfunction();
+	                        app$1.phasefinishfunction(true);
 	                    }
 	                },
 	            ]
