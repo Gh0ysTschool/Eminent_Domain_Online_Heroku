@@ -1,8 +1,8 @@
-const express = require('express')
-const path = require('path')
-const PORT = process.env.PORT || 5000
+const express = require('express');
+const path = require('path');
+const PORT = process.env.PORT || 5000;
 
-express()
+let server = express()
   .use(express.static(path.join(__dirname, 'public')))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
@@ -11,7 +11,7 @@ express()
 
 const WebSocket = require('ws');
 const games=[];
-const wss = new WebSocket.Server({ port: PORT });
+const wss = new WebSocket.Server({ server : server});
 let generatenewgame = function(state){
   state.game_id= games.length;
   games.push({game:state});
