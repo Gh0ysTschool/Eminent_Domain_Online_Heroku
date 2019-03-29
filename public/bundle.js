@@ -274,7 +274,7 @@ var app = (function () {
 			app.set({
 				'game':game
 	                });
-	                app.phasefinishfunction(true);//game.displayinfo.callback();
+	                app.phasefinishfunction();//game.displayinfo.callback();
 			//document.dispatchEvent(new Event('choicemade'));
 		},
 	            offer (
@@ -564,7 +564,7 @@ var app = (function () {
 				settled:false,
 				conquer_cost:2,
 				production_zones:[],
-				inluence_value:2,
+				influence_value:2,
 				icons:{'survey':0,'warfare':0,'colonize':0,'produce':0,'trade':0,'research':0,},
 				handsize_modifier:0,
 				hosted_colonies:[],
@@ -609,7 +609,7 @@ var app = (function () {
 			app.generateplanet('TANKAHSHIN').metallic().settle(4).conquer(5).influence(3).zone('red').icon('warfare'),
 			app.generateplanet('VOSON').metallic().settle(4).conquer(5).influence(3).zone('red').icon('survey'),
 			app.generateplanet('PINK SONAR').metallic().settle(5).conquer(4).influence(3).zone('red').icon('survey'),
-			app.generateplanet("OVERLORD BETZEL'S DOMAIN").metallic(3).settle(6).conquer().influence(4)            .icon('warfare'),
+			app.generateplanet("OVERLORD BETZEL'S DOMAIN").metallic().settle(3).conquer(6).influence(4)            .icon('warfare'),
 			app.generateplanet('8910 SPIELEN').metallic().settle(4).conquer(5).influence(2).zone('red')               .handsize(1),
 			app.generateplanet('IDROYOS').metallic().settle(3).conquer(6).influence(5),
 			app.generateplanet('ERKAM-W').metallic().settle(5).conquer(4).influence(3).zone('red').icon('warfare')
@@ -1136,9 +1136,7 @@ var app = (function () {
 			app.generategamesequence();
 			//app.makews('ws://192.168.1.6:3030');
 			//'ws://temperate-isle.herokuapp.com/:3030';
-			//location.origin.replace(/^http/, 'ws')
-			//app.makews('wss://stormy-sea-41713.herokuapp.com:3030');
-			app.makews(location.origin.replace(/^http/, 'ws'));
+			app.makews('ws://temperate-isle.herokuapp.com:3030');
 			app.generate_game_id();
 			//app.phasefinishfunction();
 		},
@@ -1277,6 +1275,18 @@ var app = (function () {
 
 	const file = "src\\App.html";
 
+	function tap_handler_13(event) {
+		const { component, ctx } = this._svelte;
+
+		component.choosewrapper(ctx.option);
+	}
+
+	function click_handler_13(event) {
+		const { component, ctx } = this._svelte;
+
+		component.choosewrapper(ctx.option);
+	}
+
 	function tap_handler_12(event) {
 		const { component, ctx } = this._svelte;
 
@@ -1289,7 +1299,13 @@ var app = (function () {
 		component.choosewrapper(ctx.option);
 	}
 
-	function get_each_context_5(ctx, list, i) {
+	function get_each_context_7(ctx, list, i) {
+		const child_ctx = Object.create(ctx);
+		child_ctx.zone = list[i];
+		return child_ctx;
+	}
+
+	function get_each_context_6(ctx, list, i) {
 		const child_ctx = Object.create(ctx);
 		child_ctx.option = list[i];
 		return child_ctx;
@@ -1425,6 +1441,12 @@ var app = (function () {
 		const { component, ctx } = this._svelte;
 
 		component.choosewrapper(ctx.planet);
+	}
+
+	function get_each_context_5(ctx, list, i) {
+		const child_ctx = Object.create(ctx);
+		child_ctx.zone = list[i];
+		return child_ctx;
 	}
 
 	function get_each1_context(ctx, list, i) {
@@ -1612,7 +1634,7 @@ var app = (function () {
 		var each_blocks = [];
 
 		for (var i = 0; i < each_value_1.length; i += 1) {
-			each_blocks[i] = create_each_block_2(component, get_each_context_1(ctx, each_value_1, i));
+			each_blocks[i] = create_each_block_3(component, get_each_context_1(ctx, each_value_1, i));
 		}
 
 		var if_block = (ctx.game.displayinfo.selectionzone=='options') && create_if_block_6(component, ctx);
@@ -1654,7 +1676,7 @@ var app = (function () {
 						if (each_blocks[i]) {
 							each_blocks[i].p(changed, child_ctx);
 						} else {
-							each_blocks[i] = create_each_block_2(component, child_ctx);
+							each_blocks[i] = create_each_block_3(component, child_ctx);
 							each_blocks[i].c();
 							each_blocks[i].m(div, text);
 						}
@@ -2066,22 +2088,22 @@ var app = (function () {
 	}
 
 	// (45:3) {#if game.acting_player!==undefined && ((lobby.screenname==player.name && lobby.online) || (game.acting_player.id==player.id && !lobby.online)) }
-	function create_if_block_7(component, ctx) {
+	function create_if_block_15(component, ctx) {
 		var div12, div0, text0, div4, div1, text1, text2_value = ctx.player.starfighters.small, text2, text3, div2, text4, text5_value = ctx.player.influence.length, text5, text6, br, text7, text8_value = ctx.lobby.screenname, text8, text9, div3, text10, text11_value = ctx.game.influence.length, text11, text12, div5, text13, text14_value = (ctx.game.displayinfo.center_or_planets) ? "planets" : "center row", text14, text15, text16, text17, div6, text18, text19, text20, div7, text21_value = ctx.game.messagetoplayer[ctx.game.messagetoplayer.length-1], text21, text22, div11, div8, text23, text24_value = ctx.player.deck.length, text24, text25, div9, text26, div10, text27, text28_value = ctx.player.discard.length, text28;
 
 		function select_block_type_1(ctx) {
-			if (ctx.game.displayinfo.selectionzone=='research') return create_if_block_24;
-			if (ctx.game.displayinfo.center_or_planets) return create_if_block_25;
+			if (ctx.game.displayinfo.selectionzone=='research') return create_if_block_33;
+			if (ctx.game.displayinfo.center_or_planets) return create_if_block_34;
 		}
 
 		var current_block_type = select_block_type_1(ctx);
 		var if_block0 = current_block_type && current_block_type(component, ctx);
 
-		var if_block1 = (!ctx.game.displayinfo.center_or_planets) && create_if_block_17(component, ctx);
+		var if_block1 = (!ctx.game.displayinfo.center_or_planets) && create_if_block_25(component, ctx);
 
 		function select_block_type_3(ctx) {
-			if (ctx.game.displayinfo.showoptiontoskip) return create_if_block_16;
-			return create_else_block_4;
+			if (ctx.game.displayinfo.showoptiontoskip) return create_if_block_24;
+			return create_else_block_5;
 		}
 
 		var current_block_type_1 = select_block_type_3(ctx);
@@ -2092,14 +2114,14 @@ var app = (function () {
 		var each0_blocks = [];
 
 		for (var i = 0; i < each0_value_1.length; i += 1) {
-			each0_blocks[i] = create_each_block_4(component, get_each0_context_1(ctx, each0_value_1, i));
+			each0_blocks[i] = create_each_block_5(component, get_each0_context_1(ctx, each0_value_1, i));
 		}
 
 		function select_block_type_5(ctx) {
-			if (ctx.game.passp) return create_if_block_11;
-			if (ctx.game.passt) return create_if_block_12;
-			if (ctx.game.displayinfo.allowformultipleselections && ctx.game.choices.length>0) return create_if_block_13;
-			return create_else_block_3;
+			if (ctx.game.passp) return create_if_block_19;
+			if (ctx.game.passt) return create_if_block_20;
+			if (ctx.game.displayinfo.allowformultipleselections && ctx.game.choices.length>0) return create_if_block_21;
+			return create_else_block_4;
 		}
 
 		var current_block_type_2 = select_block_type_5(ctx);
@@ -2110,7 +2132,7 @@ var app = (function () {
 		var each1_blocks = [];
 
 		for (var i = 0; i < each1_value_1.length; i += 1) {
-			each1_blocks[i] = create_each_block_3(component, get_each1_context_1(ctx, each1_value_1, i));
+			each1_blocks[i] = create_each_block_4(component, get_each1_context_1(ctx, each1_value_1, i));
 		}
 
 		return {
@@ -2197,17 +2219,17 @@ var app = (function () {
 				addLoc(div5, file, 54, 5, 2438);
 				div6.id = "playedcards";
 				div6.className = "flex zone playedcards";
-				addLoc(div6, file, 124, 5, 6215);
+				addLoc(div6, file, 144, 5, 7191);
 				div7.className = "messagetoplayer bordered";
-				addLoc(div7, file, 159, 5, 8454);
+				addLoc(div7, file, 179, 5, 9460);
 				div8.className = "bordered deck";
-				addLoc(div8, file, 162, 6, 8617);
+				addLoc(div8, file, 182, 6, 9623);
 				div9.className = "hand";
-				addLoc(div9, file, 163, 24, 8721);
+				addLoc(div9, file, 183, 24, 9727);
 				div10.className = "bordered discard";
-				addLoc(div10, file, 180, 6, 10135);
+				addLoc(div10, file, 200, 6, 11141);
 				div11.className = "flex zone ownedcards";
-				addLoc(div11, file, 161, 5, 8576);
+				addLoc(div11, file, 181, 5, 9582);
 				div12.className = "bordered playingfield";
 				addLoc(div12, file, 45, 4, 1836);
 			},
@@ -2306,7 +2328,7 @@ var app = (function () {
 					if (if_block1) {
 						if_block1.p(changed, ctx);
 					} else {
-						if_block1 = create_if_block_17(component, ctx);
+						if_block1 = create_if_block_25(component, ctx);
 						if_block1.c();
 						if_block1.m(div12, text17);
 					}
@@ -2331,7 +2353,7 @@ var app = (function () {
 						if (each0_blocks[i]) {
 							each0_blocks[i].p(changed, child_ctx);
 						} else {
-							each0_blocks[i] = create_each_block_4(component, child_ctx);
+							each0_blocks[i] = create_each_block_5(component, child_ctx);
 							each0_blocks[i].c();
 							each0_blocks[i].m(div6, text19);
 						}
@@ -2369,7 +2391,7 @@ var app = (function () {
 						if (each1_blocks[i]) {
 							each1_blocks[i].p(changed, child_ctx);
 						} else {
-							each1_blocks[i] = create_each_block_3(component, child_ctx);
+							each1_blocks[i] = create_each_block_4(component, child_ctx);
 							each1_blocks[i].c();
 							each1_blocks[i].m(div9, null);
 						}
@@ -2407,12 +2429,12 @@ var app = (function () {
 	}
 
 	// (67:49) 
-	function create_if_block_25(component, ctx) {
+	function create_if_block_34(component, ctx) {
 		var div;
 
 		function select_block_type_2(ctx) {
-			if (ctx.game.displayinfo.selectionzone=='rolecards') return create_if_block_26;
-			return create_else_block_5;
+			if (ctx.game.displayinfo.selectionzone=='rolecards') return create_if_block_35;
+			return create_else_block_6;
 		}
 
 		var current_block_type = select_block_type_2(ctx);
@@ -2453,7 +2475,7 @@ var app = (function () {
 	}
 
 	// (59:5) {#if game.displayinfo.selectionzone=='research'}
-	function create_if_block_24(component, ctx) {
+	function create_if_block_33(component, ctx) {
 		var div;
 
 		var each_value_2 = ctx.game.research_deck;
@@ -2461,7 +2483,7 @@ var app = (function () {
 		var each_blocks = [];
 
 		for (var i = 0; i < each_value_2.length; i += 1) {
-			each_blocks[i] = create_each_block_7(component, get_each_context_2(ctx, each_value_2, i));
+			each_blocks[i] = create_each_block_9(component, get_each_context_2(ctx, each_value_2, i));
 		}
 
 		return {
@@ -2493,7 +2515,7 @@ var app = (function () {
 						if (each_blocks[i]) {
 							each_blocks[i].p(changed, child_ctx);
 						} else {
-							each_blocks[i] = create_each_block_7(component, child_ctx);
+							each_blocks[i] = create_each_block_9(component, child_ctx);
 							each_blocks[i].c();
 							each_blocks[i].m(div, null);
 						}
@@ -2517,7 +2539,7 @@ var app = (function () {
 	}
 
 	// (76:7) {:else}
-	function create_else_block_5(component, ctx) {
+	function create_else_block_6(component, ctx) {
 		var each_anchor;
 
 		var each_value_4 = ctx.game.stacks.rolecards;
@@ -2525,7 +2547,7 @@ var app = (function () {
 		var each_blocks = [];
 
 		for (var i = 0; i < each_value_4.length; i += 1) {
-			each_blocks[i] = create_each_block_9(component, get_each_context_4(ctx, each_value_4, i));
+			each_blocks[i] = create_each_block_11(component, get_each_context_4(ctx, each_value_4, i));
 		}
 
 		return {
@@ -2555,7 +2577,7 @@ var app = (function () {
 						if (each_blocks[i]) {
 							each_blocks[i].p(changed, child_ctx);
 						} else {
-							each_blocks[i] = create_each_block_9(component, child_ctx);
+							each_blocks[i] = create_each_block_11(component, child_ctx);
 							each_blocks[i].c();
 							each_blocks[i].m(each_anchor.parentNode, each_anchor);
 						}
@@ -2579,7 +2601,7 @@ var app = (function () {
 	}
 
 	// (69:7) {#if game.displayinfo.selectionzone=='rolecards'}
-	function create_if_block_26(component, ctx) {
+	function create_if_block_35(component, ctx) {
 		var each_anchor;
 
 		var each_value_3 = ctx.game.stacks.rolecards;
@@ -2587,7 +2609,7 @@ var app = (function () {
 		var each_blocks = [];
 
 		for (var i = 0; i < each_value_3.length; i += 1) {
-			each_blocks[i] = create_each_block_8(component, get_each_context_3(ctx, each_value_3, i));
+			each_blocks[i] = create_each_block_10(component, get_each_context_3(ctx, each_value_3, i));
 		}
 
 		return {
@@ -2617,7 +2639,7 @@ var app = (function () {
 						if (each_blocks[i]) {
 							each_blocks[i].p(changed, child_ctx);
 						} else {
-							each_blocks[i] = create_each_block_8(component, child_ctx);
+							each_blocks[i] = create_each_block_10(component, child_ctx);
 							each_blocks[i].c();
 							each_blocks[i].m(each_anchor.parentNode, each_anchor);
 						}
@@ -2641,7 +2663,7 @@ var app = (function () {
 	}
 
 	// (77:8) {#each game.stacks.rolecards as card}
-	function create_each_block_9(component, ctx) {
+	function create_each_block_11(component, ctx) {
 		var div1, img, img_class_value, img_src_value, img_alt_value, text0, div0, text1_value = ctx.game.stacks.pilecount[ctx.card.type], text1;
 
 		return {
@@ -2695,7 +2717,7 @@ var app = (function () {
 	}
 
 	// (70:8) {#each game.stacks.rolecards as card}
-	function create_each_block_8(component, ctx) {
+	function create_each_block_10(component, ctx) {
 		var div1, img, img_class_value, img_src_value, img_alt_value, text0, div0, text1_value = ctx.game.stacks.pilecount[ctx.card.type], text1;
 
 		return {
@@ -2764,7 +2786,7 @@ var app = (function () {
 	}
 
 	// (61:7) {#each game.research_deck as card}
-	function create_each_block_7(component, ctx) {
+	function create_each_block_9(component, ctx) {
 		var div, img, img_src_value, img_class_value, img_alt_value;
 
 		return {
@@ -2815,7 +2837,7 @@ var app = (function () {
 	}
 
 	// (86:5) {#if !game.displayinfo.center_or_planets}
-	function create_if_block_17(component, ctx) {
+	function create_if_block_25(component, ctx) {
 		var div, text;
 
 		var each0_value = ctx.player.unsettled_planets;
@@ -2823,7 +2845,7 @@ var app = (function () {
 		var each0_blocks = [];
 
 		for (var i = 0; i < each0_value.length; i += 1) {
-			each0_blocks[i] = create_each_block_6(component, get_each0_context(ctx, each0_value, i));
+			each0_blocks[i] = create_each_block_8(component, get_each0_context(ctx, each0_value, i));
 		}
 
 		var each1_value = [...ctx.player.settled_planets, ...ctx.player.conquered_planets];
@@ -2831,7 +2853,7 @@ var app = (function () {
 		var each1_blocks = [];
 
 		for (var i = 0; i < each1_value.length; i += 1) {
-			each1_blocks[i] = create_each_block_5(component, get_each1_context(ctx, each1_value, i));
+			each1_blocks[i] = create_each_block_6(component, get_each1_context(ctx, each1_value, i));
 		}
 
 		return {
@@ -2875,7 +2897,7 @@ var app = (function () {
 						if (each0_blocks[i]) {
 							each0_blocks[i].p(changed, child_ctx);
 						} else {
-							each0_blocks[i] = create_each_block_6(component, child_ctx);
+							each0_blocks[i] = create_each_block_8(component, child_ctx);
 							each0_blocks[i].c();
 							each0_blocks[i].m(div, text);
 						}
@@ -2896,7 +2918,7 @@ var app = (function () {
 						if (each1_blocks[i]) {
 							each1_blocks[i].p(changed, child_ctx);
 						} else {
-							each1_blocks[i] = create_each_block_5(component, child_ctx);
+							each1_blocks[i] = create_each_block_6(component, child_ctx);
 							each1_blocks[i].c();
 							each1_blocks[i].m(div, null);
 						}
@@ -2922,7 +2944,7 @@ var app = (function () {
 	}
 
 	// (88:7) {#each player.unsettled_planets as planet}
-	function create_each_block_6(component, ctx) {
+	function create_each_block_8(component, ctx) {
 		var div3, img, img_src_value, img_alt_value, text0, div0, text1_value = ctx.planet.settle_cost, text1, text2, div1, text3_value = ctx.planet.conquer_cost, text3, text4, div2, text5_value = ctx.planet.hosted_colonies.length, text5, text6, div3_class_value;
 
 		return {
@@ -3011,391 +3033,482 @@ var app = (function () {
 		};
 	}
 
-	// (102:9) {#if planet.icons.survey>0}
-	function create_if_block_23(component, ctx) {
-		var p, text0_value = ctx.planet.icons.survey, text0, text1;
+	// (103:11) {#if planet.icons.survey > 0}
+	function create_if_block_32(component, ctx) {
+		var img, br;
 
 		return {
 			c: function create() {
-				p = createElement("p");
-				text0 = createText(text0_value);
-				text1 = createText(" survey");
-				addLoc(p, file, 102, 10, 5547);
+				img = createElement("img");
+				br = createElement("br");
+				img.src = "./images/surveyicon100.png";
+				img.alt = "survey";
+				addLoc(img, file, 103, 12, 5694);
+				addLoc(br, file, 103, 64, 5746);
 			},
 
 			m: function mount(target, anchor) {
-				insert(target, p, anchor);
-				append(p, text0);
-				append(p, text1);
-			},
-
-			p: function update(changed, ctx) {
-				if ((changed.game) && text0_value !== (text0_value = ctx.planet.icons.survey)) {
-					setData(text0, text0_value);
-				}
+				insert(target, img, anchor);
+				insert(target, br, anchor);
 			},
 
 			d: function destroy(detach) {
 				if (detach) {
-					detachNode(p);
+					detachNode(img);
+					detachNode(br);
 				}
 			}
 		};
 	}
 
-	// (105:9) {#if planet.icons.warfare>0}
-	function create_if_block_22(component, ctx) {
-		var p, text0_value = ctx.planet.icons.warfare, text0, text1;
+	// (106:11) {#if planet.icons.warfare > 0}
+	function create_if_block_31(component, ctx) {
+		var img, br;
 
 		return {
 			c: function create() {
-				p = createElement("p");
-				text0 = createText(text0_value);
-				text1 = createText(" warfare");
-				addLoc(p, file, 105, 10, 5647);
+				img = createElement("img");
+				br = createElement("br");
+				img.src = "./images/warfareicon100.png";
+				img.alt = "warfare";
+				addLoc(img, file, 106, 12, 5822);
+				addLoc(br, file, 106, 66, 5876);
 			},
 
 			m: function mount(target, anchor) {
-				insert(target, p, anchor);
-				append(p, text0);
-				append(p, text1);
-			},
-
-			p: function update(changed, ctx) {
-				if ((changed.game) && text0_value !== (text0_value = ctx.planet.icons.warfare)) {
-					setData(text0, text0_value);
-				}
+				insert(target, img, anchor);
+				insert(target, br, anchor);
 			},
 
 			d: function destroy(detach) {
 				if (detach) {
-					detachNode(p);
+					detachNode(img);
+					detachNode(br);
 				}
 			}
 		};
 	}
 
-	// (108:9) {#if planet.icons.colonize>0}
-	function create_if_block_21(component, ctx) {
-		var p, text0_value = ctx.planet.icons.colonize, text0, text1;
+	// (109:11) {#if planet.icons.colonize > 0}
+	function create_if_block_30(component, ctx) {
+		var img, br;
 
 		return {
 			c: function create() {
-				p = createElement("p");
-				text0 = createText(text0_value);
-				text1 = createText(" colonize");
-				addLoc(p, file, 108, 10, 5750);
+				img = createElement("img");
+				br = createElement("br");
+				img.src = "./images/colonizeicon100.png";
+				img.alt = "colonize";
+				addLoc(img, file, 109, 12, 5953);
+				addLoc(br, file, 109, 68, 6009);
 			},
 
 			m: function mount(target, anchor) {
-				insert(target, p, anchor);
-				append(p, text0);
-				append(p, text1);
-			},
-
-			p: function update(changed, ctx) {
-				if ((changed.game) && text0_value !== (text0_value = ctx.planet.icons.colonize)) {
-					setData(text0, text0_value);
-				}
+				insert(target, img, anchor);
+				insert(target, br, anchor);
 			},
 
 			d: function destroy(detach) {
 				if (detach) {
-					detachNode(p);
+					detachNode(img);
+					detachNode(br);
 				}
 			}
 		};
 	}
 
-	// (111:9) {#if planet.icons.produce>0}
-	function create_if_block_20(component, ctx) {
-		var p, text0_value = ctx.planet.icons.produce, text0, text1;
+	// (112:11) {#if planet.icons.research > 0}
+	function create_if_block_29(component, ctx) {
+		var img, br;
 
 		return {
 			c: function create() {
-				p = createElement("p");
-				text0 = createText(text0_value);
-				text1 = createText(" produce");
-				addLoc(p, file, 111, 10, 5854);
+				img = createElement("img");
+				br = createElement("br");
+				img.src = "./images/researchicon100.png";
+				img.alt = "research";
+				addLoc(img, file, 112, 12, 6086);
+				addLoc(br, file, 112, 68, 6142);
 			},
 
 			m: function mount(target, anchor) {
-				insert(target, p, anchor);
-				append(p, text0);
-				append(p, text1);
-			},
-
-			p: function update(changed, ctx) {
-				if ((changed.game) && text0_value !== (text0_value = ctx.planet.icons.produce)) {
-					setData(text0, text0_value);
-				}
+				insert(target, img, anchor);
+				insert(target, br, anchor);
 			},
 
 			d: function destroy(detach) {
 				if (detach) {
-					detachNode(p);
+					detachNode(img);
+					detachNode(br);
 				}
 			}
 		};
 	}
 
-	// (114:9) {#if planet.icons.trade>0}
-	function create_if_block_19(component, ctx) {
-		var p, text0_value = ctx.planet.icons.trade, text0, text1;
+	// (115:11) {#if planet.icons.trade > 0}
+	function create_if_block_28(component, ctx) {
+		var img, br;
 
 		return {
 			c: function create() {
-				p = createElement("p");
-				text0 = createText(text0_value);
-				text1 = createText(" trade");
-				addLoc(p, file, 114, 10, 5954);
+				img = createElement("img");
+				br = createElement("br");
+				img.src = "./images/tradeicon100.png";
+				img.alt = "trade";
+				addLoc(img, file, 115, 12, 6216);
+				addLoc(br, file, 115, 62, 6266);
 			},
 
 			m: function mount(target, anchor) {
-				insert(target, p, anchor);
-				append(p, text0);
-				append(p, text1);
-			},
-
-			p: function update(changed, ctx) {
-				if ((changed.game) && text0_value !== (text0_value = ctx.planet.icons.trade)) {
-					setData(text0, text0_value);
-				}
+				insert(target, img, anchor);
+				insert(target, br, anchor);
 			},
 
 			d: function destroy(detach) {
 				if (detach) {
-					detachNode(p);
+					detachNode(img);
+					detachNode(br);
 				}
 			}
 		};
 	}
 
-	// (117:9) {#if planet.icons.research>0}
-	function create_if_block_18(component, ctx) {
-		var p, text0_value = ctx.planet.icons.research, text0, text1;
+	// (118:11) {#if planet.icons.produce > 0}
+	function create_if_block_27(component, ctx) {
+		var img, br;
 
 		return {
 			c: function create() {
-				p = createElement("p");
-				text0 = createText(text0_value);
-				text1 = createText(" research");
-				addLoc(p, file, 117, 10, 6053);
+				img = createElement("img");
+				br = createElement("br");
+				img.src = "./images/produceicon100.png";
+				img.alt = "produce";
+				addLoc(img, file, 118, 12, 6342);
+				addLoc(br, file, 118, 66, 6396);
 			},
 
 			m: function mount(target, anchor) {
-				insert(target, p, anchor);
-				append(p, text0);
-				append(p, text1);
+				insert(target, img, anchor);
+				insert(target, br, anchor);
+			},
+
+			d: function destroy(detach) {
+				if (detach) {
+					detachNode(img);
+					detachNode(br);
+				}
+			}
+		};
+	}
+
+	// (122:11) {#each planet.production_zones as zone}
+	function create_each_block_7(component, ctx) {
+		var img, img_src_value, img_alt_value, br;
+
+		return {
+			c: function create() {
+				img = createElement("img");
+				br = createElement("br");
+				img.src = img_src_value = "./images/" + ctx.zone.type + "productionzoneicon.png";
+				img.alt = img_alt_value = "" + ctx.zone.type + " zone";
+				addLoc(img, file, 122, 12, 6518);
+				addLoc(br, file, 122, 90, 6596);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, img, anchor);
+				insert(target, br, anchor);
 			},
 
 			p: function update(changed, ctx) {
-				if ((changed.game) && text0_value !== (text0_value = ctx.planet.icons.research)) {
-					setData(text0, text0_value);
+				if ((changed.game) && img_src_value !== (img_src_value = "./images/" + ctx.zone.type + "productionzoneicon.png")) {
+					img.src = img_src_value;
+				}
+
+				if ((changed.game) && img_alt_value !== (img_alt_value = "" + ctx.zone.type + " zone")) {
+					img.alt = img_alt_value;
 				}
 			},
 
 			d: function destroy(detach) {
 				if (detach) {
-					detachNode(p);
+					detachNode(img);
+					detachNode(br);
+				}
+			}
+		};
+	}
+
+	// (126:11) {#if planet.handsize_modifier > 0}
+	function create_if_block_26(component, ctx) {
+		var img, br;
+
+		return {
+			c: function create() {
+				img = createElement("img");
+				br = createElement("br");
+				img.src = "./images/handsizeicon100.png";
+				img.alt = "produce";
+				addLoc(img, file, 126, 12, 6713);
+				addLoc(br, file, 126, 67, 6768);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, img, anchor);
+				insert(target, br, anchor);
+			},
+
+			d: function destroy(detach) {
+				if (detach) {
+					detachNode(img);
+					detachNode(br);
 				}
 			}
 		};
 	}
 
 	// (96:28) {#each [...player.settled_planets, ...player.conquered_planets] as planet}
-	function create_each_block_5(component, ctx) {
-		var div, p0, text0_value = ctx.planet.name, text0, text1, p1, text2_value = ctx.planet.type, text2, text3, p2, text4_value = ctx.planet.production_zones.length, text4, text5, text6, p3, text7, text8_value = ctx.planet.handsize_modifier, text8, text9, text10, text11, text12, text13, text14, text15, div_class_value;
+	function create_each_block_6(component, ctx) {
+		var div4, div3, img0, img0_src_value, img0_alt_value, text0, div2, text1, text2, text3, text4, text5, text6, text7, text8, div0, text9_value = ctx.planet.influence_value, text9, text10, img1, text11, div1, text12_value = ctx.planet.name, text12, div4_class_value;
 
-		var if_block0 = (ctx.planet.icons.survey>0) && create_if_block_23(component, ctx);
+		var if_block0 = (ctx.planet.icons.survey > 0) && create_if_block_32(component, ctx);
 
-		var if_block1 = (ctx.planet.icons.warfare>0) && create_if_block_22(component, ctx);
+		var if_block1 = (ctx.planet.icons.warfare > 0) && create_if_block_31(component, ctx);
 
-		var if_block2 = (ctx.planet.icons.colonize>0) && create_if_block_21(component, ctx);
+		var if_block2 = (ctx.planet.icons.colonize > 0) && create_if_block_30(component, ctx);
 
-		var if_block3 = (ctx.planet.icons.produce>0) && create_if_block_20(component, ctx);
+		var if_block3 = (ctx.planet.icons.research > 0) && create_if_block_29(component, ctx);
 
-		var if_block4 = (ctx.planet.icons.trade>0) && create_if_block_19(component, ctx);
+		var if_block4 = (ctx.planet.icons.trade > 0) && create_if_block_28(component, ctx);
 
-		var if_block5 = (ctx.planet.icons.research>0) && create_if_block_18(component, ctx);
+		var if_block5 = (ctx.planet.icons.produce > 0) && create_if_block_27(component, ctx);
+
+		var each_value_5 = ctx.planet.production_zones;
+
+		var each_blocks = [];
+
+		for (var i = 0; i < each_value_5.length; i += 1) {
+			each_blocks[i] = create_each_block_7(component, get_each_context_5(ctx, each_value_5, i));
+		}
+
+		var if_block6 = (ctx.planet.handsize_modifier > 0) && create_if_block_26(component, ctx);
 
 		return {
 			c: function create() {
-				div = createElement("div");
-				p0 = createElement("p");
-				text0 = createText(text0_value);
-				text1 = createText("\n\t\t\t\t\t\t\t\t\t");
-				p1 = createElement("p");
-				text2 = createText(text2_value);
-				text3 = createText("\n\t\t\t\t\t\t\t\t\t");
-				p2 = createElement("p");
-				text4 = createText(text4_value);
-				text5 = createText(" production zones");
-				text6 = createText("\n\t\t\t\t\t\t\t\t\t");
-				p3 = createElement("p");
-				text7 = createText("+");
-				text8 = createText(text8_value);
-				text9 = createText(" handsize");
-				text10 = createText("\n\t\t\t\t\t\t\t\t\t");
+				div4 = createElement("div");
+				div3 = createElement("div");
+				img0 = createElement("img");
+				text0 = createText("\t\n\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t");
+				div2 = createElement("div");
 				if (if_block0) if_block0.c();
-				text11 = createText("\n\t\t\t\t\t\t\t\t\t");
+				text1 = createText("\n\t\t\t\t\t\t\t\t\t\t\t");
 				if (if_block1) if_block1.c();
-				text12 = createText("\n\t\t\t\t\t\t\t\t\t");
+				text2 = createText("\n\t\t\t\t\t\t\t\t\t\t\t");
 				if (if_block2) if_block2.c();
-				text13 = createText("\n\t\t\t\t\t\t\t\t\t");
+				text3 = createText("\n\t\t\t\t\t\t\t\t\t\t\t");
 				if (if_block3) if_block3.c();
-				text14 = createText("\n\t\t\t\t\t\t\t\t\t");
+				text4 = createText("\n\t\t\t\t\t\t\t\t\t\t\t");
 				if (if_block4) if_block4.c();
-				text15 = createText("\n\t\t\t\t\t\t\t\t\t");
+				text5 = createText("\n\t\t\t\t\t\t\t\t\t\t\t");
 				if (if_block5) if_block5.c();
-				addLoc(p0, file, 97, 9, 5326);
-				addLoc(p1, file, 98, 9, 5357);
-				addLoc(p2, file, 99, 9, 5388);
-				addLoc(p3, file, 100, 9, 5455);
+				text6 = createText("\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t");
 
-				div._svelte = { component, ctx };
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].c();
+				}
 
-				addListener(div, "click", click_handler_5);
-				addListener(div, "tap", tap_handler_5);
-				div.className = div_class_value = (ctx.game.displayinfo.selectionzone=='settle_&_conquered_planets') ? ( (ctx.planet.selected) ? 'selected' : 'selectable' ): 'bordered';
-				addLoc(div, file, 96, 8, 5110);
+				text7 = createText("\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t");
+				if (if_block6) if_block6.c();
+				text8 = createText("\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t");
+				div0 = createElement("div");
+				text9 = createText(text9_value);
+				text10 = createText("\n\t\t\t\t\t\t\t\t\t\t\t");
+				img1 = createElement("img");
+				text11 = createText("\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t");
+				div1 = createElement("div");
+				text12 = createText(text12_value);
+				img0.src = img0_src_value = "./images/" + ctx.planet.type + "100.png";
+				img0.alt = img0_alt_value = "" + ctx.planet.settle_cost + " " + ctx.planet.type + " " + ctx.planet.conquer_cost;
+				addLoc(img0, file, 98, 10, 5388);
+				addLoc(div0, file, 129, 11, 6837);
+				img1.src = "./images/influenceicon.png";
+				img1.alt = "influence";
+				addLoc(img1, file, 132, 11, 6909);
+				addLoc(div1, file, 134, 11, 7002);
+				div2.className = "planetfrontinfo";
+				addLoc(div2, file, 101, 10, 5611);
+				div3.className = "planetfront";
+				setStyle(div3, "font-size", "160%");
+				addLoc(div3, file, 97, 9, 5326);
+
+				div4._svelte = { component, ctx };
+
+				addListener(div4, "click", click_handler_5);
+				addListener(div4, "tap", tap_handler_5);
+				div4.className = div4_class_value = (ctx.game.displayinfo.selectionzone=='settle_&_conquered_planets') ? ( (ctx.planet.selected) ? 'selected' : 'selectable' ): 'bordered';
+				addLoc(div4, file, 96, 8, 5110);
 			},
 
 			m: function mount(target, anchor) {
-				insert(target, div, anchor);
-				append(div, p0);
-				append(p0, text0);
-				append(div, text1);
-				append(div, p1);
-				append(p1, text2);
-				append(div, text3);
-				append(div, p2);
-				append(p2, text4);
-				append(p2, text5);
-				append(div, text6);
-				append(div, p3);
-				append(p3, text7);
-				append(p3, text8);
-				append(p3, text9);
-				append(div, text10);
-				if (if_block0) if_block0.m(div, null);
-				append(div, text11);
-				if (if_block1) if_block1.m(div, null);
-				append(div, text12);
-				if (if_block2) if_block2.m(div, null);
-				append(div, text13);
-				if (if_block3) if_block3.m(div, null);
-				append(div, text14);
-				if (if_block4) if_block4.m(div, null);
-				append(div, text15);
-				if (if_block5) if_block5.m(div, null);
+				insert(target, div4, anchor);
+				append(div4, div3);
+				append(div3, img0);
+				append(div3, text0);
+				append(div3, div2);
+				if (if_block0) if_block0.m(div2, null);
+				append(div2, text1);
+				if (if_block1) if_block1.m(div2, null);
+				append(div2, text2);
+				if (if_block2) if_block2.m(div2, null);
+				append(div2, text3);
+				if (if_block3) if_block3.m(div2, null);
+				append(div2, text4);
+				if (if_block4) if_block4.m(div2, null);
+				append(div2, text5);
+				if (if_block5) if_block5.m(div2, null);
+				append(div2, text6);
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].m(div2, null);
+				}
+
+				append(div2, text7);
+				if (if_block6) if_block6.m(div2, null);
+				append(div2, text8);
+				append(div2, div0);
+				append(div0, text9);
+				append(div2, text10);
+				append(div2, img1);
+				append(div2, text11);
+				append(div2, div1);
+				append(div1, text12);
 			},
 
 			p: function update(changed, _ctx) {
 				ctx = _ctx;
-				if ((changed.game) && text0_value !== (text0_value = ctx.planet.name)) {
-					setData(text0, text0_value);
+				if ((changed.game) && img0_src_value !== (img0_src_value = "./images/" + ctx.planet.type + "100.png")) {
+					img0.src = img0_src_value;
 				}
 
-				if ((changed.game) && text2_value !== (text2_value = ctx.planet.type)) {
-					setData(text2, text2_value);
+				if ((changed.game) && img0_alt_value !== (img0_alt_value = "" + ctx.planet.settle_cost + " " + ctx.planet.type + " " + ctx.planet.conquer_cost)) {
+					img0.alt = img0_alt_value;
 				}
 
-				if ((changed.game) && text4_value !== (text4_value = ctx.planet.production_zones.length)) {
-					setData(text4, text4_value);
-				}
-
-				if ((changed.game) && text8_value !== (text8_value = ctx.planet.handsize_modifier)) {
-					setData(text8, text8_value);
-				}
-
-				if (ctx.planet.icons.survey>0) {
-					if (if_block0) {
-						if_block0.p(changed, ctx);
-					} else {
-						if_block0 = create_if_block_23(component, ctx);
+				if (ctx.planet.icons.survey > 0) {
+					if (!if_block0) {
+						if_block0 = create_if_block_32(component, ctx);
 						if_block0.c();
-						if_block0.m(div, text11);
+						if_block0.m(div2, text1);
 					}
 				} else if (if_block0) {
 					if_block0.d(1);
 					if_block0 = null;
 				}
 
-				if (ctx.planet.icons.warfare>0) {
-					if (if_block1) {
-						if_block1.p(changed, ctx);
-					} else {
-						if_block1 = create_if_block_22(component, ctx);
+				if (ctx.planet.icons.warfare > 0) {
+					if (!if_block1) {
+						if_block1 = create_if_block_31(component, ctx);
 						if_block1.c();
-						if_block1.m(div, text12);
+						if_block1.m(div2, text2);
 					}
 				} else if (if_block1) {
 					if_block1.d(1);
 					if_block1 = null;
 				}
 
-				if (ctx.planet.icons.colonize>0) {
-					if (if_block2) {
-						if_block2.p(changed, ctx);
-					} else {
-						if_block2 = create_if_block_21(component, ctx);
+				if (ctx.planet.icons.colonize > 0) {
+					if (!if_block2) {
+						if_block2 = create_if_block_30(component, ctx);
 						if_block2.c();
-						if_block2.m(div, text13);
+						if_block2.m(div2, text3);
 					}
 				} else if (if_block2) {
 					if_block2.d(1);
 					if_block2 = null;
 				}
 
-				if (ctx.planet.icons.produce>0) {
-					if (if_block3) {
-						if_block3.p(changed, ctx);
-					} else {
-						if_block3 = create_if_block_20(component, ctx);
+				if (ctx.planet.icons.research > 0) {
+					if (!if_block3) {
+						if_block3 = create_if_block_29(component, ctx);
 						if_block3.c();
-						if_block3.m(div, text14);
+						if_block3.m(div2, text4);
 					}
 				} else if (if_block3) {
 					if_block3.d(1);
 					if_block3 = null;
 				}
 
-				if (ctx.planet.icons.trade>0) {
-					if (if_block4) {
-						if_block4.p(changed, ctx);
-					} else {
-						if_block4 = create_if_block_19(component, ctx);
+				if (ctx.planet.icons.trade > 0) {
+					if (!if_block4) {
+						if_block4 = create_if_block_28(component, ctx);
 						if_block4.c();
-						if_block4.m(div, text15);
+						if_block4.m(div2, text5);
 					}
 				} else if (if_block4) {
 					if_block4.d(1);
 					if_block4 = null;
 				}
 
-				if (ctx.planet.icons.research>0) {
-					if (if_block5) {
-						if_block5.p(changed, ctx);
-					} else {
-						if_block5 = create_if_block_18(component, ctx);
+				if (ctx.planet.icons.produce > 0) {
+					if (!if_block5) {
+						if_block5 = create_if_block_27(component, ctx);
 						if_block5.c();
-						if_block5.m(div, null);
+						if_block5.m(div2, text6);
 					}
 				} else if (if_block5) {
 					if_block5.d(1);
 					if_block5 = null;
 				}
 
-				div._svelte.ctx = ctx;
-				if ((changed.game) && div_class_value !== (div_class_value = (ctx.game.displayinfo.selectionzone=='settle_&_conquered_planets') ? ( (ctx.planet.selected) ? 'selected' : 'selectable' ): 'bordered')) {
-					div.className = div_class_value;
+				if (changed.game) {
+					each_value_5 = ctx.planet.production_zones;
+
+					for (var i = 0; i < each_value_5.length; i += 1) {
+						const child_ctx = get_each_context_5(ctx, each_value_5, i);
+
+						if (each_blocks[i]) {
+							each_blocks[i].p(changed, child_ctx);
+						} else {
+							each_blocks[i] = create_each_block_7(component, child_ctx);
+							each_blocks[i].c();
+							each_blocks[i].m(div2, text7);
+						}
+					}
+
+					for (; i < each_blocks.length; i += 1) {
+						each_blocks[i].d(1);
+					}
+					each_blocks.length = each_value_5.length;
+				}
+
+				if (ctx.planet.handsize_modifier > 0) {
+					if (!if_block6) {
+						if_block6 = create_if_block_26(component, ctx);
+						if_block6.c();
+						if_block6.m(div2, text8);
+					}
+				} else if (if_block6) {
+					if_block6.d(1);
+					if_block6 = null;
+				}
+
+				if ((changed.game) && text9_value !== (text9_value = ctx.planet.influence_value)) {
+					setData(text9, text9_value);
+				}
+
+				if ((changed.game) && text12_value !== (text12_value = ctx.planet.name)) {
+					setData(text12, text12_value);
+				}
+
+				div4._svelte.ctx = ctx;
+				if ((changed.game) && div4_class_value !== (div4_class_value = (ctx.game.displayinfo.selectionzone=='settle_&_conquered_planets') ? ( (ctx.planet.selected) ? 'selected' : 'selectable' ): 'bordered')) {
+					div4.className = div4_class_value;
 				}
 			},
 
 			d: function destroy(detach) {
 				if (detach) {
-					detachNode(div);
+					detachNode(div4);
 				}
 
 				if (if_block0) if_block0.d();
@@ -3404,14 +3517,18 @@ var app = (function () {
 				if (if_block3) if_block3.d();
 				if (if_block4) if_block4.d();
 				if (if_block5) if_block5.d();
-				removeListener(div, "click", click_handler_5);
-				removeListener(div, "tap", tap_handler_5);
+
+				destroyEach(each_blocks, detach);
+
+				if (if_block6) if_block6.d();
+				removeListener(div4, "click", click_handler_5);
+				removeListener(div4, "tap", tap_handler_5);
 			}
 		};
 	}
 
-	// (128:6) {:else}
-	function create_else_block_4(component, ctx) {
+	// (148:6) {:else}
+	function create_else_block_5(component, ctx) {
 		var div;
 
 		return {
@@ -3419,8 +3536,8 @@ var app = (function () {
 				div = createElement("div");
 				div.textContent = "[____]";
 				setStyle(div, "margin-right", "auto");
-				div.className = "bordered";
-				addLoc(div, file, 128, 7, 6481);
+				div.className = "bordered pass";
+				addLoc(div, file, 148, 7, 7462);
 			},
 
 			m: function mount(target, anchor) {
@@ -3435,8 +3552,8 @@ var app = (function () {
 		};
 	}
 
-	// (126:6) {#if game.displayinfo.showoptiontoskip}
-	function create_if_block_16(component, ctx) {
+	// (146:6) {#if game.displayinfo.showoptiontoskip}
+	function create_if_block_24(component, ctx) {
 		var div;
 
 		return {
@@ -3448,8 +3565,8 @@ var app = (function () {
 				addListener(div, "click", click_handler_6);
 				addListener(div, "tap", tap_handler_6);
 				setStyle(div, "margin-right", "auto");
-				div.className = "selectable";
-				addLoc(div, file, 126, 7, 6322);
+				div.className = "selectable pass";
+				addLoc(div, file, 146, 7, 7298);
 			},
 
 			m: function mount(target, anchor) {
@@ -3467,8 +3584,8 @@ var app = (function () {
 		};
 	}
 
-	// (143:94) 
-	function create_if_block_15(component, ctx) {
+	// (163:94) 
+	function create_if_block_23(component, ctx) {
 		var div, img, img_src_value, img_alt_value;
 
 		return {
@@ -3478,9 +3595,9 @@ var app = (function () {
 				img.className = "minicard";
 				img.src = img_src_value = "./images/" + ctx.card.type + "100.png";
 				img.alt = img_alt_value = ctx.card.name;
-				addLoc(img, file, 144, 10, 7645);
+				addLoc(img, file, 164, 10, 8631);
 				div.className = "bordered";
-				addLoc(div, file, 143, 9, 7612);
+				addLoc(div, file, 163, 9, 8598);
 			},
 
 			m: function mount(target, anchor) {
@@ -3506,8 +3623,8 @@ var app = (function () {
 		};
 	}
 
-	// (139:8) {#if card.research_cost !== undefined}
-	function create_if_block_14(component, ctx) {
+	// (159:8) {#if card.research_cost !== undefined}
+	function create_if_block_22(component, ctx) {
 		var div, img, img_src_value, img_alt_value;
 
 		return {
@@ -3517,9 +3634,9 @@ var app = (function () {
 				img.className = "minicard";
 				img.src = img_src_value = ctx.card.imgurl;
 				img.alt = img_alt_value = ctx.card.name;
-				addLoc(img, file, 140, 9, 7431);
+				addLoc(img, file, 160, 9, 8417);
 				div.className = "bordered";
-				addLoc(div, file, 139, 8, 7399);
+				addLoc(div, file, 159, 8, 8385);
 			},
 
 			m: function mount(target, anchor) {
@@ -3545,13 +3662,13 @@ var app = (function () {
 		};
 	}
 
-	// (131:6) {#each player.limbo as card}
-	function create_each_block_4(component, ctx) {
+	// (151:6) {#each player.limbo as card}
+	function create_each_block_5(component, ctx) {
 		var if_block_anchor;
 
 		function select_block_type_4(ctx) {
-			if (ctx.card.research_cost !== ctx.undefined) return create_if_block_14;
-			if (ctx.card.type != "advanced" && ctx.card.type != "fertile" && ctx.card.type != "metallic") return create_if_block_15;
+			if (ctx.card.research_cost !== ctx.undefined) return create_if_block_22;
+			if (ctx.card.type != "advanced" && ctx.card.type != "fertile" && ctx.card.type != "metallic") return create_if_block_23;
 		}
 
 		var current_block_type = select_block_type_4(ctx);
@@ -3588,16 +3705,16 @@ var app = (function () {
 		};
 	}
 
-	// (156:6) {:else}
-	function create_else_block_3(component, ctx) {
+	// (176:6) {:else}
+	function create_else_block_4(component, ctx) {
 		var div;
 
 		return {
 			c: function create() {
 				div = createElement("div");
 				div.textContent = "[______]";
-				div.className = "bordered";
-				addLoc(div, file, 156, 7, 8387);
+				div.className = "bordered pass";
+				addLoc(div, file, 176, 7, 9388);
 			},
 
 			m: function mount(target, anchor) {
@@ -3614,8 +3731,8 @@ var app = (function () {
 		};
 	}
 
-	// (154:84) 
-	function create_if_block_13(component, ctx) {
+	// (174:84) 
+	function create_if_block_21(component, ctx) {
 		var div;
 
 		return {
@@ -3627,8 +3744,8 @@ var app = (function () {
 				addListener(div, "click", click_handler_9);
 				addListener(div, "tap", tap_handler_9);
 				setStyle(div, "margin-left", "auto");
-				div.className = "selectable";
-				addLoc(div, file, 154, 7, 8187);
+				div.className = "selectable pass";
+				addLoc(div, file, 174, 7, 9183);
 			},
 
 			m: function mount(target, anchor) {
@@ -3651,8 +3768,8 @@ var app = (function () {
 		};
 	}
 
-	// (152:26) 
-	function create_if_block_12(component, ctx) {
+	// (172:26) 
+	function create_if_block_20(component, ctx) {
 		var div;
 
 		return {
@@ -3664,8 +3781,8 @@ var app = (function () {
 				addListener(div, "click", click_handler_8);
 				addListener(div, "tap", tap_handler_8);
 				setStyle(div, "margin-left", "auto");
-				div.className = "selectable";
-				addLoc(div, file, 152, 7, 7985);
+				div.className = "selectable pass";
+				addLoc(div, file, 172, 7, 8976);
 			},
 
 			m: function mount(target, anchor) {
@@ -3685,8 +3802,8 @@ var app = (function () {
 		};
 	}
 
-	// (150:6) {#if game.passp }
-	function create_if_block_11(component, ctx) {
+	// (170:6) {#if game.passp }
+	function create_if_block_19(component, ctx) {
 		var div, text0, br, text1;
 
 		return {
@@ -3695,15 +3812,15 @@ var app = (function () {
 				text0 = createText("[Pass to ");
 				br = createElement("br");
 				text1 = createText(" Next Player]");
-				addLoc(br, file, 150, 116, 7927);
+				addLoc(br, file, 170, 121, 8918);
 
 				div._svelte = { component };
 
 				addListener(div, "click", click_handler_7);
 				addListener(div, "tap", tap_handler_7);
 				setStyle(div, "margin-left", "auto");
-				div.className = "selectable";
-				addLoc(div, file, 150, 7, 7818);
+				div.className = "selectable pass";
+				addLoc(div, file, 170, 7, 8804);
 			},
 
 			m: function mount(target, anchor) {
@@ -3726,8 +3843,8 @@ var app = (function () {
 		};
 	}
 
-	// (175:9) {:else}
-	function create_else_block_2(component, ctx) {
+	// (195:9) {:else}
+	function create_else_block_3(component, ctx) {
 		var img, img_src_value, img_alt_value, img_class_value;
 
 		return {
@@ -3736,7 +3853,7 @@ var app = (function () {
 				img.src = img_src_value = "./images/" + ctx.card.type + "100.png";
 				img.alt = img_alt_value = ctx.card.name;
 				img.className = img_class_value = "cutcard " + ((ctx.game.displayinfo.selectionzone=='hand') ? ( (ctx.card.selected) ? 'selected' : 'selectable' ): 'bordered');
-				addLoc(img, file, 175, 10, 9874);
+				addLoc(img, file, 195, 10, 10880);
 			},
 
 			m: function mount(target, anchor) {
@@ -3765,8 +3882,8 @@ var app = (function () {
 		};
 	}
 
-	// (173:9) {#if card.research_cost !== undefined}
-	function create_if_block_10(component, ctx) {
+	// (193:9) {#if card.research_cost !== undefined}
+	function create_if_block_18(component, ctx) {
 		var img, img_src_value, img_alt_value, img_class_value;
 
 		return {
@@ -3775,7 +3892,7 @@ var app = (function () {
 				img.src = img_src_value = ctx.card.imgurl;
 				img.alt = img_alt_value = ctx.card.name;
 				img.className = img_class_value = "cutcard " + ((ctx.game.displayinfo.selectionzone=='hand') ? ( (ctx.card.selected) ? 'selected' : 'selectable' ): 'bordered');
-				addLoc(img, file, 173, 10, 9682);
+				addLoc(img, file, 193, 10, 10688);
 			},
 
 			m: function mount(target, anchor) {
@@ -3804,13 +3921,13 @@ var app = (function () {
 		};
 	}
 
-	// (166:8) {#if game.displayinfo.selectionzone=='hand'}
-	function create_if_block_8(component, ctx) {
+	// (186:8) {#if game.displayinfo.selectionzone=='hand'}
+	function create_if_block_16(component, ctx) {
 		var if_block_anchor;
 
 		function select_block_type_7(ctx) {
-			if (ctx.card.research_cost !== ctx.undefined) return create_if_block_9;
-			return create_else_block_1;
+			if (ctx.card.research_cost !== ctx.undefined) return create_if_block_17;
+			return create_else_block_2;
 		}
 
 		var current_block_type = select_block_type_7(ctx);
@@ -3847,8 +3964,8 @@ var app = (function () {
 		};
 	}
 
-	// (169:9) {:else}
-	function create_else_block_1(component, ctx) {
+	// (189:9) {:else}
+	function create_else_block_2(component, ctx) {
 		var img, img_src_value, img_alt_value, img_class_value;
 
 		return {
@@ -3864,7 +3981,7 @@ var app = (function () {
 				img.src = img_src_value = "./images/" + ctx.card.type + "100.png";
 				img.alt = img_alt_value = ctx.card.name;
 				img.className = img_class_value = "cutcard " + ((ctx.game.displayinfo.selectionzone=='hand') ? ( (ctx.card.selected) ? 'hidden' : 'selectable' ): 'bordered');
-				addLoc(img, file, 169, 10, 9237);
+				addLoc(img, file, 189, 10, 10243);
 			},
 
 			m: function mount(target, anchor) {
@@ -3901,8 +4018,8 @@ var app = (function () {
 		};
 	}
 
-	// (167:9) {#if card.research_cost !== undefined}
-	function create_if_block_9(component, ctx) {
+	// (187:9) {#if card.research_cost !== undefined}
+	function create_if_block_17(component, ctx) {
 		var img, img_src_value, img_alt_value, img_class_value;
 
 		return {
@@ -3918,7 +4035,7 @@ var app = (function () {
 				img.src = img_src_value = ctx.card.imgurl;
 				img.alt = img_alt_value = ctx.card.name;
 				img.className = img_class_value = "cutcard " + ((ctx.game.displayinfo.selectionzone=='hand') ? ( (ctx.card.selected) ? 'hidden' : 'selectable' ): 'bordered');
-				addLoc(img, file, 167, 10, 8886);
+				addLoc(img, file, 187, 10, 9892);
 			},
 
 			m: function mount(target, anchor) {
@@ -3955,14 +4072,14 @@ var app = (function () {
 		};
 	}
 
-	// (165:7) {#each player.hand as card}
-	function create_each_block_3(component, ctx) {
+	// (185:7) {#each player.hand as card}
+	function create_each_block_4(component, ctx) {
 		var if_block_anchor;
 
 		function select_block_type_6(ctx) {
-			if (ctx.game.displayinfo.selectionzone=='hand') return create_if_block_8;
-			if (ctx.card.research_cost !== ctx.undefined) return create_if_block_10;
-			return create_else_block_2;
+			if (ctx.game.displayinfo.selectionzone=='hand') return create_if_block_16;
+			if (ctx.card.research_cost !== ctx.undefined) return create_if_block_18;
+			return create_else_block_3;
 		}
 
 		var current_block_type = select_block_type_6(ctx);
@@ -4000,10 +4117,10 @@ var app = (function () {
 	}
 
 	// (44:2) {#each game.players as player}
-	function create_each_block_2(component, ctx) {
+	function create_each_block_3(component, ctx) {
 		var if_block_anchor;
 
-		var if_block = (ctx.game.acting_player!==ctx.undefined && ((ctx.lobby.screenname==ctx.player.name && ctx.lobby.online) || (ctx.game.acting_player.id==ctx.player.id && !ctx.lobby.online))) && create_if_block_7(component, ctx);
+		var if_block = (ctx.game.acting_player!==ctx.undefined && ((ctx.lobby.screenname==ctx.player.name && ctx.lobby.online) || (ctx.game.acting_player.id==ctx.player.id && !ctx.lobby.online))) && create_if_block_15(component, ctx);
 
 		return {
 			c: function create() {
@@ -4021,7 +4138,7 @@ var app = (function () {
 					if (if_block) {
 						if_block.p(changed, ctx);
 					} else {
-						if_block = create_if_block_7(component, ctx);
+						if_block = create_if_block_15(component, ctx);
 						if_block.c();
 						if_block.m(if_block_anchor.parentNode, if_block_anchor);
 					}
@@ -4040,16 +4157,16 @@ var app = (function () {
 		};
 	}
 
-	// (187:2) {#if game.displayinfo.selectionzone=='options'}
+	// (207:2) {#if game.displayinfo.selectionzone=='options'}
 	function create_if_block_6(component, ctx) {
-		var div;
+		var div, div_class_value;
 
-		var each_value_5 = ctx.game.options;
+		var each_value_6 = ctx.game.options;
 
 		var each_blocks = [];
 
-		for (var i = 0; i < each_value_5.length; i += 1) {
-			each_blocks[i] = create_each_block_1(component, get_each_context_5(ctx, each_value_5, i));
+		for (var i = 0; i < each_value_6.length; i += 1) {
+			each_blocks[i] = create_each_block_1(component, get_each_context_6(ctx, each_value_6, i));
 		}
 
 		return {
@@ -4059,8 +4176,8 @@ var app = (function () {
 				for (var i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].c();
 				}
-				div.className = "options";
-				addLoc(div, file, 187, 3, 10338);
+				div.className = div_class_value = ( ctx.game.options[0] !== ctx.undefined && ctx.game.options[0].type !== ctx.undefined) ? 'talloptions' : 'options';
+				addLoc(div, file, 207, 3, 11344);
 			},
 
 			m: function mount(target, anchor) {
@@ -4072,11 +4189,11 @@ var app = (function () {
 			},
 
 			p: function update(changed, ctx) {
-				if (changed.game) {
-					each_value_5 = ctx.game.options;
+				if (changed.game || changed.undefined) {
+					each_value_6 = ctx.game.options;
 
-					for (var i = 0; i < each_value_5.length; i += 1) {
-						const child_ctx = get_each_context_5(ctx, each_value_5, i);
+					for (var i = 0; i < each_value_6.length; i += 1) {
+						const child_ctx = get_each_context_6(ctx, each_value_6, i);
 
 						if (each_blocks[i]) {
 							each_blocks[i].p(changed, child_ctx);
@@ -4090,7 +4207,11 @@ var app = (function () {
 					for (; i < each_blocks.length; i += 1) {
 						each_blocks[i].d(1);
 					}
-					each_blocks.length = each_value_5.length;
+					each_blocks.length = each_value_6.length;
+				}
+
+				if ((changed.game || changed.undefined) && div_class_value !== (div_class_value = ( ctx.game.options[0] !== ctx.undefined && ctx.game.options[0].type !== ctx.undefined) ? 'talloptions' : 'options')) {
+					div.className = div_class_value;
 				}
 			},
 
@@ -4104,23 +4225,21 @@ var app = (function () {
 		};
 	}
 
-	// (189:4) {#each game.options as option}
-	function create_each_block_1(component, ctx) {
+	// (267:5) {:else}
+	function create_else_block_1(component, ctx) {
 		var div, text0_value = ctx.option.name, text0, text1, div_class_value;
 
 		return {
 			c: function create() {
 				div = createElement("div");
 				text0 = createText(text0_value);
-				text1 = createText("\n\t\t\t\t\t");
+				text1 = createText("\n\t\t\t\t\t\t");
 				div._svelte = { component, ctx };
 
-				addListener(div, "click", click_handler_12);
-				addListener(div, "tap", tap_handler_12);
-				setStyle(div, "width", "50%");
-				setStyle(div, "color", "blue");
-				div.className = div_class_value = (ctx.game.displayinfo.selectionzone=='options') ? ( (ctx.option.selected) ? 'selected' : 'selectable' ): 'bordered';
-				addLoc(div, file, 189, 5, 10400);
+				addListener(div, "click", click_handler_13);
+				addListener(div, "tap", tap_handler_13);
+				div.className = div_class_value = "pass " + ((ctx.game.displayinfo.selectionzone=='options') ? ( (ctx.option.selected) ? 'selected' : 'selectable' ): 'bordered');
+				addLoc(div, file, 267, 6, 13839);
 			},
 
 			m: function mount(target, anchor) {
@@ -4136,7 +4255,7 @@ var app = (function () {
 				}
 
 				div._svelte.ctx = ctx;
-				if ((changed.game) && div_class_value !== (div_class_value = (ctx.game.displayinfo.selectionzone=='options') ? ( (ctx.option.selected) ? 'selected' : 'selectable' ): 'bordered')) {
+				if ((changed.game) && div_class_value !== (div_class_value = "pass " + ((ctx.game.displayinfo.selectionzone=='options') ? ( (ctx.option.selected) ? 'selected' : 'selectable' ): 'bordered'))) {
 					div.className = div_class_value;
 				}
 			},
@@ -4146,8 +4265,596 @@ var app = (function () {
 					detachNode(div);
 				}
 
-				removeListener(div, "click", click_handler_12);
-				removeListener(div, "tap", tap_handler_12);
+				removeListener(div, "click", click_handler_13);
+				removeListener(div, "tap", tap_handler_13);
+			}
+		};
+	}
+
+	// (210:5) {#if option.type !== undefined}
+	function create_if_block_7(component, ctx) {
+		var div7, div3, img0, img0_src_value, img0_alt_value, text0, div2, text1, text2, text3, text4, text5, text6, text7, text8, div0, text9_value = ctx.option.influence_value, text9, text10, img1, text11, div1, text12_value = ctx.option.name, text12, text13, div6, div5, img2, img2_src_value, img2_alt_value, text14, div4, span0, text15_value = ctx.option.settle_cost, text15, text16, span1, text17_value = ctx.option.conquer_cost, text17, text18, div7_class_value;
+
+		var if_block0 = (ctx.option.icons.survey > 0) && create_if_block_14(component, ctx);
+
+		var if_block1 = (ctx.option.icons.warfare > 0) && create_if_block_13(component, ctx);
+
+		var if_block2 = (ctx.option.icons.colonize > 0) && create_if_block_12(component, ctx);
+
+		var if_block3 = (ctx.option.icons.research > 0) && create_if_block_11(component, ctx);
+
+		var if_block4 = (ctx.option.icons.trade > 0) && create_if_block_10(component, ctx);
+
+		var if_block5 = (ctx.option.icons.produce > 0) && create_if_block_9(component, ctx);
+
+		var each_value_7 = ctx.option.production_zones;
+
+		var each_blocks = [];
+
+		for (var i = 0; i < each_value_7.length; i += 1) {
+			each_blocks[i] = create_each_block_2(component, get_each_context_7(ctx, each_value_7, i));
+		}
+
+		var if_block6 = (ctx.option.handsize_modifier > 0) && create_if_block_8(component, ctx);
+
+		return {
+			c: function create() {
+				div7 = createElement("div");
+				div3 = createElement("div");
+				img0 = createElement("img");
+				text0 = createText("\t\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t");
+				div2 = createElement("div");
+				if (if_block0) if_block0.c();
+				text1 = createText("\n\t\t\t\t\t\t\t\t");
+				if (if_block1) if_block1.c();
+				text2 = createText("\n\t\t\t\t\t\t\t\t");
+				if (if_block2) if_block2.c();
+				text3 = createText("\n\t\t\t\t\t\t\t\t");
+				if (if_block3) if_block3.c();
+				text4 = createText("\n\t\t\t\t\t\t\t\t");
+				if (if_block4) if_block4.c();
+				text5 = createText("\n\t\t\t\t\t\t\t\t");
+				if (if_block5) if_block5.c();
+				text6 = createText("\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t");
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].c();
+				}
+
+				text7 = createText("\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t");
+				if (if_block6) if_block6.c();
+				text8 = createText("\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t");
+				div0 = createElement("div");
+				text9 = createText(text9_value);
+				text10 = createText("\n\t\t\t\t\t\t\t\t");
+				img1 = createElement("img");
+				text11 = createText("\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t");
+				div1 = createElement("div");
+				text12 = createText(text12_value);
+				text13 = createText("\n\t\t\t\t\t\t");
+				div6 = createElement("div");
+				div5 = createElement("div");
+				img2 = createElement("img");
+				text14 = createText("\n\t\t\t\t\t\t\t\t");
+				div4 = createElement("div");
+				span0 = createElement("span");
+				text15 = createText(text15_value);
+				text16 = createText("\n\t\t\t\t\t\t\t\t\t");
+				span1 = createElement("span");
+				text17 = createText(text17_value);
+				text18 = createText("\n\t\t\t\t\t");
+				img0.src = img0_src_value = "./images/" + ctx.option.type + "100.png";
+				img0.alt = img0_alt_value = "" + ctx.option.settle_cost + " " + ctx.option.type + " " + ctx.option.conquer_cost;
+				addLoc(img0, file, 213, 7, 11787);
+				addLoc(div0, file, 244, 8, 13143);
+				img1.src = "./images/influenceicon.png";
+				img1.alt = "influence";
+				addLoc(img1, file, 247, 8, 13206);
+				addLoc(div1, file, 249, 8, 13293);
+				div2.className = "planetfrontinfo";
+				addLoc(div2, file, 216, 7, 12001);
+				div3.className = "planetfront";
+				addLoc(div3, file, 212, 6, 11752);
+				img2.src = img2_src_value = "./images/" + ctx.option.type + "back100.png";
+				img2.alt = img2_alt_value = "" + ctx.option.settle_cost + " " + ctx.option.type + " " + ctx.option.conquer_cost;
+				addLoc(img2, file, 258, 8, 13479);
+				span0.className = "mini_settle_cost";
+				addLoc(span0, file, 260, 9, 13635);
+				span1.className = "mini_conquer_cost";
+				addLoc(span1, file, 261, 9, 13704);
+				div4.className = "unsettled_costs";
+				addLoc(div4, file, 259, 8, 13596);
+				div5.className = "mini_unsettled";
+				addLoc(div5, file, 257, 7, 13442);
+				addLoc(div6, file, 254, 6, 13370);
+
+				div7._svelte = { component, ctx };
+
+				addListener(div7, "click", click_handler_12);
+				addListener(div7, "tap", tap_handler_12);
+				div7.className = div7_class_value = "bordered flex " + ((ctx.game.displayinfo.selectionzone=='options') ? ( (ctx.option.selected) ? 'selected' : 'selectable' ): 'bordered');
+				addLoc(div7, file, 211, 5, 11543);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, div7, anchor);
+				append(div7, div3);
+				append(div3, img0);
+				append(div3, text0);
+				append(div3, div2);
+				if (if_block0) if_block0.m(div2, null);
+				append(div2, text1);
+				if (if_block1) if_block1.m(div2, null);
+				append(div2, text2);
+				if (if_block2) if_block2.m(div2, null);
+				append(div2, text3);
+				if (if_block3) if_block3.m(div2, null);
+				append(div2, text4);
+				if (if_block4) if_block4.m(div2, null);
+				append(div2, text5);
+				if (if_block5) if_block5.m(div2, null);
+				append(div2, text6);
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].m(div2, null);
+				}
+
+				append(div2, text7);
+				if (if_block6) if_block6.m(div2, null);
+				append(div2, text8);
+				append(div2, div0);
+				append(div0, text9);
+				append(div2, text10);
+				append(div2, img1);
+				append(div2, text11);
+				append(div2, div1);
+				append(div1, text12);
+				append(div7, text13);
+				append(div7, div6);
+				append(div6, div5);
+				append(div5, img2);
+				append(div5, text14);
+				append(div5, div4);
+				append(div4, span0);
+				append(span0, text15);
+				append(div4, text16);
+				append(div4, span1);
+				append(span1, text17);
+				append(div7, text18);
+			},
+
+			p: function update(changed, _ctx) {
+				ctx = _ctx;
+				if ((changed.game) && img0_src_value !== (img0_src_value = "./images/" + ctx.option.type + "100.png")) {
+					img0.src = img0_src_value;
+				}
+
+				if ((changed.game) && img0_alt_value !== (img0_alt_value = "" + ctx.option.settle_cost + " " + ctx.option.type + " " + ctx.option.conquer_cost)) {
+					img0.alt = img0_alt_value;
+				}
+
+				if (ctx.option.icons.survey > 0) {
+					if (!if_block0) {
+						if_block0 = create_if_block_14(component, ctx);
+						if_block0.c();
+						if_block0.m(div2, text1);
+					}
+				} else if (if_block0) {
+					if_block0.d(1);
+					if_block0 = null;
+				}
+
+				if (ctx.option.icons.warfare > 0) {
+					if (!if_block1) {
+						if_block1 = create_if_block_13(component, ctx);
+						if_block1.c();
+						if_block1.m(div2, text2);
+					}
+				} else if (if_block1) {
+					if_block1.d(1);
+					if_block1 = null;
+				}
+
+				if (ctx.option.icons.colonize > 0) {
+					if (!if_block2) {
+						if_block2 = create_if_block_12(component, ctx);
+						if_block2.c();
+						if_block2.m(div2, text3);
+					}
+				} else if (if_block2) {
+					if_block2.d(1);
+					if_block2 = null;
+				}
+
+				if (ctx.option.icons.research > 0) {
+					if (!if_block3) {
+						if_block3 = create_if_block_11(component, ctx);
+						if_block3.c();
+						if_block3.m(div2, text4);
+					}
+				} else if (if_block3) {
+					if_block3.d(1);
+					if_block3 = null;
+				}
+
+				if (ctx.option.icons.trade > 0) {
+					if (!if_block4) {
+						if_block4 = create_if_block_10(component, ctx);
+						if_block4.c();
+						if_block4.m(div2, text5);
+					}
+				} else if (if_block4) {
+					if_block4.d(1);
+					if_block4 = null;
+				}
+
+				if (ctx.option.icons.produce > 0) {
+					if (!if_block5) {
+						if_block5 = create_if_block_9(component, ctx);
+						if_block5.c();
+						if_block5.m(div2, text6);
+					}
+				} else if (if_block5) {
+					if_block5.d(1);
+					if_block5 = null;
+				}
+
+				if (changed.game) {
+					each_value_7 = ctx.option.production_zones;
+
+					for (var i = 0; i < each_value_7.length; i += 1) {
+						const child_ctx = get_each_context_7(ctx, each_value_7, i);
+
+						if (each_blocks[i]) {
+							each_blocks[i].p(changed, child_ctx);
+						} else {
+							each_blocks[i] = create_each_block_2(component, child_ctx);
+							each_blocks[i].c();
+							each_blocks[i].m(div2, text7);
+						}
+					}
+
+					for (; i < each_blocks.length; i += 1) {
+						each_blocks[i].d(1);
+					}
+					each_blocks.length = each_value_7.length;
+				}
+
+				if (ctx.option.handsize_modifier > 0) {
+					if (!if_block6) {
+						if_block6 = create_if_block_8(component, ctx);
+						if_block6.c();
+						if_block6.m(div2, text8);
+					}
+				} else if (if_block6) {
+					if_block6.d(1);
+					if_block6 = null;
+				}
+
+				if ((changed.game) && text9_value !== (text9_value = ctx.option.influence_value)) {
+					setData(text9, text9_value);
+				}
+
+				if ((changed.game) && text12_value !== (text12_value = ctx.option.name)) {
+					setData(text12, text12_value);
+				}
+
+				if ((changed.game) && img2_src_value !== (img2_src_value = "./images/" + ctx.option.type + "back100.png")) {
+					img2.src = img2_src_value;
+				}
+
+				if ((changed.game) && img2_alt_value !== (img2_alt_value = "" + ctx.option.settle_cost + " " + ctx.option.type + " " + ctx.option.conquer_cost)) {
+					img2.alt = img2_alt_value;
+				}
+
+				if ((changed.game) && text15_value !== (text15_value = ctx.option.settle_cost)) {
+					setData(text15, text15_value);
+				}
+
+				if ((changed.game) && text17_value !== (text17_value = ctx.option.conquer_cost)) {
+					setData(text17, text17_value);
+				}
+
+				div7._svelte.ctx = ctx;
+				if ((changed.game) && div7_class_value !== (div7_class_value = "bordered flex " + ((ctx.game.displayinfo.selectionzone=='options') ? ( (ctx.option.selected) ? 'selected' : 'selectable' ): 'bordered'))) {
+					div7.className = div7_class_value;
+				}
+			},
+
+			d: function destroy(detach) {
+				if (detach) {
+					detachNode(div7);
+				}
+
+				if (if_block0) if_block0.d();
+				if (if_block1) if_block1.d();
+				if (if_block2) if_block2.d();
+				if (if_block3) if_block3.d();
+				if (if_block4) if_block4.d();
+				if (if_block5) if_block5.d();
+
+				destroyEach(each_blocks, detach);
+
+				if (if_block6) if_block6.d();
+				removeListener(div7, "click", click_handler_12);
+				removeListener(div7, "tap", tap_handler_12);
+			}
+		};
+	}
+
+	// (218:8) {#if option.icons.survey > 0}
+	function create_if_block_14(component, ctx) {
+		var img, br;
+
+		return {
+			c: function create() {
+				img = createElement("img");
+				br = createElement("br");
+				img.src = "./images/surveyicon100.png";
+				img.alt = "survey";
+				addLoc(img, file, 218, 9, 12078);
+				addLoc(br, file, 218, 61, 12130);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, img, anchor);
+				insert(target, br, anchor);
+			},
+
+			d: function destroy(detach) {
+				if (detach) {
+					detachNode(img);
+					detachNode(br);
+				}
+			}
+		};
+	}
+
+	// (221:8) {#if option.icons.warfare > 0}
+	function create_if_block_13(component, ctx) {
+		var img, br;
+
+		return {
+			c: function create() {
+				img = createElement("img");
+				br = createElement("br");
+				img.src = "./images/warfareicon100.png";
+				img.alt = "warfare";
+				addLoc(img, file, 221, 9, 12197);
+				addLoc(br, file, 221, 63, 12251);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, img, anchor);
+				insert(target, br, anchor);
+			},
+
+			d: function destroy(detach) {
+				if (detach) {
+					detachNode(img);
+					detachNode(br);
+				}
+			}
+		};
+	}
+
+	// (224:8) {#if option.icons.colonize > 0}
+	function create_if_block_12(component, ctx) {
+		var img, br;
+
+		return {
+			c: function create() {
+				img = createElement("img");
+				br = createElement("br");
+				img.src = "./images/colonizeicon100.png";
+				img.alt = "colonize";
+				addLoc(img, file, 224, 9, 12319);
+				addLoc(br, file, 224, 65, 12375);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, img, anchor);
+				insert(target, br, anchor);
+			},
+
+			d: function destroy(detach) {
+				if (detach) {
+					detachNode(img);
+					detachNode(br);
+				}
+			}
+		};
+	}
+
+	// (227:8) {#if option.icons.research > 0}
+	function create_if_block_11(component, ctx) {
+		var img, br;
+
+		return {
+			c: function create() {
+				img = createElement("img");
+				br = createElement("br");
+				img.src = "./images/researchicon100.png";
+				img.alt = "research";
+				addLoc(img, file, 227, 9, 12443);
+				addLoc(br, file, 227, 65, 12499);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, img, anchor);
+				insert(target, br, anchor);
+			},
+
+			d: function destroy(detach) {
+				if (detach) {
+					detachNode(img);
+					detachNode(br);
+				}
+			}
+		};
+	}
+
+	// (230:8) {#if option.icons.trade > 0}
+	function create_if_block_10(component, ctx) {
+		var img, br;
+
+		return {
+			c: function create() {
+				img = createElement("img");
+				br = createElement("br");
+				img.src = "./images/tradeicon100.png";
+				img.alt = "trade";
+				addLoc(img, file, 230, 9, 12564);
+				addLoc(br, file, 230, 59, 12614);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, img, anchor);
+				insert(target, br, anchor);
+			},
+
+			d: function destroy(detach) {
+				if (detach) {
+					detachNode(img);
+					detachNode(br);
+				}
+			}
+		};
+	}
+
+	// (233:8) {#if option.icons.produce > 0}
+	function create_if_block_9(component, ctx) {
+		var img, br;
+
+		return {
+			c: function create() {
+				img = createElement("img");
+				br = createElement("br");
+				img.src = "./images/produceicon100.png";
+				img.alt = "produce";
+				addLoc(img, file, 233, 9, 12681);
+				addLoc(br, file, 233, 63, 12735);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, img, anchor);
+				insert(target, br, anchor);
+			},
+
+			d: function destroy(detach) {
+				if (detach) {
+					detachNode(img);
+					detachNode(br);
+				}
+			}
+		};
+	}
+
+	// (237:8) {#each option.production_zones as zone}
+	function create_each_block_2(component, ctx) {
+		var img, img_src_value, img_alt_value, br;
+
+		return {
+			c: function create() {
+				img = createElement("img");
+				br = createElement("br");
+				img.src = img_src_value = "./images/" + ctx.zone.type + "productionzoneicon.png";
+				img.alt = img_alt_value = "" + ctx.zone.type + " zone";
+				addLoc(img, file, 237, 9, 12845);
+				addLoc(br, file, 237, 87, 12923);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, img, anchor);
+				insert(target, br, anchor);
+			},
+
+			p: function update(changed, ctx) {
+				if ((changed.game) && img_src_value !== (img_src_value = "./images/" + ctx.zone.type + "productionzoneicon.png")) {
+					img.src = img_src_value;
+				}
+
+				if ((changed.game) && img_alt_value !== (img_alt_value = "" + ctx.zone.type + " zone")) {
+					img.alt = img_alt_value;
+				}
+			},
+
+			d: function destroy(detach) {
+				if (detach) {
+					detachNode(img);
+					detachNode(br);
+				}
+			}
+		};
+	}
+
+	// (241:8) {#if option.handsize_modifier > 0}
+	function create_if_block_8(component, ctx) {
+		var img, br;
+
+		return {
+			c: function create() {
+				img = createElement("img");
+				br = createElement("br");
+				img.src = "./images/handsizeicon100.png";
+				img.alt = "produce";
+				addLoc(img, file, 241, 9, 13028);
+				addLoc(br, file, 241, 64, 13083);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, img, anchor);
+				insert(target, br, anchor);
+			},
+
+			d: function destroy(detach) {
+				if (detach) {
+					detachNode(img);
+					detachNode(br);
+				}
+			}
+		};
+	}
+
+	// (209:4) {#each game.options as option}
+	function create_each_block_1(component, ctx) {
+		var if_block_anchor;
+
+		function select_block_type_8(ctx) {
+			if (ctx.option.type !== ctx.undefined) return create_if_block_7;
+			return create_else_block_1;
+		}
+
+		var current_block_type = select_block_type_8(ctx);
+		var if_block = current_block_type(component, ctx);
+
+		return {
+			c: function create() {
+				if_block.c();
+				if_block_anchor = createComment();
+			},
+
+			m: function mount(target, anchor) {
+				if_block.m(target, anchor);
+				insert(target, if_block_anchor, anchor);
+			},
+
+			p: function update(changed, ctx) {
+				if (current_block_type === (current_block_type = select_block_type_8(ctx)) && if_block) {
+					if_block.p(changed, ctx);
+				} else {
+					if_block.d(1);
+					if_block = current_block_type(component, ctx);
+					if_block.c();
+					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+				}
+			},
+
+			d: function destroy(detach) {
+				if_block.d(detach);
+				if (detach) {
+					detachNode(if_block_anchor);
+				}
 			}
 		};
 	}
@@ -4382,7 +5089,7 @@ var app = (function () {
 	                            if (app$1.get().game.acting_player.activeaction != 'colonize' || app$1.get().game.choices[0].name != 'settle_colonies'){
 	                                app$1.phasefinishfunction();
 	                            } else {   
-									app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
+	                                app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
 	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
@@ -4718,7 +5425,7 @@ var app = (function () {
 	                            if (app$1.get().game.acting_player.activeaction != 'improved_colonize' || app$1.get().game.choices[0].name != 'settle_colonies'){
 	                                app$1.phasefinishfunction();
 	                            } else {
-									app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
+	                                app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
 	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
@@ -4853,7 +5560,7 @@ var app = (function () {
 	                        if (app$1.get().game.acting_player.activeaction != 'improved_research' ){
 	                            app$1.phasefinishfunction();
 	                        } else {    
-								research(app$1.get().game.choices, app$1.get().game.acting_player, 3);
+	                            research(app$1.get().game.choices, app$1.get().game.acting_player, 3);
 	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
@@ -4867,9 +5574,9 @@ var app = (function () {
 	                        if (app$1.get().game.acting_player.activeaction != 'improved_survey' ){
 	                            app$1.phasefinishfunction();
 	                        } else {    
-	            				app$1.draw(app$1.get().game.acting_player);
-	            				app$1.draw(app$1.get().game.acting_player);
-	            				app$1.draw(app$1.get().game.acting_player);
+	                            app$1.draw(app$1.get().game.acting_player);
+	                            app$1.draw(app$1.get().game.acting_player);
+	                            app$1.draw(app$1.get().game.acting_player);
 	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
@@ -5407,7 +6114,7 @@ var app = (function () {
 	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'settle_colonies'){
 	                                app$1.phasefinishfunction();
 	                            } else {   
-									app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
+	                                app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
 	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
@@ -5576,7 +6283,7 @@ var app = (function () {
 	                    'Researching your Technology':
 	                    ()=>{        
 	                        if (app$1.get().game.acting_player.activerole != 'research' ){
-	                        app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction();
 	                        } else {    
 	                            let game = app$1.get().game;
 	                            if (game.choices[0].name!="Skip"){
@@ -5595,7 +6302,11 @@ var app = (function () {
 	                                    }
 	                                }
 	                                if (condition && game.acting_player.boostingicons.research >= game.choices[0].research_cost){
-	                                    app$1.play(game.research_deck, game.acting_player.limbo, 'discard', game.choices[0].identifier);
+	                                    if (game.choices[0].is_permanent){
+	                                        app$1.play(game.research_deck, game.acting_player.permanents, '', game.choices[0].identifier);
+	                                    } else {
+	                                        app$1.play(game.research_deck, game.acting_player.limbo, 'discard', game.choices[0].identifier);
+	                                    }
 	                                }
 	                            }
 	                            app$1.phasefinishfunction(true);
@@ -5892,7 +6603,7 @@ var app = (function () {
 	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'settle_colonies'){
 	                                app$1.phasefinishfunction();
 	                            } else {   
-									app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
+	                                app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
 	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
@@ -6025,7 +6736,7 @@ var app = (function () {
 	                    'Researching your Technology':
 	                    ()=>{        
 	                        if (app$1.get().game.acting_player.activerole != 'survey' ){
-	                        	app$1.phasefinishfunction();
+	                            app$1.phasefinishfunction();
 	                        } else {    
 	                            let game = app$1.get().game;
 	                            if (game.choices[0].name!="Skip"){
@@ -6313,10 +7024,8 @@ var app = (function () {
 	    'winner':false,
 	    'stacks':{
 	        'pilecount':{
-	            //'research':20,
-	            //'producetrade':16,
-	            'research':1,
-	            'producetrade':1,
+	            'research':20,
+	            'producetrade':16,
 	            'colonize':20,
 	            'warfare':16,
 	            'survey':20
@@ -6364,7 +7073,7 @@ var app = (function () {
 	    
 	};
 	//let url = 'ws://temperate-isle.herokuapp.com:3030';
-	let url = location.origin.replace(/^http/, 'ws');//'wss://stormy-sea-41713.herokuapp.com:3030';
+	let url = 'ws://192.168.1.6:3030';
 	let lobby =
 	{
 	    screenname:'',

@@ -9,9 +9,9 @@ let server = express()
   .get('/', (req, res) => res.render('pages/index'))
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
-const WebSocket = require('ws');
+//const WebSocket = require('ws');
 const games=[];
-const wss = new WebSocket.Server({ server : server});
+const wss = require('socket.io')(server);//new WebSocket.Server({ server : server});
 let generatenewgame = function(state){
   state.game_id= games.length;
   games.push({game:state});
