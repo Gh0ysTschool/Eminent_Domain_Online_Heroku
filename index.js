@@ -22,14 +22,14 @@ wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(data) {
     data = JSON.parse(data);
     if(data.header=='set'){
-      games[data.game_id].game=data;
+      games[data.game_id]={game:data};
       wss.clients.forEach(function each(client) {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify(data));
         }
       });
     } else if(data.header=='newgame'){
-      let i = generatenewgame(data.game);
+      let i = generatenewgame(data);
       ws.send(i);
     } else if(data.header=='fetchexisting'){
       data = games;

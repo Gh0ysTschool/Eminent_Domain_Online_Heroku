@@ -928,7 +928,7 @@ var app = (function () {
 			
 			let planet=game.choices[0];
 			player.unsettled_planets.push(planet);
-			[,player.limbo] = app.select_via_identifier(player.limbo, planet.identifier);
+			planet = app.select_via_identifier(player.limbo, planet.identifier);
 			let temparray = [];
 			let iterations = player.limbo.length;
 			for (let i = 0; i >= iterations ; i++){  
@@ -5095,7 +5095,7 @@ var app = (function () {
 	                                app$1.offer(
 	                                    false /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
 	                                    false /*allows multiple choices | sets game.displayinfo.allowformultipleselections=boolean */, 
-	                                    ['options', [{name:'colonize'}, {name:'settle_colonies'}]] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
+	                                    ['options', [{name:'Colonize'}, {name:'Settle Colonies'}]] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
 	                                    'choices' /* label for where the choice is stored | set with game[label]=*/,
 	                                    app$1.phasefinishfunction /*callback that handles the choice or finishes the phase*/, 
 	                                );
@@ -5105,7 +5105,7 @@ var app = (function () {
 	                {
 	                    'Choose an Unsettled Planet to Settle':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activeaction != 'colonize' || app$1.get().game.choices[0].name != 'settle_colonies'){
+	                            if (app$1.get().game.acting_player.activeaction != 'colonize' || app$1.get().game.choices[0].name != 'Settle Colonies'){
 	                                app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.offer(
@@ -5121,7 +5121,7 @@ var app = (function () {
 	                {
 	                    'Settling your Planet':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activeaction != 'colonize' || app$1.get().game.choices[0].name != 'settle_colonies'){
+	                            if (app$1.get().game.acting_player.activeaction != 'colonize' || app$1.get().game.choices[0].name != 'Settle Colonies'){
 	                                app$1.phasefinishfunction();
 	                            } else {   
 	                                app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
@@ -5134,7 +5134,7 @@ var app = (function () {
 	                {
 	                    'Choose an Unsettled Planet to Colonize':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activeaction != 'colonize' || app$1.get().game.choices[0].name != 'colonize'){
+	                            if (app$1.get().game.acting_player.activeaction != 'colonize' || app$1.get().game.choices[0].name != 'Colonize'){
 	                                app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.offer(
@@ -5150,7 +5150,7 @@ var app = (function () {
 	                {
 	                    'Colonizing your Planet':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activeaction != 'colonize' || app$1.get().game.choices[0].name != 'colonize'){
+	                            if (app$1.get().game.acting_player.activeaction != 'colonize' || app$1.get().game.choices[0].name != 'Colonize'){
 	                                app$1.phasefinishfunction();
 	                            } else {
 	                                app$1.colonize(app$1.get().game.subchoices[0], app$1.get().game.acting_player.limbo , app$1.get().game.acting_player.limbo.filter((el)=>{ return el.type == 'colonize'})[0]);
@@ -5437,7 +5437,7 @@ var app = (function () {
 	                                app$1.offer(
 	                                    false /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
 	                                    false /*allows multiple choices | sets game.displayinfo.allowformultipleselections=boolean */, 
-	                                    ['options', [{name:'colonize'}, {name:'settle_colonies'}]] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
+	                                    ['options', [{name:'Colonize'}, {name:'Settle Colonies'}]] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
 	                                    'choices' /* label for where the choice is stored | set with game[label]=*/,
 	                                    app$1.phasefinishfunction /*callback that handles the choice or finishes the phase*/, 
 	                                );
@@ -5447,7 +5447,7 @@ var app = (function () {
 	                {
 	                    'Choose an Unsettled Planet to Settle':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activeaction != 'improved_colonize' || app$1.get().game.choices[0].name != 'settle_colonies'){
+	                            if (app$1.get().game.acting_player.activeaction != 'improved_colonize' || app$1.get().game.choices[0].name != 'Settle Colonies'){
 	                                app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.offer(
@@ -5463,7 +5463,7 @@ var app = (function () {
 	                {
 	                    'Settling your Planet':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activeaction != 'improved_colonize' || app$1.get().game.choices[0].name != 'settle_colonies'){
+	                            if (app$1.get().game.acting_player.activeaction != 'improved_colonize' || app$1.get().game.choices[0].name != 'Settle Colonies'){
 	                                app$1.phasefinishfunction();
 	                            } else {
 	                                app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
@@ -5476,7 +5476,7 @@ var app = (function () {
 	                {
 	                    'Choose an Unsettled Planet to Colonize':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activeaction != 'improved_colonize' || app$1.get().game.choices[0].name != 'colonize'){
+	                            if (app$1.get().game.acting_player.activeaction != 'improved_colonize' || app$1.get().game.choices[0].name != 'Colonize'){
 	                                app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.offer(
@@ -5492,7 +5492,7 @@ var app = (function () {
 	                {
 	                    'Colonizing your Planet':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activeaction != 'improved_colonize' || app$1.get().game.choices[0].name != 'colonize'){
+	                            if (app$1.get().game.acting_player.activeaction != 'improved_colonize' || app$1.get().game.choices[0].name != 'Colonize'){
 	                                app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.colonize(app$1.get().game.subchoices[0], app$1.get().game.acting_player.limbo , app$1.get().game.acting_player.limbo.filter((el)=>{ return el.type == 'improved_colonize'})[0]);
@@ -5804,7 +5804,7 @@ var app = (function () {
 	                {
 	                    'Terraforming your Planet':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activeaction != 'terraforming' || app$1.get().game.choices[0].name != 'colonize'){
+	                            if (app$1.get().game.acting_player.activeaction != 'terraforming' || app$1.get().game.choices[0].name != 'Colonize'){
 	                                app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.colonize(app$1.get().game.choices[0], app$1.get().game.acting_player.limbo , app$1.get().game.acting_player.limbo.filter((el)=>{ return el.type == 'terraforming'})[0]);
@@ -6132,7 +6132,7 @@ var app = (function () {
 	                                app$1.offer(
 	                                    false /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
 	                                    false /*allows multiple choices | sets game.displayinfo.allowformultipleselections=boolean */, 
-	                                    ['options', [{name:'colonize'}, {name:'settle_colonies'}]] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
+	                                    ['options', [{name:'colonize'}, {name:'Settle Colonies'}]] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
 	                                    'choices' /* label for where the choice is stored | set with game[label]=*/,
 	                                    app$1.phasefinishfunction /*callback that handles the choice or finishes the phase*/, 
 	                                );
@@ -6142,7 +6142,7 @@ var app = (function () {
 	                {
 	                    'Choose an Unsettled Planet to Settle':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'settle_colonies'){
+	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'Settle Colonies'){
 	                                app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.offer(
@@ -6158,7 +6158,7 @@ var app = (function () {
 	                {
 	                    'Settling your Planet':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'settle_colonies'){
+	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'Settle Colonies'){
 	                                app$1.phasefinishfunction();
 	                            } else {   
 	                                app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
@@ -6171,7 +6171,7 @@ var app = (function () {
 	                {
 	                    'Choose an Unsettled Planet to Colonize':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'colonize'){
+	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'Colonize'){
 	                                app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.offer(
@@ -6187,7 +6187,7 @@ var app = (function () {
 	                {
 	                    'Colonizing your Planet':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'colonize'){
+	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'Colonize'){
 	                                app$1.phasefinishfunction();
 	                            } else {   
 	                                let j = 0; 
@@ -6633,14 +6633,14 @@ var app = (function () {
 	                               app$1.phasefinishfunction();
 	                            } else if ( app$1.get().game.acting_player.permanents.filter( (el)=>{return el.type=='bureaucracy'} ).length == 0){
 	                                let game = app$1.get().game;
-	                                game.choices=['colonize'];
+	                                game.choices=[{name:'Colonize'}];
 	                                app$1.set({'game':game});
 	                                app$1.phasefinishfunction(true);
 	                            } else {    
 	                                app$1.offer(
 	                                    false /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
 	                                    false /*allows multiple choices | sets game.displayinfo.allowformultipleselections=boolean */, 
-	                                    ['options', [{name:'colonize'}, {name:'settle_colonies'}]] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
+	                                    ['options', [{name:'Colonize'}, {name:'Settle Colonies'}]] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
 	                                    'choices' /* label for where the choice is stored | set with game[label]=*/,
 	                                    app$1.phasefinishfunction /*callback that handles the choice or finishes the phase*/, 
 	                                );
@@ -6650,7 +6650,7 @@ var app = (function () {
 	                {
 	                    'Choose an Unsettled Planet to Settle':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'settle_colonies'){
+	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'Settle Colonies'){
 	                                app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.offer(
@@ -6666,7 +6666,7 @@ var app = (function () {
 	                {
 	                    'Settling your Planet':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'settle_colonies'){
+	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'Settle Colonies'){
 	                                app$1.phasefinishfunction();
 	                            } else {   
 	                                app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
@@ -6679,7 +6679,7 @@ var app = (function () {
 	                {
 	                    'Choose an Unsettled Planet to Colonize':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'colonize'){
+	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'Colonize'){
 	                                app$1.phasefinishfunction();
 	                            } else {    
 	                                app$1.offer(
@@ -6695,7 +6695,7 @@ var app = (function () {
 	                {
 	                    'Colonizing your Planet':
 	                        ()=>{        
-	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'colonize'){
+	                            if (app$1.get().game.acting_player.activerole != 'colonize' || app$1.get().game.choices[0].name != 'Colonize'){
 	                                app$1.phasefinishfunction();
 	                            } else {   
 	                                let j = 0; 
