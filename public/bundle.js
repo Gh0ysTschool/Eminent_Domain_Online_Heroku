@@ -673,22 +673,33 @@ var app = (function () {
 			app.send({'game':game});
 		},
 		settle_colonies (planet, possessing_player){
-			for (let i = 0; i < planet.hosted_colonies.length; i++){
-				possessing_player.discard.push(planet.hosted_colonies.pop());
+			let planets = [...possessing_player.settled_planets,...possessing_player.conquered_planets];
+			reduction = 0;
+			for (let p in planets){
+				reduction+= planets[p].icons.colonize;
 			}
-			let temp_array = [];
-			let removed = false;
-			for (let i = 0; i < possessing_player.unsettled_planets.length; i++){
-				let elem = possessing_player.unsettled_planets.pop();
-				if (planet.identifier == elem.identifier && !removed) {
-					elem.settled=true;
-					possessing_player.settled_planets.push(elem);
-					removed=true;
+			for (let p in game.leadingplayer.permanents){
+				reduction+= permanents[p].icons.colonize;
+			}
+			if (planet.settle_cost - reduction <= planet.hosted_colonies.length){
+				for (let i in planet.hosted_colonies){
+					possessing_player.discard.push(planet.hosted_colonies.pop());
 				}
-				else { temp_array.push(elem); }		}
-			for (let i in temp_array){
-				possesing_player.unsettled_planets.push(temp_array[i]);
+				let temp_array = [];
+				let removed = false;
+				for (let i = 0; i < possessing_player.unsettled_planets.length; i++){
+					let elem = possessing_player.unsettled_planets.pop();
+					if (planet.identifier == elem.identifier && !removed) {
+						elem.settled=true;
+						possessing_player.settled_planets.push(elem);
+						removed=true;
+					}
+					else { temp_array.push(elem); }			}
+				for (let i in temp_array){
+					possesing_player.unsettled_planets.push(temp_array[i]);
+				}
 			}
+			
 		},
 		//pass_turn leadingplayer->nextplayer
 		pass_turn(){
@@ -2223,17 +2234,17 @@ var app = (function () {
 				addLoc(div5, file, 54, 5, 2438);
 				div6.id = "playedcards";
 				div6.className = "flex zone playedcards";
-				addLoc(div6, file, 144, 5, 7192);
+				addLoc(div6, file, 146, 5, 7365);
 				div7.className = "messagetoplayer bordered";
-				addLoc(div7, file, 179, 5, 9461);
+				addLoc(div7, file, 181, 5, 9634);
 				div8.className = "bordered deck";
-				addLoc(div8, file, 182, 6, 9624);
+				addLoc(div8, file, 184, 6, 9797);
 				div9.className = "hand";
-				addLoc(div9, file, 183, 24, 9728);
+				addLoc(div9, file, 185, 24, 9901);
 				div10.className = "bordered discard";
-				addLoc(div10, file, 200, 6, 11142);
+				addLoc(div10, file, 202, 6, 11315);
 				div11.className = "flex zone ownedcards";
-				addLoc(div11, file, 181, 5, 9583);
+				addLoc(div11, file, 183, 5, 9756);
 				div12.className = "bordered playingfield";
 				addLoc(div12, file, 45, 4, 1836);
 			},
@@ -2868,7 +2879,7 @@ var app = (function () {
 					each0_blocks[i].c();
 				}
 
-				text = createText("\n                            ");
+				text = createText("\n\t\t\t\t\t\t\t");
 
 				for (var i = 0; i < each1_blocks.length; i += 1) {
 					each1_blocks[i].c();
@@ -3037,7 +3048,7 @@ var app = (function () {
 		};
 	}
 
-	// (103:11) {#if planet.icons.survey > 0}
+	// (105:11) {#if planet.icons.survey > 0}
 	function create_if_block_32(component, ctx) {
 		var img, br;
 
@@ -3047,8 +3058,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/surveyicon100.png";
 				img.alt = "survey";
-				addLoc(img, file, 103, 12, 5695);
-				addLoc(br, file, 103, 64, 5747);
+				addLoc(img, file, 105, 12, 5868);
+				addLoc(br, file, 105, 64, 5920);
 			},
 
 			m: function mount(target, anchor) {
@@ -3065,7 +3076,7 @@ var app = (function () {
 		};
 	}
 
-	// (106:11) {#if planet.icons.warfare > 0}
+	// (108:11) {#if planet.icons.warfare > 0}
 	function create_if_block_31(component, ctx) {
 		var img, br;
 
@@ -3075,8 +3086,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/warfareicon100.png";
 				img.alt = "warfare";
-				addLoc(img, file, 106, 12, 5823);
-				addLoc(br, file, 106, 66, 5877);
+				addLoc(img, file, 108, 12, 5996);
+				addLoc(br, file, 108, 66, 6050);
 			},
 
 			m: function mount(target, anchor) {
@@ -3093,7 +3104,7 @@ var app = (function () {
 		};
 	}
 
-	// (109:11) {#if planet.icons.colonize > 0}
+	// (111:11) {#if planet.icons.colonize > 0}
 	function create_if_block_30(component, ctx) {
 		var img, br;
 
@@ -3103,8 +3114,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/colonizeicon100.png";
 				img.alt = "colonize";
-				addLoc(img, file, 109, 12, 5954);
-				addLoc(br, file, 109, 68, 6010);
+				addLoc(img, file, 111, 12, 6127);
+				addLoc(br, file, 111, 68, 6183);
 			},
 
 			m: function mount(target, anchor) {
@@ -3121,7 +3132,7 @@ var app = (function () {
 		};
 	}
 
-	// (112:11) {#if planet.icons.research > 0}
+	// (114:11) {#if planet.icons.research > 0}
 	function create_if_block_29(component, ctx) {
 		var img, br;
 
@@ -3131,8 +3142,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/researchicon100.png";
 				img.alt = "research";
-				addLoc(img, file, 112, 12, 6087);
-				addLoc(br, file, 112, 68, 6143);
+				addLoc(img, file, 114, 12, 6260);
+				addLoc(br, file, 114, 68, 6316);
 			},
 
 			m: function mount(target, anchor) {
@@ -3149,7 +3160,7 @@ var app = (function () {
 		};
 	}
 
-	// (115:11) {#if planet.icons.trade > 0}
+	// (117:11) {#if planet.icons.trade > 0}
 	function create_if_block_28(component, ctx) {
 		var img, br;
 
@@ -3159,8 +3170,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/tradeicon100.png";
 				img.alt = "trade";
-				addLoc(img, file, 115, 12, 6217);
-				addLoc(br, file, 115, 62, 6267);
+				addLoc(img, file, 117, 12, 6390);
+				addLoc(br, file, 117, 62, 6440);
 			},
 
 			m: function mount(target, anchor) {
@@ -3177,7 +3188,7 @@ var app = (function () {
 		};
 	}
 
-	// (118:11) {#if planet.icons.produce > 0}
+	// (120:11) {#if planet.icons.produce > 0}
 	function create_if_block_27(component, ctx) {
 		var img, br;
 
@@ -3187,8 +3198,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/produceicon100.png";
 				img.alt = "produce";
-				addLoc(img, file, 118, 12, 6343);
-				addLoc(br, file, 118, 66, 6397);
+				addLoc(img, file, 120, 12, 6516);
+				addLoc(br, file, 120, 66, 6570);
 			},
 
 			m: function mount(target, anchor) {
@@ -3205,7 +3216,7 @@ var app = (function () {
 		};
 	}
 
-	// (122:11) {#each planet.production_zones as zone}
+	// (124:11) {#each planet.production_zones as zone}
 	function create_each_block_7(component, ctx) {
 		var img, img_src_value, img_alt_value, br;
 
@@ -3215,8 +3226,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = img_src_value = "./images/" + ctx.zone.type + "productionzoneicon.png";
 				img.alt = img_alt_value = "" + ctx.zone.type + " zone";
-				addLoc(img, file, 122, 12, 6519);
-				addLoc(br, file, 122, 90, 6597);
+				addLoc(img, file, 124, 12, 6692);
+				addLoc(br, file, 124, 90, 6770);
 			},
 
 			m: function mount(target, anchor) {
@@ -3243,7 +3254,7 @@ var app = (function () {
 		};
 	}
 
-	// (126:11) {#if planet.handsize_modifier > 0}
+	// (128:11) {#if planet.handsize_modifier > 0}
 	function create_if_block_26(component, ctx) {
 		var img, br;
 
@@ -3253,8 +3264,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/handsizeicon100.png";
 				img.alt = "produce";
-				addLoc(img, file, 126, 12, 6714);
-				addLoc(br, file, 126, 67, 6769);
+				addLoc(img, file, 128, 12, 6887);
+				addLoc(br, file, 128, 67, 6942);
 			},
 
 			m: function mount(target, anchor) {
@@ -3271,7 +3282,7 @@ var app = (function () {
 		};
 	}
 
-	// (96:28) {#each [...player.settled_planets, ...player.conquered_planets] as planet}
+	// (96:7) {#each [...player.settled_planets, ...player.conquered_planets] as planet}
 	function create_each_block_6(component, ctx) {
 		var div4, div3, img0, img0_src_value, img0_alt_value, text0, div2, text1, text2, text3, text4, text5, text6, text7, text8, div0, text9_value = ctx.planet.influence_value, text9, text10, img1, text11, div1, text12_value = ctx.planet.name, text12, div4_class_value;
 
@@ -3333,24 +3344,24 @@ var app = (function () {
 				text12 = createText(text12_value);
 				img0.src = img0_src_value = "./images/" + ctx.planet.type + "100.png";
 				img0.alt = img0_alt_value = "" + ctx.planet.settle_cost + " " + ctx.planet.type + " " + ctx.planet.conquer_cost;
-				addLoc(img0, file, 98, 10, 5389);
-				addLoc(div0, file, 129, 11, 6838);
+				addLoc(img0, file, 100, 10, 5562);
+				addLoc(div0, file, 131, 11, 7011);
 				img1.src = "./images/influenceicon.png";
 				img1.alt = "influence";
-				addLoc(img1, file, 132, 11, 6910);
-				addLoc(div1, file, 134, 11, 7003);
+				addLoc(img1, file, 134, 11, 7083);
+				addLoc(div1, file, 136, 11, 7176);
 				div2.className = "planetfrontinfo";
-				addLoc(div2, file, 101, 10, 5612);
+				addLoc(div2, file, 103, 10, 5785);
 				div3.className = "planetfront";
 				setStyle(div3, "font-size", "160%");
-				addLoc(div3, file, 97, 9, 5327);
+				addLoc(div3, file, 99, 9, 5500);
 
 				div4._svelte = { component, ctx };
 
 				addListener(div4, "click", click_handler_5);
 				addListener(div4, "tap", tap_handler_5);
 				div4.className = div4_class_value = (ctx.game.displayinfo.selectionzone=='settled_&_conquered_planets') ? ( (ctx.planet.selected) ? 'selected' : 'selectable' ): 'bordered';
-				addLoc(div4, file, 96, 8, 5110);
+				addLoc(div4, file, 98, 8, 5283);
 			},
 
 			m: function mount(target, anchor) {
@@ -3531,7 +3542,7 @@ var app = (function () {
 		};
 	}
 
-	// (148:6) {:else}
+	// (150:6) {:else}
 	function create_else_block_5(component, ctx) {
 		var div;
 
@@ -3541,7 +3552,7 @@ var app = (function () {
 				div.textContent = "[____]";
 				setStyle(div, "margin-right", "auto");
 				div.className = "bordered pass";
-				addLoc(div, file, 148, 7, 7463);
+				addLoc(div, file, 150, 7, 7636);
 			},
 
 			m: function mount(target, anchor) {
@@ -3556,7 +3567,7 @@ var app = (function () {
 		};
 	}
 
-	// (146:6) {#if game.displayinfo.showoptiontoskip}
+	// (148:6) {#if game.displayinfo.showoptiontoskip}
 	function create_if_block_24(component, ctx) {
 		var div;
 
@@ -3570,7 +3581,7 @@ var app = (function () {
 				addListener(div, "tap", tap_handler_6);
 				setStyle(div, "margin-right", "auto");
 				div.className = "selectable pass";
-				addLoc(div, file, 146, 7, 7299);
+				addLoc(div, file, 148, 7, 7472);
 			},
 
 			m: function mount(target, anchor) {
@@ -3588,7 +3599,7 @@ var app = (function () {
 		};
 	}
 
-	// (163:94) 
+	// (165:94) 
 	function create_if_block_23(component, ctx) {
 		var div, img, img_src_value, img_alt_value;
 
@@ -3599,9 +3610,9 @@ var app = (function () {
 				img.className = "minicard";
 				img.src = img_src_value = "./images/" + ctx.card.type + "100.png";
 				img.alt = img_alt_value = ctx.card.name;
-				addLoc(img, file, 164, 10, 8632);
+				addLoc(img, file, 166, 10, 8805);
 				div.className = "bordered";
-				addLoc(div, file, 163, 9, 8599);
+				addLoc(div, file, 165, 9, 8772);
 			},
 
 			m: function mount(target, anchor) {
@@ -3627,7 +3638,7 @@ var app = (function () {
 		};
 	}
 
-	// (159:8) {#if card.research_cost !== undefined}
+	// (161:8) {#if card.research_cost !== undefined}
 	function create_if_block_22(component, ctx) {
 		var div, img, img_src_value, img_alt_value;
 
@@ -3638,9 +3649,9 @@ var app = (function () {
 				img.className = "minicard";
 				img.src = img_src_value = ctx.card.imgurl;
 				img.alt = img_alt_value = ctx.card.name;
-				addLoc(img, file, 160, 9, 8418);
+				addLoc(img, file, 162, 9, 8591);
 				div.className = "bordered";
-				addLoc(div, file, 159, 8, 8386);
+				addLoc(div, file, 161, 8, 8559);
 			},
 
 			m: function mount(target, anchor) {
@@ -3666,7 +3677,7 @@ var app = (function () {
 		};
 	}
 
-	// (151:6) {#each player.limbo as card}
+	// (153:6) {#each player.limbo as card}
 	function create_each_block_5(component, ctx) {
 		var if_block_anchor;
 
@@ -3709,7 +3720,7 @@ var app = (function () {
 		};
 	}
 
-	// (176:6) {:else}
+	// (178:6) {:else}
 	function create_else_block_4(component, ctx) {
 		var div;
 
@@ -3718,7 +3729,7 @@ var app = (function () {
 				div = createElement("div");
 				div.textContent = "[______]";
 				div.className = "bordered pass";
-				addLoc(div, file, 176, 7, 9389);
+				addLoc(div, file, 178, 7, 9562);
 			},
 
 			m: function mount(target, anchor) {
@@ -3735,7 +3746,7 @@ var app = (function () {
 		};
 	}
 
-	// (174:84) 
+	// (176:84) 
 	function create_if_block_21(component, ctx) {
 		var div;
 
@@ -3749,7 +3760,7 @@ var app = (function () {
 				addListener(div, "tap", tap_handler_9);
 				setStyle(div, "margin-left", "auto");
 				div.className = "selectable pass";
-				addLoc(div, file, 174, 7, 9184);
+				addLoc(div, file, 176, 7, 9357);
 			},
 
 			m: function mount(target, anchor) {
@@ -3772,7 +3783,7 @@ var app = (function () {
 		};
 	}
 
-	// (172:26) 
+	// (174:26) 
 	function create_if_block_20(component, ctx) {
 		var div;
 
@@ -3786,7 +3797,7 @@ var app = (function () {
 				addListener(div, "tap", tap_handler_8);
 				setStyle(div, "margin-left", "auto");
 				div.className = "selectable pass";
-				addLoc(div, file, 172, 7, 8977);
+				addLoc(div, file, 174, 7, 9150);
 			},
 
 			m: function mount(target, anchor) {
@@ -3806,7 +3817,7 @@ var app = (function () {
 		};
 	}
 
-	// (170:6) {#if game.passp }
+	// (172:6) {#if game.passp }
 	function create_if_block_19(component, ctx) {
 		var div, text0, br, text1;
 
@@ -3816,7 +3827,7 @@ var app = (function () {
 				text0 = createText("[Pass to ");
 				br = createElement("br");
 				text1 = createText(" Next Player]");
-				addLoc(br, file, 170, 121, 8919);
+				addLoc(br, file, 172, 121, 9092);
 
 				div._svelte = { component };
 
@@ -3824,7 +3835,7 @@ var app = (function () {
 				addListener(div, "tap", tap_handler_7);
 				setStyle(div, "margin-left", "auto");
 				div.className = "selectable pass";
-				addLoc(div, file, 170, 7, 8805);
+				addLoc(div, file, 172, 7, 8978);
 			},
 
 			m: function mount(target, anchor) {
@@ -3847,7 +3858,7 @@ var app = (function () {
 		};
 	}
 
-	// (195:9) {:else}
+	// (197:9) {:else}
 	function create_else_block_3(component, ctx) {
 		var img, img_src_value, img_alt_value, img_class_value;
 
@@ -3857,7 +3868,7 @@ var app = (function () {
 				img.src = img_src_value = "./images/" + ctx.card.type + "100.png";
 				img.alt = img_alt_value = ctx.card.name;
 				img.className = img_class_value = "cutcard " + ((ctx.game.displayinfo.selectionzone=='hand') ? ( (ctx.card.selected) ? 'selected' : 'selectable' ): 'bordered');
-				addLoc(img, file, 195, 10, 10881);
+				addLoc(img, file, 197, 10, 11054);
 			},
 
 			m: function mount(target, anchor) {
@@ -3886,7 +3897,7 @@ var app = (function () {
 		};
 	}
 
-	// (193:9) {#if card.research_cost !== undefined}
+	// (195:9) {#if card.research_cost !== undefined}
 	function create_if_block_18(component, ctx) {
 		var img, img_src_value, img_alt_value, img_class_value;
 
@@ -3896,7 +3907,7 @@ var app = (function () {
 				img.src = img_src_value = ctx.card.imgurl;
 				img.alt = img_alt_value = ctx.card.name;
 				img.className = img_class_value = "cutcard " + ((ctx.game.displayinfo.selectionzone=='hand') ? ( (ctx.card.selected) ? 'selected' : 'selectable' ): 'bordered');
-				addLoc(img, file, 193, 10, 10689);
+				addLoc(img, file, 195, 10, 10862);
 			},
 
 			m: function mount(target, anchor) {
@@ -3925,7 +3936,7 @@ var app = (function () {
 		};
 	}
 
-	// (186:8) {#if game.displayinfo.selectionzone=='hand'}
+	// (188:8) {#if game.displayinfo.selectionzone=='hand'}
 	function create_if_block_16(component, ctx) {
 		var if_block_anchor;
 
@@ -3968,7 +3979,7 @@ var app = (function () {
 		};
 	}
 
-	// (189:9) {:else}
+	// (191:9) {:else}
 	function create_else_block_2(component, ctx) {
 		var img, img_src_value, img_alt_value, img_class_value;
 
@@ -3985,7 +3996,7 @@ var app = (function () {
 				img.src = img_src_value = "./images/" + ctx.card.type + "100.png";
 				img.alt = img_alt_value = ctx.card.name;
 				img.className = img_class_value = "cutcard " + ((ctx.game.displayinfo.selectionzone=='hand') ? ( (ctx.card.selected) ? 'hidden' : 'selectable' ): 'bordered');
-				addLoc(img, file, 189, 10, 10244);
+				addLoc(img, file, 191, 10, 10417);
 			},
 
 			m: function mount(target, anchor) {
@@ -4022,7 +4033,7 @@ var app = (function () {
 		};
 	}
 
-	// (187:9) {#if card.research_cost !== undefined}
+	// (189:9) {#if card.research_cost !== undefined}
 	function create_if_block_17(component, ctx) {
 		var img, img_src_value, img_alt_value, img_class_value;
 
@@ -4039,7 +4050,7 @@ var app = (function () {
 				img.src = img_src_value = ctx.card.imgurl;
 				img.alt = img_alt_value = ctx.card.name;
 				img.className = img_class_value = "cutcard " + ((ctx.game.displayinfo.selectionzone=='hand') ? ( (ctx.card.selected) ? 'hidden' : 'selectable' ): 'bordered');
-				addLoc(img, file, 187, 10, 9893);
+				addLoc(img, file, 189, 10, 10066);
 			},
 
 			m: function mount(target, anchor) {
@@ -4076,7 +4087,7 @@ var app = (function () {
 		};
 	}
 
-	// (185:7) {#each player.hand as card}
+	// (187:7) {#each player.hand as card}
 	function create_each_block_4(component, ctx) {
 		var if_block_anchor;
 
@@ -4161,7 +4172,7 @@ var app = (function () {
 		};
 	}
 
-	// (207:2) {#if game.displayinfo.selectionzone=='options'}
+	// (209:2) {#if game.displayinfo.selectionzone=='options'}
 	function create_if_block_6(component, ctx) {
 		var div, div_class_value;
 
@@ -4181,7 +4192,7 @@ var app = (function () {
 					each_blocks[i].c();
 				}
 				div.className = div_class_value = ( ctx.game.options[0] !== ctx.undefined && ctx.game.options[0].type !== ctx.undefined) ? 'talloptions' : 'options';
-				addLoc(div, file, 207, 3, 11345);
+				addLoc(div, file, 209, 3, 11518);
 			},
 
 			m: function mount(target, anchor) {
@@ -4229,7 +4240,7 @@ var app = (function () {
 		};
 	}
 
-	// (267:5) {:else}
+	// (269:5) {:else}
 	function create_else_block_1(component, ctx) {
 		var div, text0_value = ctx.option.name, text0, text1, div_class_value;
 
@@ -4243,7 +4254,7 @@ var app = (function () {
 				addListener(div, "click", click_handler_13);
 				addListener(div, "tap", tap_handler_13);
 				div.className = div_class_value = "pass " + ((ctx.game.displayinfo.selectionzone=='options') ? ( (ctx.option.selected) ? 'selected' : 'selectable' ): 'bordered');
-				addLoc(div, file, 267, 6, 13840);
+				addLoc(div, file, 269, 6, 14013);
 			},
 
 			m: function mount(target, anchor) {
@@ -4275,7 +4286,7 @@ var app = (function () {
 		};
 	}
 
-	// (210:5) {#if option.type !== undefined}
+	// (212:5) {#if option.type !== undefined}
 	function create_if_block_7(component, ctx) {
 		var div7, div3, img0, img0_src_value, img0_alt_value, text0, div2, text1, text2, text3, text4, text5, text6, text7, text8, div0, text9_value = ctx.option.influence_value, text9, text10, img1, text11, div1, text12_value = ctx.option.name, text12, text13, div6, div5, img2, img2_src_value, img2_alt_value, text14, div4, span0, text15_value = ctx.option.settle_cost, text15, text16, span1, text17_value = ctx.option.conquer_cost, text17, text18, div7_class_value;
 
@@ -4349,35 +4360,35 @@ var app = (function () {
 				text18 = createText("\n\t\t\t\t\t");
 				img0.src = img0_src_value = "./images/" + ctx.option.type + "100.png";
 				img0.alt = img0_alt_value = "" + ctx.option.settle_cost + " " + ctx.option.type + " " + ctx.option.conquer_cost;
-				addLoc(img0, file, 213, 7, 11788);
-				addLoc(div0, file, 244, 8, 13144);
+				addLoc(img0, file, 215, 7, 11961);
+				addLoc(div0, file, 246, 8, 13317);
 				img1.src = "./images/influenceicon.png";
 				img1.alt = "influence";
-				addLoc(img1, file, 247, 8, 13207);
-				addLoc(div1, file, 249, 8, 13294);
+				addLoc(img1, file, 249, 8, 13380);
+				addLoc(div1, file, 251, 8, 13467);
 				div2.className = "planetfrontinfo";
-				addLoc(div2, file, 216, 7, 12002);
+				addLoc(div2, file, 218, 7, 12175);
 				div3.className = "planetfront";
-				addLoc(div3, file, 212, 6, 11753);
+				addLoc(div3, file, 214, 6, 11926);
 				img2.src = img2_src_value = "./images/" + ctx.option.type + "back100.png";
 				img2.alt = img2_alt_value = "" + ctx.option.settle_cost + " " + ctx.option.type + " " + ctx.option.conquer_cost;
-				addLoc(img2, file, 258, 8, 13480);
+				addLoc(img2, file, 260, 8, 13653);
 				span0.className = "mini_settle_cost";
-				addLoc(span0, file, 260, 9, 13636);
+				addLoc(span0, file, 262, 9, 13809);
 				span1.className = "mini_conquer_cost";
-				addLoc(span1, file, 261, 9, 13705);
+				addLoc(span1, file, 263, 9, 13878);
 				div4.className = "unsettled_costs";
-				addLoc(div4, file, 259, 8, 13597);
+				addLoc(div4, file, 261, 8, 13770);
 				div5.className = "mini_unsettled";
-				addLoc(div5, file, 257, 7, 13443);
-				addLoc(div6, file, 254, 6, 13371);
+				addLoc(div5, file, 259, 7, 13616);
+				addLoc(div6, file, 256, 6, 13544);
 
 				div7._svelte = { component, ctx };
 
 				addListener(div7, "click", click_handler_12);
 				addListener(div7, "tap", tap_handler_12);
 				div7.className = div7_class_value = "bordered flex " + ((ctx.game.displayinfo.selectionzone=='options') ? ( (ctx.option.selected) ? 'selected' : 'selectable' ): 'bordered');
-				addLoc(div7, file, 211, 5, 11544);
+				addLoc(div7, file, 213, 5, 11717);
 			},
 
 			m: function mount(target, anchor) {
@@ -4586,7 +4597,7 @@ var app = (function () {
 		};
 	}
 
-	// (218:8) {#if option.icons.survey > 0}
+	// (220:8) {#if option.icons.survey > 0}
 	function create_if_block_14(component, ctx) {
 		var img, br;
 
@@ -4596,8 +4607,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/surveyicon100.png";
 				img.alt = "survey";
-				addLoc(img, file, 218, 9, 12079);
-				addLoc(br, file, 218, 61, 12131);
+				addLoc(img, file, 220, 9, 12252);
+				addLoc(br, file, 220, 61, 12304);
 			},
 
 			m: function mount(target, anchor) {
@@ -4614,7 +4625,7 @@ var app = (function () {
 		};
 	}
 
-	// (221:8) {#if option.icons.warfare > 0}
+	// (223:8) {#if option.icons.warfare > 0}
 	function create_if_block_13(component, ctx) {
 		var img, br;
 
@@ -4624,8 +4635,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/warfareicon100.png";
 				img.alt = "warfare";
-				addLoc(img, file, 221, 9, 12198);
-				addLoc(br, file, 221, 63, 12252);
+				addLoc(img, file, 223, 9, 12371);
+				addLoc(br, file, 223, 63, 12425);
 			},
 
 			m: function mount(target, anchor) {
@@ -4642,7 +4653,7 @@ var app = (function () {
 		};
 	}
 
-	// (224:8) {#if option.icons.colonize > 0}
+	// (226:8) {#if option.icons.colonize > 0}
 	function create_if_block_12(component, ctx) {
 		var img, br;
 
@@ -4652,8 +4663,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/colonizeicon100.png";
 				img.alt = "colonize";
-				addLoc(img, file, 224, 9, 12320);
-				addLoc(br, file, 224, 65, 12376);
+				addLoc(img, file, 226, 9, 12493);
+				addLoc(br, file, 226, 65, 12549);
 			},
 
 			m: function mount(target, anchor) {
@@ -4670,7 +4681,7 @@ var app = (function () {
 		};
 	}
 
-	// (227:8) {#if option.icons.research > 0}
+	// (229:8) {#if option.icons.research > 0}
 	function create_if_block_11(component, ctx) {
 		var img, br;
 
@@ -4680,8 +4691,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/researchicon100.png";
 				img.alt = "research";
-				addLoc(img, file, 227, 9, 12444);
-				addLoc(br, file, 227, 65, 12500);
+				addLoc(img, file, 229, 9, 12617);
+				addLoc(br, file, 229, 65, 12673);
 			},
 
 			m: function mount(target, anchor) {
@@ -4698,7 +4709,7 @@ var app = (function () {
 		};
 	}
 
-	// (230:8) {#if option.icons.trade > 0}
+	// (232:8) {#if option.icons.trade > 0}
 	function create_if_block_10(component, ctx) {
 		var img, br;
 
@@ -4708,8 +4719,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/tradeicon100.png";
 				img.alt = "trade";
-				addLoc(img, file, 230, 9, 12565);
-				addLoc(br, file, 230, 59, 12615);
+				addLoc(img, file, 232, 9, 12738);
+				addLoc(br, file, 232, 59, 12788);
 			},
 
 			m: function mount(target, anchor) {
@@ -4726,7 +4737,7 @@ var app = (function () {
 		};
 	}
 
-	// (233:8) {#if option.icons.produce > 0}
+	// (235:8) {#if option.icons.produce > 0}
 	function create_if_block_9(component, ctx) {
 		var img, br;
 
@@ -4736,8 +4747,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/produceicon100.png";
 				img.alt = "produce";
-				addLoc(img, file, 233, 9, 12682);
-				addLoc(br, file, 233, 63, 12736);
+				addLoc(img, file, 235, 9, 12855);
+				addLoc(br, file, 235, 63, 12909);
 			},
 
 			m: function mount(target, anchor) {
@@ -4754,7 +4765,7 @@ var app = (function () {
 		};
 	}
 
-	// (237:8) {#each option.production_zones as zone}
+	// (239:8) {#each option.production_zones as zone}
 	function create_each_block_2(component, ctx) {
 		var img, img_src_value, img_alt_value, br;
 
@@ -4764,8 +4775,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = img_src_value = "./images/" + ctx.zone.type + "productionzoneicon.png";
 				img.alt = img_alt_value = "" + ctx.zone.type + " zone";
-				addLoc(img, file, 237, 9, 12846);
-				addLoc(br, file, 237, 87, 12924);
+				addLoc(img, file, 239, 9, 13019);
+				addLoc(br, file, 239, 87, 13097);
 			},
 
 			m: function mount(target, anchor) {
@@ -4792,7 +4803,7 @@ var app = (function () {
 		};
 	}
 
-	// (241:8) {#if option.handsize_modifier > 0}
+	// (243:8) {#if option.handsize_modifier > 0}
 	function create_if_block_8(component, ctx) {
 		var img, br;
 
@@ -4802,8 +4813,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/handsizeicon100.png";
 				img.alt = "produce";
-				addLoc(img, file, 241, 9, 13029);
-				addLoc(br, file, 241, 64, 13084);
+				addLoc(img, file, 243, 9, 13202);
+				addLoc(br, file, 243, 64, 13257);
 			},
 
 			m: function mount(target, anchor) {
@@ -4820,7 +4831,7 @@ var app = (function () {
 		};
 	}
 
-	// (209:4) {#each game.options as option}
+	// (211:4) {#each game.options as option}
 	function create_each_block_1(component, ctx) {
 		var if_block_anchor;
 
@@ -4933,7 +4944,7 @@ var app = (function () {
 	};
 
 	let nonce = 0;
-	let game = {
+	let game$1 = {
 	    'passtoplayer':false,
 	    'nonce':0,
 	    'displayinfo':{
@@ -4985,12 +4996,30 @@ var app = (function () {
 	                            if (game.leadingplayer.rounds!==undefined){
 	                                game.leadingplayer.rounds++;
 	                            }
+	                            let planets = [...game.leadingplayer.settled_planets,...game.leadingplayer.conquered_planets];
+	                            for (let p in planets){
+	                                game.leadingplayer.icons.survey+= planets[p].icons.survey;
+	                                game.leadingplayer.icons.warfare+= planets[p].icons.warfare;
+	                                game.leadingplayer.icons.trade+= planets[p].icons.trade;
+	                                game.leadingplayer.icons.produce+= planets[p].icons.produce;
+	                                game.leadingplayer.icons.research+= planets[p].icons.research;
+	                            }
+	                            for (let p in game.leadingplayer.permanents){
+	                                game.leadingplayer.icons.survey+= permanents[p].icons.survey;
+	                                game.leadingplayer.icons.warfare+= permanents[p].icons.warfare;
+	                                game.leadingplayer.icons.trade+= permanents[p].icons.trade;
+	                                game.leadingplayer.icons.produce+= permanents[p].icons.produce;
+	                                game.leadingplayer.icons.research+= permanents[p].icons.research;
+	                            }
 	                            app$1.set({'game':game});
 	                            app$1.phasefinishfunction(true);
 	                        }
 	                }
 	            ]
 	        },
+	        //check for permanent tech logistics
+	        //offer wether to perform the role or the action phases first
+	        //simply add an extra action phase that occurs if the role was choosen first, set all action phase one's to cancel if role was choosen first
 
 	        // action : 2
 	        //      choose from hand an action to play or skip
@@ -4998,6 +5027,8 @@ var app = (function () {
 	        {
 	            'action':
 	            [
+	                //check for permanent tech productivity
+	                //add an extra action
 	                {
 	                    'Choose an Action to Play':
 	                        ()=>{
@@ -5094,6 +5125,8 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {   
 	                                app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
+	                                // check for permanent tech abundance
+	                                // change production slots to filled
 	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
@@ -5334,6 +5367,8 @@ var app = (function () {
 	                            app$1.phasefinishfunction();
 	                        } else {    
 	                            app$1.conquer(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
+	                            //check for permanent tech scorched earth policy
+	                            //remove production zone from planet
 	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
@@ -5387,6 +5422,8 @@ var app = (function () {
 	                            app$1.phasefinishfunction();
 	                        } else {    
 	                            app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
+	                            // check for permanent tech abundance
+	                            // change production slots to filled
 	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
@@ -5430,6 +5467,8 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {
 	                                app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
+	                                // check for permanent tech abundance
+	                                // change production slots to filled
 	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
@@ -6053,6 +6092,10 @@ var app = (function () {
 	                        } else {
 	                            for (let i in cards){
 	                                player.boostingicons[cards[i].type]++;
+	                                // check for permanent tech adaptability
+	                                // add one of each other icon to the player
+	                                // also change so that it will simply merge the card's icons with the player's, cuz this way doesnt count technology card's icons
+
 	                            //     limbo.push(
 	                            //         {'final_destination_label':'discard', 
 	                            //         ...hand.filter(
@@ -6119,6 +6162,8 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {   
 	                                app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
+	                                // check for permanent tech abundance
+	                                // change production slots to filled
 	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
@@ -6506,6 +6551,8 @@ var app = (function () {
 	                            app$1.phasefinishfunction(true);
 	                        } else {    
 	                            app$1.draw(app$1.get().game.acting_player);
+	                            //check for permanent tech dissension
+	                            //draw an extra card
 	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
@@ -6547,6 +6594,10 @@ var app = (function () {
 	                            } else {
 	                                for (let i in cards){
 	                                    player.boostingicons[cards[i].type]++;
+	                                    // check for permanent tech adaptability
+	                                    // add one of each other icon to the player
+	                                    // also change so that it will simply merge the card's icons with the player's, cuz this way doesnt count technology card's icons
+
 	                                    // limbo.push(
 	                                    //     {'final_destination_label':'discard', 
 	                                    //     ...hand.filter(
@@ -6580,9 +6631,10 @@ var app = (function () {
 	                        ()=>{   
 	                            if (app$1.get().game.acting_player.activerole!='colonize'){
 	                               app$1.phasefinishfunction();
-	                            } else if ( game.acting_player.permanents.filter( (el)=>{return el.type=='bureaucracy'} ).length == 0){
+	                            } else if ( app$1.get().game.acting_player.permanents.filter( (el)=>{return el.type=='bureaucracy'} ).length == 0){
 	                                let game = app$1.get().game;
 	                                game.choices=['colonize'];
+	                                app$1.set({'game':game});
 	                                app$1.phasefinishfunction(true);
 	                            } else {    
 	                                app$1.offer(
@@ -6618,6 +6670,8 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {   
 	                                app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
+	                                // check for permanent tech abundance
+	                                // change production slots to filled
 	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
@@ -6950,6 +7004,11 @@ var app = (function () {
 	                        }
 	                    }
 	                },
+	                //offer remove from streamlining permanent tech
+	                //remove using research logic
+	                
+	                //offer remove from hyperefficiency permanent tech
+	                //remove using research logic and choices.length as the limit
 	                {
 	                    'Choose any Cards you would like to Discard':
 	                    ()=>{ 
@@ -7098,13 +7157,13 @@ var app = (function () {
 	    existinggames:[],
 	};
 	 
-	game.nonce=nonce;
+	game$1.nonce=nonce;
 	const app$1 = new App({
 		target: document.body,
 		data: {
 	        lobby: lobby,
-	        game: game,
-	        phases: game.gamephases,
+	        game: game$1,
+	        phases: game$1.gamephases,
 		}
 	});
 
