@@ -29,8 +29,10 @@ wss.on('connection', function connection(ws) {
         }
       });
     } else if(data.header=='newgame'){
-      let i = generatenewgame(data);
+      let i = generatenewgame(data.game);
       ws.send(i);
+    } else if(data.header=='ping'){
+      ws.send({header:'pong'});
     } else if(data.header=='fetchexisting'){
       data = games;
       ws.send(JSON.stringify(games));

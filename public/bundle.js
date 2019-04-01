@@ -390,6 +390,7 @@ var app = (function () {
 						player.deck.push(player.discard.pop());
 					}
 					player.deck=app.knuthshuffle(player.deck);
+					player.hand.push(player.deck.pop());
 				}
 			}
 			return player;
@@ -813,8 +814,7 @@ var app = (function () {
 		},
 		//survey deck->hand
 		survey(player){
-			app.draw(player);
-			app.draw(player);
+			player = app.draw(player,2);
 		},
 		//colonize hand/limbo->host
 		colonize(planet, source_array, card, isRole=false){
@@ -1112,10 +1112,9 @@ var app = (function () {
 		enterexistinggame(g){
 			let game_id = g.game_id;
 			let slot = 0, player_name = app.get().lobby.screename;
-			for (let i in g.players){
+			for (let i = 0; i <g.players.length; i++){
 				if (g.players[i].available){
 					slot = i;
-					//player_name = i;
 					break;
 				}
 			}
@@ -1178,7 +1177,6 @@ var app = (function () {
 		makews(){
 			let game = app.get().game;
 			let ws = new WebSocket(app.get().lobby.url);
-
 			ws.onmessage = evt => {
 				// on receiving a message, add it to the list of messages
 				let game = JSON.parse(evt.data);
@@ -6132,7 +6130,7 @@ var app = (function () {
 	                                app$1.offer(
 	                                    false /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
 	                                    false /*allows multiple choices | sets game.displayinfo.allowformultipleselections=boolean */, 
-	                                    ['options', [{name:'colonize'}, {name:'Settle Colonies'}]] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
+	                                    ['options', [{name:'Colonize'}, {name:'Settle Colonies'}]] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
 	                                    'choices' /* label for where the choice is stored | set with game[label]=*/,
 	                                    app$1.phasefinishfunction /*callback that handles the choice or finishes the phase*/, 
 	                                );
