@@ -529,6 +529,7 @@ var app = (function () {
 			let game = app.get().game;
 			let _player = {
 				'id':_id,
+				'actionrolesequence':'ar', //can be ar. ra, aar, ara, raa
 				'specialization':'',
 				'available':true,
 				'rounds':0,
@@ -683,6 +684,11 @@ var app = (function () {
 				reduction+= permanents[p].icons.colonize;
 			}
 			if (planet.settle_cost - reduction <= planet.hosted_colonies.length){
+				if (app.get().game.acting_player.permanents.filter( (el)=>{return el.type=='abundance'} ).length != 0){
+					if (planet.production_zones.length != 0){
+						planet.production_zones = planet.production_zones.map((pz)=>{return {type:pz.type,filled:true};});
+					}
+				}
 				for (let i in planet.hosted_colonies){
 					possessing_player.discard.push(planet.hosted_colonies.pop());
 				}
@@ -845,7 +851,19 @@ var app = (function () {
 		},
 		//conquer player_starship_pile->starship_pile, player_unconquered_planets->player_conquered_planets
 		conquer(planet, player){
+			if (app.get().game.acting_player.permanents.filter( (el)=>{return el.type=='scorched_earth_policy'} ).length != 0){
+					planet.production_zones = [];
+					planet.conquer_cost -= 2;
+					if (planet.conquer_cost < 0) {
+						planet.conquer_cost = 0;
+					}
+				}
 			if (player.starfighters.small >= planet.conquer_cost){
+				if (app.get().game.acting_player.permanents.filter( (el)=>{return el.type=='abundance'} ).length != 0){
+					if (planet.production_zones.length != 0){
+						planet.production_zones = planet.production_zones.map((pz)=>{return {type:pz.type,filled:true};});
+					}
+				}
 				player.starfighters.small -= planet.conquer_cost;
 				planet = app.select_via_identifier(player.unsettled_planets, planet.identifier);
 				planet.conquered=true;
@@ -1000,20 +1018,39 @@ var app = (function () {
 			let game=app.get().game;
 			let _gamesequence=[];
 			_gamesequence = app.gshelper([...game.gamephases[0].start],_gamesequence);
-			_gamesequence = app.gshelper([...game.gamephases[1].action],_gamesequence);
+			//ar. ra, aar, ara, raa
+			_gamesequence = app.gshelper([...game.gamephases[1].action],_gamesequence, ()=>{return app.get().acting_player.actionrolesequence=='aar'});
+			_gamesequence = app.gshelper([...game.gamephases[1].action],_gamesequence, ()=>{return app.get().acting_player.actionrolesequence=='aar' || app.get().acting_player.actionrolesequence=='ar'  });
+			
 			_gamesequence = app.gshelper([...game.gamephases[2].role],_gamesequence);
 			_gamesequence = app.gshelper([...game.gamephases[3].lead],_gamesequence);
 			for (let i = 1; i<game.number_of_players; i++){
 				_gamesequence = app.gshelper([...game.gamephases[4].follow],_gamesequence);
 			}
+			_gamesequence = app.gshelper([...game.gamephases[1].action],_gamesequence, ()=>{return app.get().acting_player.actionrolesequence=='raa' || app.get().acting_player.actionrolesequence=='ara'  });
+			_gamesequence = app.gshelper([...game.gamephases[1].action],_gamesequence, ()=>{return app.get().acting_player.actionrolesequence=='raa'});
+
 			_gamesequence = app.gshelper([...game.gamephases[5].discard],_gamesequence);
 			_gamesequence = app.gshelper([...game.gamephases[6].cleanup],_gamesequence);
 			game.gamesequence = _gamesequence;
 			app.set({'game':game,'phases':_gamesequence});
 		},
-		gshelper(source_array, destination_array){
+		gshelper(source_array, destination_array,wrapperfunction=false){
 			for (let i in source_array){
-				destination_array.push(source_array[i]);
+				if (wrapperfunction){
+					let func = source_array[i];
+					destination_array.push(
+						()=>{
+							if (wrapperfunction()){
+								func();
+							} else {
+								app.phasefinishfunction();
+							}
+						}
+					);
+				} else {
+					destination_array.push(source_array[i]);
+				}
 			}
 			return destination_array;
 		},
@@ -5012,6 +5049,55 @@ var app = (function () {
 	                            app$1.set({'game':game});
 	                            app$1.phasefinishfunction(true);
 	                        }
+	                },
+	                {
+	                    'Productivity':()=>{
+	                        if (app$1.get().game.acting_player.permanents.filter( (el)=>{return el.type=='productivity'} ).length != 0){
+	                            let game = app$1.get().game;
+	                            game.acting_player.actionrolesequence = 'aar';
+	                            app$1.set({'game':game});
+	                        }
+	                        app$1.phasefinishfunction();
+	                    }
+	                },
+	                {
+	                    'Choose an Order to Perform Your Action and Role Phases':()=>{
+	                        if (app$1.get().game.acting_player.permanents.filter( (el)=>{return el.type=='logistics'} ).length != 0){
+	                            let options = [{name:'Action Phase then Role Phase'}, {name:'Role Phase then Action Phase'}];
+								if (app.get().game.acting_player.permanents.filter( (el)=>{return el.type=='productivity'} ).length != 0){
+									//add aar,ara,and raa as options
+									options.push({name:'Action Phase then another Action Phase then Role Phase'});
+									options.push({name:'Action Phase then Role Phase then another Action Phase'});
+									options.push({name:'Role Phase then Action Phase then another Action Phase'});
+								}
+	                            //offer ar or ra
+	                            app$1.offer(
+	                                false /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
+	                                false /*allows multiple choices | sets game.displayinfo.allowformultipleselections=boolean */, 
+	                                ['options', options] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
+	                                'choices' /* label for where the choice is stored | set with game[label]=*/,
+	                                app$1.phasefinishfunction /*callback that handles the choice or finishes the phase*/, 
+	                            );
+	                        } else {
+	                            app$1.phasefinishfunction();
+	                        }
+	                    }
+	                },
+	                {
+	                    'Logistics':()=>{
+	                        if (app$1.get().game.acting_player.permanents.filter( (el)=>{return el.type=='logistics'} ).length != 0){
+	                            let game = app$1.get().game;
+	                            if (app$1.get().game.choices[0].name == 'Action Phase then Role Phase'){game.acting_player.actionrolesequence='ar';}
+	                            else if (app$1.get().game.choices[0].name == 'Role Phase then Action Phase'){game.acting_player.actionrolesequence='ra';}
+	                            else if (app$1.get().game.choices[0].name == 'Action Phase then another Action Phase then Role Phase'){game.acting_player.actionrolesequence='aar';}
+	                            else if (app$1.get().game.choices[0].name == 'Action Phase then Role Phase then another Action Phase'){game.acting_player.actionrolesequence='ara';}
+	                            else if (app$1.get().game.choices[0].name == 'Role Phase then Action Phase then another Action Phase'){game.acting_player.actionrolesequence='raa';}
+	                            app$1.set({'game':game});
+	                            app$1.phasefinishfunction(true);
+	                        } else {
+	                            app$1.phasefinishfunction();
+	                        }
+	                    }
 	                }
 	            ]
 	        },
@@ -5123,8 +5209,6 @@ var app = (function () {
 	                                app$1.phasefinishfunction();
 	                            } else {   
 	                                app$1.settle_colonies(app$1.get().game.subchoices[0], app$1.get().game.acting_player);
-	                                // check for permanent tech abundance
-	                                // change production slots to filled
 	                                app$1.phasefinishfunction(true);
 	                            }
 	                        }
@@ -6549,8 +6633,9 @@ var app = (function () {
 	                            app$1.phasefinishfunction(true);
 	                        } else {    
 	                            app$1.draw(app$1.get().game.acting_player);
-	                            //check for permanent tech dissension
-	                            //draw an extra card
+	                            if (app$1.get().game.acting_player.permanents.filter( (el)=>{return el.type=='dissension'} ).length != 0){
+	                                app$1.draw(app$1.get().game.acting_player);
+	                            }
 	                            app$1.phasefinishfunction(true);
 	                        }
 	                    }
@@ -6806,8 +6891,6 @@ var app = (function () {
 	                        } else {    
 	                            let game = app$1.get().game;
 	                            if (game.choices[0].name!="Skip"){
-	                                //TODO check research card requirements
-	                                //check for number of planets and type of planets
 	                                let p = {'advanced':0,'metallic':0,'fertile':0};
 	                                [...game.acting_player.settled_planets, ...game.acting_player.conquered_planets].map(
 	                                    (el)=>{
@@ -7002,11 +7085,101 @@ var app = (function () {
 	                        }
 	                    }
 	                },
-	                //offer remove from streamlining permanent tech
-	                //remove using research logic
-	                
-	                //offer remove from hyperefficiency permanent tech
-	                //remove using research logic and choices.length as the limit
+	                {
+	                    'Mobalizing against your Planet':
+	                    ()=>{        
+	                        if (app$1.get().game.acting_player.activeaction != 'mobilization'){
+	                            app$1.phasefinishfunction();
+	                        } else {   
+	                            app$1.conquer(app$1.get().game.subchoices[0], app$1.get().game.acting_player); 
+	                            app$1.phasefinishfunction(true);
+	                        }
+	                    }
+	                },
+	                {
+	                    'Would you like to Streamline Your Empire':
+	                    ()=>{        
+	                        if (app$1.get().game.acting_player.permanents.filter( (el)=>{return el.type=='streamlining'} ).length == 0){
+	                            app$1.phasefinishfunction();
+	                        } else {   
+	                            app$1.offer(
+	                                false /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
+	                                false /*allows multiple choices | sets game.displayinfo.allowformultipleselections=boolean */, 
+	                                ['options', [{name:'Decline'}, {name:'Streamline Empire'}]] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
+	                                'choices' /* label for where the choice is stored | set with game[label]=*/,
+	                                app$1.phasefinishfunction /*callback that handles the choice or finishes the phase*/, 
+	                            );
+	                        }
+	                    }
+	                },
+	                {
+	                    'Choose a Card from Your Hand to Remove from the Game':
+	                    ()=>{        
+	                        if (app$1.get().game.acting_player.permanents.filter( (el)=>{return el.type=='streamlining'} ).length == 0 || app$1.get().game.choices[0].name != 'Streamline Empire'){
+	                            app$1.phasefinishfunction();
+	                        } else {   
+	                            app$1.offer(
+	                                true /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
+	                                false /*allows multiple choices | sets game.displayinfo.allowformultipleselections=boolean */, 
+	                                ['hand'] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
+	                                'subchoices' /* label for where the choice is stored | set with game[label]=*/,
+	                                app$1.phasefinishfunction /*callback that handles the choice or finishes the phase*/, 
+	                            );
+	                        }
+	                    }
+	                },
+	                {
+	                    'Streamlining Your Empire':
+	                    ()=>{        
+	                        if (app$1.get().game.acting_player.permanents.filter( (el)=>{return el.type=='streamlining'} ).length == 0 || app$1.get().game.choices[0].name != 'Streamline Empire' || app$1.get().game.choices[0].name == 'Skip'){
+	                            app$1.phasefinishfunction();
+	                        } else {   
+	                            app$1.research(app$1.get().game.choices, app$1.get().game.acting_player, 1);
+	                        }
+	                    }
+	                },
+	                {
+	                    "Would you like to Utilize Your Empire's Hyperefficiency":
+	                    ()=>{        
+	                        if (app$1.get().game.acting_player.permanents.filter( (el)=>{return el.type=='hyperefficiency'} ).length == 0){
+	                            app$1.phasefinishfunction();
+	                        } else {   
+	                            app$1.offer(
+	                                false /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
+	                                false /*allows multiple choices | sets game.displayinfo.allowformultipleselections=boolean */, 
+	                                ['options', [{name:'Decline'}, {name:'Utilize Hyperefficiency'}]] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
+	                                'choices' /* label for where the choice is stored | set with game[label]=*/,
+	                                app$1.phasefinishfunction /*callback that handles the choice or finishes the phase*/, 
+	                            );
+	                        }
+	                    }
+	                },
+	                {
+	                    'Choose a Card from Your Hand to Remove from the Game':
+	                    ()=>{        
+	                        if (app$1.get().game.acting_player.permanents.filter( (el)=>{return el.type=='hyperefficiency'} ).length == 0 || app$1.get().game.choices[0].name != 'Utilize Hyperefficiency'){
+	                            app$1.phasefinishfunction();
+	                        } else {   
+	                            app$1.offer(
+	                                true /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
+	                                true /*allows multiple choices | sets game.displayinfo.allowformultipleselections=boolean */, 
+	                                ['hand'] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
+	                                'subchoices' /* label for where the choice is stored | set with game[label]=*/,
+	                                app$1.phasefinishfunction /*callback that handles the choice or finishes the phase*/, 
+	                            );
+	                        }
+	                    }
+	                },
+	                {
+	                    'Your Empire is Hyperefficient':
+	                    ()=>{        
+	                        if (app$1.get().game.acting_player.permanents.filter( (el)=>{return el.type=='hyperefficiency'} ).length == 0 || app$1.get().game.choices[0].name != 'Utilize Hyperefficiency' || app$1.get().game.choices[0].name == 'Skip'){
+	                            app$1.phasefinishfunction();
+	                        } else {   
+	                            app$1.research(app$1.get().game.choices, app$1.get().game.acting_player, app$1.get().game.choices.length);
+	                        }
+	                    }
+	                },
 	                {
 	                    'Choose any Cards you would like to Discard':
 	                    ()=>{ 
