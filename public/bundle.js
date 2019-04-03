@@ -992,6 +992,7 @@ var app = (function () {
 			//also track who started the game
 			//we can probably just track this as a total_rounds property of the player object, incrementing every time pass_turn is called
 			// just check that all are equal
+			
 			let game = app.get().game;
 			game.currentphase = (game.currentphase + 1) % game.gamesequence.length; 
 			let jsobj = game.gamesequence[game.currentphase];
@@ -1019,35 +1020,39 @@ var app = (function () {
 			let _gamesequence=[];
 			_gamesequence = app.gshelper([...game.gamephases[0].start],_gamesequence);
 			//ar. ra, aar, ara, raa
-			_gamesequence = app.gshelper([...game.gamephases[1].action],_gamesequence, ()=>{return app.get().acting_player.actionrolesequence=='aar'});
-			_gamesequence = app.gshelper([...game.gamephases[1].action],_gamesequence, ()=>{return app.get().acting_player.actionrolesequence=='aar' || app.get().acting_player.actionrolesequence=='ar'  });
+			_gamesequence = app.gshelper([...game.gamephases[1].action],_gamesequence, ()=>{return app.get().game.acting_player.actionrolesequence=='aar'});
+			_gamesequence = app.gshelper([...game.gamephases[1].action],_gamesequence, ()=>{return app.get().game.acting_player.actionrolesequence=='aar' || app.get().game.acting_player.actionrolesequence=='ar'  });
 			
 			_gamesequence = app.gshelper([...game.gamephases[2].role],_gamesequence);
 			_gamesequence = app.gshelper([...game.gamephases[3].lead],_gamesequence);
 			for (let i = 1; i<game.number_of_players; i++){
 				_gamesequence = app.gshelper([...game.gamephases[4].follow],_gamesequence);
 			}
-			_gamesequence = app.gshelper([...game.gamephases[1].action],_gamesequence, ()=>{return app.get().acting_player.actionrolesequence=='raa' || app.get().acting_player.actionrolesequence=='ara'  });
-			_gamesequence = app.gshelper([...game.gamephases[1].action],_gamesequence, ()=>{return app.get().acting_player.actionrolesequence=='raa'});
+			_gamesequence = app.gshelper([...game.gamephases[1].action],_gamesequence, ()=>{return app.get().game.acting_player.actionrolesequence=='raa' || app.get().game.acting_player.actionrolesequence=='ara'  });
+			_gamesequence = app.gshelper([...game.gamephases[1].action],_gamesequence, ()=>{return app.get().game.acting_player.actionrolesequence=='raa'});
 
 			_gamesequence = app.gshelper([...game.gamephases[5].discard],_gamesequence);
 			_gamesequence = app.gshelper([...game.gamephases[6].cleanup],_gamesequence);
 			game.gamesequence = _gamesequence;
 			app.set({'game':game,'phases':_gamesequence});
 		},
-		gshelper(source_array, destination_array,wrapperfunction=false){
+		gshelper(source_array, destination_array, wrapperfunction=false){
 			for (let i in source_array){
 				if (wrapperfunction){
-					let func = source_array[i];
-					destination_array.push(
-						()=>{
-							if (wrapperfunction()){
-								func();
-							} else {
-								app.phasefinishfunction();
-							}
+					let jsobj = source_array[i];
+					let func,key;
+					let item = {};
+					for (key in jsobj){
+						func=jsobj[key];
+					}
+					item[key] = ()=>{
+						if (wrapperfunction()){
+							func();
+						} else {
+							app.phasefinishfunction();
 						}
-					);
+					};
+					destination_array.push(item);
 				} else {
 					destination_array.push(source_array[i]);
 				}
@@ -5064,12 +5069,12 @@ var app = (function () {
 	                    'Choose an Order to Perform Your Action and Role Phases':()=>{
 	                        if (app$1.get().game.acting_player.permanents.filter( (el)=>{return el.type=='logistics'} ).length != 0){
 	                            let options = [{name:'Action Phase then Role Phase'}, {name:'Role Phase then Action Phase'}];
-								if (app.get().game.acting_player.permanents.filter( (el)=>{return el.type=='productivity'} ).length != 0){
-									//add aar,ara,and raa as options
-									options.push({name:'Action Phase then another Action Phase then Role Phase'});
-									options.push({name:'Action Phase then Role Phase then another Action Phase'});
-									options.push({name:'Role Phase then Action Phase then another Action Phase'});
-								}
+	                            if (app$1.get().game.acting_player.permanents.filter( (el)=>{return el.type=='productivity'} ).length != 0){
+	                                //add aar,ara,and raa as options
+	                                options.push({name:'Action Phase then another Action Phase then Role Phase'});
+	                                options.push({name:'Action Phase then Role Phase then another Action Phase'});
+	                                options.push({name:'Role Phase then Action Phase then another Action Phase'});
+	                            }
 	                            //offer ar or ra
 	                            app$1.offer(
 	                                false /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
