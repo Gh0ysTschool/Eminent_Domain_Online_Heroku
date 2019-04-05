@@ -49,7 +49,7 @@ var app = (function () {
 	}
 
 	function addListener(node, event, handler, options) {
-		node.addEventListener(event, handler, options);
+		node.addEventListener(event, handler, {passive:true, ...options});
 	}
 
 	function removeListener(node, event, handler, options) {

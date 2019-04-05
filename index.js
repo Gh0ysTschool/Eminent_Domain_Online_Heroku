@@ -1,7 +1,11 @@
 const express = require('express');
 const path = require('path');
-const PORT = process.env.PORT || 5000;
 
+// const fs = require('fs');
+// var files = fs.readdirSync('./public/images');
+// console.log(files.map(e=>'/images/'+e));
+// console.log(files.map(e=>'/images/'+e).splice(99));
+const PORT = process.env.PORT || 5000;
 let server = express()
   .use(express.static(path.join(__dirname, 'public')))
   .set('views', path.join(__dirname, 'views'))
