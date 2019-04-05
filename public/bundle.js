@@ -49,7 +49,7 @@ var app = (function () {
 	}
 
 	function addListener(node, event, handler, options) {
-		node.addEventListener(event, handler, {passive:true, ...options});
+		node.addEventListener(event, handler, options);
 	}
 
 	function removeListener(node, event, handler, options) {
@@ -958,7 +958,9 @@ var app = (function () {
 					temparray.push(card);
 				}
 			}
-			player.limbo=temparray;
+			for (let el in temparray){
+				player.limbo.push(temparray.pop());
+			}
 			app.set({'game':game});
 		},
 		followcentercardrole(choices, callback=null){
@@ -2163,7 +2165,7 @@ var app = (function () {
 		var current_block_type_1 = select_block_type_3(ctx);
 		var if_block2 = current_block_type_1(component, ctx);
 
-		var each0_value_1 = ctx.player.limbo;
+		var each0_value_1 = ctx.game.players[ctx.game.acting_player_index].limbo;
 
 		var each0_blocks = [];
 
@@ -2275,15 +2277,15 @@ var app = (function () {
 				div6.className = "flex zone playedcards";
 				addLoc(div6, file, 146, 5, 7587);
 				div7.className = "messagetoplayer bordered";
-				addLoc(div7, file, 174, 5, 9101);
+				addLoc(div7, file, 174, 5, 9133);
 				div8.className = "bordered deck";
-				addLoc(div8, file, 177, 6, 9264);
+				addLoc(div8, file, 177, 6, 9296);
 				div9.className = "hand";
-				addLoc(div9, file, 178, 24, 9368);
+				addLoc(div9, file, 178, 24, 9400);
 				div10.className = "bordered discard";
-				addLoc(div10, file, 195, 6, 10852);
+				addLoc(div10, file, 195, 6, 10884);
 				div11.className = "flex zone ownedcards";
-				addLoc(div11, file, 176, 5, 9223);
+				addLoc(div11, file, 176, 5, 9255);
 				div12.className = "bordered playingfield";
 				addLoc(div12, file, 45, 4, 1876);
 			},
@@ -2399,7 +2401,7 @@ var app = (function () {
 				}
 
 				if (changed.game || changed.undefined) {
-					each0_value_1 = ctx.player.limbo;
+					each0_value_1 = ctx.game.players[ctx.game.acting_player_index].limbo;
 
 					for (var i = 0; i < each0_value_1.length; i += 1) {
 						const child_ctx = get_each0_context_1(ctx, each0_value_1, i);
@@ -3649,9 +3651,9 @@ var app = (function () {
 				img.className = "minicard";
 				img.src = img_src_value = "./images/" + ctx.card.type + "100.png";
 				img.alt = img_alt_value = ctx.card.name;
-				addLoc(img, file, 159, 10, 8272);
+				addLoc(img, file, 159, 10, 8304);
 				div.className = "bordered";
-				addLoc(div, file, 158, 9, 8239);
+				addLoc(div, file, 158, 9, 8271);
 			},
 
 			m: function mount(target, anchor) {
@@ -3688,9 +3690,9 @@ var app = (function () {
 				img.className = "minicard";
 				img.src = img_src_value = ctx.card.imgurl;
 				img.alt = img_alt_value = ctx.card.name;
-				addLoc(img, file, 155, 9, 8058);
+				addLoc(img, file, 155, 9, 8090);
 				div.className = "bordered";
-				addLoc(div, file, 154, 8, 8026);
+				addLoc(div, file, 154, 8, 8058);
 			},
 
 			m: function mount(target, anchor) {
@@ -3716,7 +3718,7 @@ var app = (function () {
 		};
 	}
 
-	// (153:6) {#each player.limbo as card}
+	// (153:6) {#each game.players[game.acting_player_index].limbo as card}
 	function create_each_block_5(component, ctx) {
 		var if_block_anchor;
 
@@ -3768,7 +3770,7 @@ var app = (function () {
 				div = createElement("div");
 				div.textContent = "[______]";
 				div.className = "bordered pass";
-				addLoc(div, file, 171, 7, 9029);
+				addLoc(div, file, 171, 7, 9061);
 			},
 
 			m: function mount(target, anchor) {
@@ -3799,7 +3801,7 @@ var app = (function () {
 				addListener(div, "tap", tap_handler_9);
 				setStyle(div, "margin-left", "auto");
 				div.className = "selectable pass";
-				addLoc(div, file, 169, 7, 8824);
+				addLoc(div, file, 169, 7, 8856);
 			},
 
 			m: function mount(target, anchor) {
@@ -3836,7 +3838,7 @@ var app = (function () {
 				addListener(div, "tap", tap_handler_8);
 				setStyle(div, "margin-left", "auto");
 				div.className = "selectable pass";
-				addLoc(div, file, 167, 7, 8617);
+				addLoc(div, file, 167, 7, 8649);
 			},
 
 			m: function mount(target, anchor) {
@@ -3866,7 +3868,7 @@ var app = (function () {
 				text0 = createText("[Pass to ");
 				br = createElement("br");
 				text1 = createText(" Next Player]");
-				addLoc(br, file, 165, 121, 8559);
+				addLoc(br, file, 165, 121, 8591);
 
 				div._svelte = { component };
 
@@ -3874,7 +3876,7 @@ var app = (function () {
 				addListener(div, "tap", tap_handler_7);
 				setStyle(div, "margin-left", "auto");
 				div.className = "selectable pass";
-				addLoc(div, file, 165, 7, 8445);
+				addLoc(div, file, 165, 7, 8477);
 			},
 
 			m: function mount(target, anchor) {
@@ -3907,7 +3909,7 @@ var app = (function () {
 				img.src = img_src_value = "./images/" + ctx.card.type + "100.png";
 				img.alt = img_alt_value = ctx.card.name;
 				img.className = img_class_value = "cutcard " + ((ctx.game.displayinfo.selectionzone=='hand') ? ( (ctx.card.selected) ? 'selected' : 'selectable' ): 'bordered');
-				addLoc(img, file, 190, 10, 10591);
+				addLoc(img, file, 190, 10, 10623);
 			},
 
 			m: function mount(target, anchor) {
@@ -3946,7 +3948,7 @@ var app = (function () {
 				img.src = img_src_value = ctx.card.imgurl;
 				img.alt = img_alt_value = ctx.card.name;
 				img.className = img_class_value = "cutcard " + ((ctx.game.displayinfo.selectionzone=='hand') ? ( (ctx.card.selected) ? 'selected' : 'selectable' ): 'bordered');
-				addLoc(img, file, 188, 10, 10399);
+				addLoc(img, file, 188, 10, 10431);
 			},
 
 			m: function mount(target, anchor) {
@@ -4035,7 +4037,7 @@ var app = (function () {
 				img.src = img_src_value = "./images/" + ctx.card.type + "100.png";
 				img.alt = img_alt_value = ctx.card.name;
 				img.className = img_class_value = "cutcard " + ((ctx.game.displayinfo.selectionzone=='hand') ? ( (ctx.card.selected) ? 'hidden' : 'selectable' ): 'bordered');
-				addLoc(img, file, 184, 10, 9919);
+				addLoc(img, file, 184, 10, 9951);
 			},
 
 			m: function mount(target, anchor) {
@@ -4089,7 +4091,7 @@ var app = (function () {
 				img.src = img_src_value = ctx.card.imgurl;
 				img.alt = img_alt_value = ctx.card.name;
 				img.className = img_class_value = "cutcard " + ((ctx.game.displayinfo.selectionzone=='hand') ? ( (ctx.card.selected) ? 'hidden' : 'selectable' ): 'bordered');
-				addLoc(img, file, 182, 10, 9533);
+				addLoc(img, file, 182, 10, 9565);
 			},
 
 			m: function mount(target, anchor) {
@@ -4231,7 +4233,7 @@ var app = (function () {
 					each_blocks[i].c();
 				}
 				div.className = div_class_value = ( ctx.game.options[0] !== ctx.undefined && ctx.game.options[0].type !== ctx.undefined) ? 'talloptions' : 'options';
-				addLoc(div, file, 202, 3, 11055);
+				addLoc(div, file, 202, 3, 11087);
 			},
 
 			m: function mount(target, anchor) {
@@ -4293,7 +4295,7 @@ var app = (function () {
 				addListener(div, "click", click_handler_13);
 				addListener(div, "tap", tap_handler_13);
 				div.className = div_class_value = "pass " + ((ctx.game.displayinfo.selectionzone=='options') ? ( (ctx.option.selected) ? 'selected' : 'selectable' ): 'bordered');
-				addLoc(div, file, 262, 6, 13570);
+				addLoc(div, file, 262, 6, 13602);
 			},
 
 			m: function mount(target, anchor) {
@@ -4399,35 +4401,35 @@ var app = (function () {
 				text18 = createText("\n\t\t\t\t\t");
 				img0.src = img0_src_value = "./images/" + ctx.option.type + "100.png";
 				img0.alt = img0_alt_value = "" + ctx.option.settle_cost + " " + ctx.option.type + " " + ctx.option.conquer_cost;
-				addLoc(img0, file, 208, 7, 11518);
-				addLoc(div0, file, 239, 8, 12874);
+				addLoc(img0, file, 208, 7, 11550);
+				addLoc(div0, file, 239, 8, 12906);
 				img1.src = "./images/influenceicon.png";
 				img1.alt = "influence";
-				addLoc(img1, file, 242, 8, 12937);
-				addLoc(div1, file, 244, 8, 13024);
+				addLoc(img1, file, 242, 8, 12969);
+				addLoc(div1, file, 244, 8, 13056);
 				div2.className = "planetfrontinfo";
-				addLoc(div2, file, 211, 7, 11732);
+				addLoc(div2, file, 211, 7, 11764);
 				div3.className = "planetfront";
-				addLoc(div3, file, 207, 6, 11483);
+				addLoc(div3, file, 207, 6, 11515);
 				img2.src = img2_src_value = "./images/" + ctx.option.type + "back100.png";
 				img2.alt = img2_alt_value = "" + ctx.option.settle_cost + " " + ctx.option.type + " " + ctx.option.conquer_cost;
-				addLoc(img2, file, 253, 8, 13210);
+				addLoc(img2, file, 253, 8, 13242);
 				span0.className = "mini_settle_cost";
-				addLoc(span0, file, 255, 9, 13366);
+				addLoc(span0, file, 255, 9, 13398);
 				span1.className = "mini_conquer_cost";
-				addLoc(span1, file, 256, 9, 13435);
+				addLoc(span1, file, 256, 9, 13467);
 				div4.className = "unsettled_costs";
-				addLoc(div4, file, 254, 8, 13327);
+				addLoc(div4, file, 254, 8, 13359);
 				div5.className = "mini_unsettled";
-				addLoc(div5, file, 252, 7, 13173);
-				addLoc(div6, file, 249, 6, 13101);
+				addLoc(div5, file, 252, 7, 13205);
+				addLoc(div6, file, 249, 6, 13133);
 
 				div7._svelte = { component, ctx };
 
 				addListener(div7, "click", click_handler_12);
 				addListener(div7, "tap", tap_handler_12);
 				div7.className = div7_class_value = "bordered flex " + ((ctx.game.displayinfo.selectionzone=='options') ? ( (ctx.option.selected) ? 'selected' : 'selectable' ): 'bordered');
-				addLoc(div7, file, 206, 5, 11254);
+				addLoc(div7, file, 206, 5, 11286);
 			},
 
 			m: function mount(target, anchor) {
@@ -4646,8 +4648,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/surveyicon100.png";
 				img.alt = "survey";
-				addLoc(img, file, 213, 9, 11809);
-				addLoc(br, file, 213, 61, 11861);
+				addLoc(img, file, 213, 9, 11841);
+				addLoc(br, file, 213, 61, 11893);
 			},
 
 			m: function mount(target, anchor) {
@@ -4674,8 +4676,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/warfareicon100.png";
 				img.alt = "warfare";
-				addLoc(img, file, 216, 9, 11928);
-				addLoc(br, file, 216, 63, 11982);
+				addLoc(img, file, 216, 9, 11960);
+				addLoc(br, file, 216, 63, 12014);
 			},
 
 			m: function mount(target, anchor) {
@@ -4702,8 +4704,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/colonizeicon100.png";
 				img.alt = "colonize";
-				addLoc(img, file, 219, 9, 12050);
-				addLoc(br, file, 219, 65, 12106);
+				addLoc(img, file, 219, 9, 12082);
+				addLoc(br, file, 219, 65, 12138);
 			},
 
 			m: function mount(target, anchor) {
@@ -4730,8 +4732,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/researchicon100.png";
 				img.alt = "research";
-				addLoc(img, file, 222, 9, 12174);
-				addLoc(br, file, 222, 65, 12230);
+				addLoc(img, file, 222, 9, 12206);
+				addLoc(br, file, 222, 65, 12262);
 			},
 
 			m: function mount(target, anchor) {
@@ -4758,8 +4760,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/tradeicon100.png";
 				img.alt = "trade";
-				addLoc(img, file, 225, 9, 12295);
-				addLoc(br, file, 225, 59, 12345);
+				addLoc(img, file, 225, 9, 12327);
+				addLoc(br, file, 225, 59, 12377);
 			},
 
 			m: function mount(target, anchor) {
@@ -4786,8 +4788,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/produceicon100.png";
 				img.alt = "produce";
-				addLoc(img, file, 228, 9, 12412);
-				addLoc(br, file, 228, 63, 12466);
+				addLoc(img, file, 228, 9, 12444);
+				addLoc(br, file, 228, 63, 12498);
 			},
 
 			m: function mount(target, anchor) {
@@ -4814,8 +4816,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = img_src_value = "./images/" + ctx.zone.type + "productionzoneicon.png";
 				img.alt = img_alt_value = "" + ctx.zone.type + " zone";
-				addLoc(img, file, 232, 9, 12576);
-				addLoc(br, file, 232, 87, 12654);
+				addLoc(img, file, 232, 9, 12608);
+				addLoc(br, file, 232, 87, 12686);
 			},
 
 			m: function mount(target, anchor) {
@@ -4852,8 +4854,8 @@ var app = (function () {
 				br = createElement("br");
 				img.src = "./images/handsizeicon100.png";
 				img.alt = "produce";
-				addLoc(img, file, 236, 9, 12759);
-				addLoc(br, file, 236, 64, 12814);
+				addLoc(img, file, 236, 9, 12791);
+				addLoc(br, file, 236, 64, 12846);
 			},
 
 			m: function mount(target, anchor) {
@@ -6620,7 +6622,7 @@ var app = (function () {
 	                        app$1.offer(
 	                            false /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
 	                            false /*allows multiple choices | sets game.displayinfo.allowformultipleselections=boolean */, 
-	                            ['options', [{name:'dissent'}, {name:app$1.get().game.players[game$1.leading_player_index].activerole}]] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
+	                            ['options', [{name:'dissent'}, {name:app$1.get().game.players[app$1.get().game.leading_player_index].activerole}]] /* available cards to choose from | game.displayinfo.selectionzone={'hand|discard|options|planets|research|rolecards'}, sets choices=array if specified*/, 
 	                            'choices' /* label for where the choice is stored | set with game[label]=*/,
 	                            app$1.phasefinishfunction /*callback that handles the choice or finishes the phase*/, 
 	                        );
@@ -7036,6 +7038,7 @@ var app = (function () {
 	                    ()=>{
 	                        let game = app$1.get().game;
 	                        game.displayinfo.selectionzone='';
+	                        app$1.send({'game':game});
 	                        game.passp=true;
 	                        app$1.set({'game':game});
 	                    }
@@ -7263,6 +7266,8 @@ var app = (function () {
 	                    ()=>{
 	                        let game = app$1.get().game;
 	                        game.displayinfo.selectionzone='';
+							game.displayinfo.showoptiontoskip=false;
+							game.displayinfo.allowformultipleselections=false;
 	                        game.passp=false;
 	                        game.passt=true;
 	                        app$1.set({'game':game});

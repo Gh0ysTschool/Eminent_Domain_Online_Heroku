@@ -43,10 +43,10 @@ wss.on('connection', function connection(ws) {
     } else if(data.header=='enterexisting'){
       let game_id = data.game_id;
       let slot = data.slot;
-      let  player_name = data.player_name;
+      let player_name = data.player_name;
       games[game_id].game.players[slot].name=player_name;
       games[game_id].game.players[slot].available=false;
-      if (games[game_id].game.acting_player_index == slot) games[game_id].game.acting_player = games[game_id].game.players[slot]
+      //if (games[game_id].game.acting_player_index == slot) games[game_id].game.acting_player = games[game_id].game.players[slot]
       wss.clients.forEach(function each(client) {
         if (client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify(games[game_id].game));
