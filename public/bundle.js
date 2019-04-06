@@ -6633,24 +6633,30 @@ var app = (function () {
 	                {
 	                    'Dissenting':
 	                    ()=>{ 
+							console.log('dissenting');
 	                        let game = app$1.get().game;
 	                        game.players[app$1.get().game.acting_player_index].activerole=game.choices[0].name;
 	                        app$1.set({'game':game});
 	                        if (app$1.get().game.players[app$1.get().game.acting_player_index].activerole!='dissent'){
+								console.log('1');
 	                            let {game:game,game:{choices:[card]}} = app$1.get();
 	                            if (game.stacks.pilecount[card.name] >= 1){
+									console.log('2');
 	                                game.players[app$1.get().game.acting_player_index].boostingicons[card.name]++;
 	                                let newcard = Object.assign({'identifier':app$1.generate_unique_identifier(), 'final_destination_label':'discard','selected':true},game.stacks.rolecards[game.stacks[card.name]]);
 	                                game.players[app$1.get().game.acting_player_index].limbo.push(newcard);
 	                                game.stacks.pilecount[card.name]--;
 	                            } else if (card.name!='colonize'){
+									console.log('3');
 	                                game.players[app$1.get().game.acting_player_index].boostingicons[card.name]++;
 	                            }
 	                            app$1.set({'game':game});
 	                            app$1.phasefinishfunction(true);
 	                        } else {    
+								console.log('4');
 	                            app$1.draw(app$1.get().game.players[app$1.get().game.acting_player_index]);
 	                            if (app$1.get().game.players[app$1.get().game.acting_player_index].permanents.filter( (el)=>{return el.type=='dissension'} ).length != 0){
+									console.log('5');
 	                                app$1.draw(app$1.get().game.players[app$1.get().game.acting_player_index]);
 	                            }
 	                            app$1.phasefinishfunction(true);
