@@ -2147,7 +2147,7 @@ var app = (function() {
       app.generategamesequence();
       //app.makews('ws://192.168.1.6:3030');
       //'ws://temperate-isle.herokuapp.com/:3030';
-      app.makews(location.origin.replace(/^http/, "ws"));
+      if (app.get().lobby.online) app.makews(location.origin.replace(/^http/, "ws"));
       if (!app.get().lobby.online) app.generate_game_id();
       //app.phasefinishfunction();
     },
