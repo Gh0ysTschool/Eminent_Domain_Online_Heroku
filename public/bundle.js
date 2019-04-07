@@ -232,51 +232,54 @@ var app = (function () {
 					app.choose([c]);
 				}
 			}
-	            },
-	            multiplechoose(choice){
-			let game = app.get().game;
-			if ( !game[game.displayinfo.choicelabel].includes(choice) ) {
-				game[game.displayinfo.choicelabel].push(choice);
-				choice.selected=true;
-				if (choice.type!=='planet' && choice.type!=='fertile' && choice.type!=='metallic' && choice.type!=='advanced' && choice.name != 'Skip'){
-					choice.final_destination_label='discard';
-				 	game.players[game.acting_player_index].limbo.push(choice);
-					game.players[game.acting_player_index].hand = game.players[game.acting_player_index].hand.filter(
-						(el)=>{ return el.identifier != choice.identifier}
-					);
+			},
+			multiplechoose(choice){
+				let game = app.get().game;
+				if ((app.get().lobby.screenname == app.get().game.players[app.get().game.acting_player_index].name || !app.get().lobby.online)){		
+					if ( !game[game.displayinfo.choicelabel].includes(choice) ) {
+						game[game.displayinfo.choicelabel].push(choice);
+						choice.selected=true;
+						if (choice.type!=='planet' && choice.type!=='fertile' && choice.type!=='metallic' && choice.type!=='advanced' && choice.name != 'Skip'){
+							choice.final_destination_label='discard';
+							game.players[game.acting_player_index].limbo.push(choice);
+							game.players[game.acting_player_index].hand = game.players[game.acting_player_index].hand.filter(
+								(el)=>{ return el.identifier != choice.identifier}
+							);
+						}
+					}
+					else{
+						//let i = game[game.displayinfo.choicelabel].indexOf(choice);
+						choice.selected=false;
+						//game[game.displayinfo.choicelabel].splice(i,1);
+						if (choice.type!=='planet' && choice.type!=='fertile' && choice.type!=='metallic' && choice.type!=='advanced' && choice.name != 'Skip'){
+							game[game.displayinfo.choicelabel]  = game[game.displayinfo.choicelabel].filter(
+								(el)=>{ return el.identifier != choice.identifier}
+							);
+							game.players[app.get().game.acting_player_index].hand.push(choice);
+							game.players[app.get().game.acting_player_index].limbo = game.players[game.acting_player_index].limbo.filter(
+								(el)=>{ return el.identifier != choice.identifier}
+							);
+						}
+					}
+					app.set({
+						'game':game
+					});
 				}
-			}
-			else{
-				//let i = game[game.displayinfo.choicelabel].indexOf(choice);
-				choice.selected=false;
-				//game[game.displayinfo.choicelabel].splice(i,1);
-				if (choice.type!=='planet' && choice.type!=='fertile' && choice.type!=='metallic' && choice.type!=='advanced' && choice.name != 'Skip'){
-					game[game.displayinfo.choicelabel]  = game[game.displayinfo.choicelabel].filter(
-						(el)=>{ return el.identifier != choice.identifier}
-					);
-					game.players[app.get().game.acting_player_index].hand.push(choice);
-					game.players[app.get().game.acting_player_index].limbo = game.players[game.acting_player_index].limbo.filter(
-						(el)=>{ return el.identifier != choice.identifier}
-					);
+			},
+			choose(choices){
+				if ((app.get().lobby.screenname == app.get().game.players[app.get().game.acting_player_index].name || !app.get().lobby.online)){
+					let game = app.get().game;
+					game.options=[];
+					for (let i in choices){
+						choices[i].selected=false;
+					}
+					game[game.displayinfo.choicelabel]=choices;
+					app.set({
+						'game':game
+					});
+					app.phasefinishfunction();//game.displayinfo.callback();
 				}
-			}
-			app.set({
-				'game':game
-			});
-		},
-	            choose(choices){
-			let game = app.get().game;
-	                game.options=[];
-	                for (let i in choices){
-				choices[i].selected=false;
-			}
-			game[game.displayinfo.choicelabel]=choices;
-			app.set({
-				'game':game
-	                });
-	                app.phasefinishfunction();//game.displayinfo.callback();
-			//document.dispatchEvent(new Event('choicemade'));
-		},
+			},
 	            offer (
 	                skippable /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
 	                multiple /*allows multiple choices | sets game.displayinfo.allowformultipleselections=boolean */, 
@@ -1113,6 +1116,9 @@ var app = (function () {
 			//returns {game_id, game_name, number_of_players, slots}
 			let ws = new WebSocket(app.get().lobby.url);
 			//let ws = new io(app.get().lobby.url);
+			let lobby = app.get().lobby;
+			lobby.online=true;
+			app.set({'lobby':lobby});
 			app.initgame(number_of_players);
 			ws.onmessage = (evt) => {
 				// on receiving a message, add it to the list of messages
@@ -1162,7 +1168,9 @@ var app = (function () {
 					break;
 				}
 			}
-			app.initgame(g.number_of_players);
+			if (!app.get().lobby.init) {
+				app.initgame(g.number_of_players);
+			}
 			let ws = new WebSocket(app.get().lobby.url);
 			//let ws = new io(app.get().lobby.url);
 			ws.onmessage = evt => {
@@ -1174,6 +1182,11 @@ var app = (function () {
 				}
 				app.set({'game':game});
 				ws.close();
+				
+				let lobby = app.get().lobby;
+				lobby.online=true;
+				lobby.player_id = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10);
+				app.set({'lobby':lobby});
 				if (game.currentphase != 0 ){
 					app.phasefinishfunction();
 				}
@@ -1186,6 +1199,9 @@ var app = (function () {
 			};
 		},
 		initgame(number_of_players){
+			let lobby = app.get().lobby;
+			lobby.init=true;
+			app.set({'lobby':lobby});
 			app.generateplanetdeck();
 			for (let i = 0; i < number_of_players; i++){
 				app.generateplayer(i);
@@ -1195,7 +1211,7 @@ var app = (function () {
 			//app.makews('ws://192.168.1.6:3030');
 			//'ws://temperate-isle.herokuapp.com/:3030';
 			app.makews(location.origin.replace(/^http/, 'ws'));
-			app.generate_game_id();
+			if (!app.get().lobby.online) app.generate_game_id();
 			//app.phasefinishfunction();
 		},
 		toggle_center_or_planets(){
@@ -1221,16 +1237,22 @@ var app = (function () {
 		makews(){
 			let game = app.get().game;
 			let ws = new WebSocket(app.get().lobby.url);
+			let ping = ()=>{
+				setTimeout(()=>{
+					ws.send(JSON.stringify({header:'ping'}));
+					ping();
+				},2000);
+			};
 			ws.onmessage = evt => {
 				// on receiving a message, add it to the list of messages
 				let game = JSON.parse(evt.data);
-				if (game.game_id==app.get().game.game_id){
+				if (game.game_id==app.get().game.game_id && game.sender != app.get().lobby.player_id){
 					game.gamesequence=app.get().phases;
 					app.set({'game':game});
 				}
-				
 			};
 			ws.onopen = evt => {
+				ping();
 			};
 			ws.onclose = () => {
 			};
@@ -1241,7 +1263,7 @@ var app = (function () {
 		sendstate(){
 			let ws = app.get().ws;
 			if (ws.readyState==1){
-				ws.send(JSON.stringify({'header':'set',...app.get().game}));
+				ws.send(JSON.stringify({...app.get().game,'header':'set','sender':app.get().lobby.player_id}));
 			}
 		},
 		generate_game_id(){
@@ -1326,6 +1348,11 @@ var app = (function () {
 			elem.webkitRequestFullscreen();
 			} else if (elem.msRequestFullscreen) { /* IE/Edge */
 			elem.msRequestFullscreen();
+			}
+		},
+		registerws(){	
+			if (app.get().ws.readyState==1){
+				app.get().ws.send(JSON.stringify({...app.get().game,'header':'register','sender':app.get().lobby.player_id}));
 			}
 		},
 	};
@@ -6619,7 +6646,7 @@ var app = (function () {
 	            'follow':
 	            [
 	                {
-	                    'Choose between Fllowing or Dissent the Leading Role':
+	                    'Choose between Following or Dissent the Leading Role':
 	                    ()=>{  
 	                        app$1.offer(
 	                            false /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
@@ -6632,31 +6659,25 @@ var app = (function () {
 	                },
 	                {
 	                    'Dissenting':
-	                    ()=>{ 
-							console.log('dissenting');
+	                    ()=>{
 	                        let game = app$1.get().game;
-	                        game.players[app$1.get().game.acting_player_index].activerole=game.choices[0].name;
+	                        game.players[game.acting_player_index].activerole=game.choices[0].name;
 	                        app$1.set({'game':game});
 	                        if (app$1.get().game.players[app$1.get().game.acting_player_index].activerole!='dissent'){
-								console.log('1');
 	                            let {game:game,game:{choices:[card]}} = app$1.get();
 	                            if (game.stacks.pilecount[card.name] >= 1){
-									console.log('2');
 	                                game.players[app$1.get().game.acting_player_index].boostingicons[card.name]++;
 	                                let newcard = Object.assign({'identifier':app$1.generate_unique_identifier(), 'final_destination_label':'discard','selected':true},game.stacks.rolecards[game.stacks[card.name]]);
 	                                game.players[app$1.get().game.acting_player_index].limbo.push(newcard);
 	                                game.stacks.pilecount[card.name]--;
 	                            } else if (card.name!='colonize'){
-									console.log('3');
-	                                game.players[app$1.get().game.acting_player_index].boostingicons[card.name]++;
+	                                game.players[game.acting_player_index].boostingicons[card.name]++;
 	                            }
 	                            app$1.set({'game':game});
 	                            app$1.phasefinishfunction(true);
 	                        } else {    
-								console.log('4');
 	                            app$1.draw(app$1.get().game.players[app$1.get().game.acting_player_index]);
 	                            if (app$1.get().game.players[app$1.get().game.acting_player_index].permanents.filter( (el)=>{return el.type=='dissension'} ).length != 0){
-									console.log('5');
 	                                app$1.draw(app$1.get().game.players[app$1.get().game.acting_player_index]);
 	                            }
 	                            app$1.phasefinishfunction(true);
