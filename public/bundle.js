@@ -324,6 +324,31 @@ var app = (function() {
         app.phasefinishfunction();
       }
     },
+    unchoose(choice) {
+      if (
+        app.get().lobby.screenname ==
+          app.get().game.players[app.get().game.acting_player_index].name ||
+        !app.get().lobby.online
+      ) {
+        let game = app.get().game;
+        if (game[game.displayinfo.choicelabel].includes(choice)) {
+          choice.selected = false;
+          game.players[game.acting_player_index].limbo = game.players[
+            game.acting_player_index
+          ].limbo.filter(el => {
+            return el.identifier != choice.identifier;
+          });
+          game[game.displayinfo.choicelabel] = game[
+            game.displayinfo.choicelabel
+          ].filter(el => {
+            return el.identifier != choice.identifier;
+          });
+          choice.final_destination_label = "";
+          game.players[game.acting_player_index].hand.push(choice);
+          app.set({ game: game });
+        }
+      }
+    },
     offer(
       skippable /*option to skip | sets game.displayinfo.showoptiontoskip=boolean */,
       multiple /*allows multiple choices | sets game.displayinfo.allowformultipleselections=boolean */,
@@ -430,7 +455,10 @@ var app = (function() {
           highest = e.influence;
         }
       });
-      app.set({ game: { ...app.get().game, winner: winner } });
+      app.send({ game: { ...app.get().game, winner: winner } });
+      app
+        .get()
+        .ws.send(JSON.stringify({ ...app.get().game, header: "remove" }));
     },
     checkforendgame() {
       let depletedstacks = 0;
@@ -2147,7 +2175,8 @@ var app = (function() {
       app.generategamesequence();
       //app.makews('ws://192.168.1.6:3030');
       //'ws://temperate-isle.herokuapp.com/:3030';
-      if (app.get().lobby.online) app.makews(location.origin.replace(/^http/, "ws"));
+      if (app.get().lobby.online)
+        app.makews(location.origin.replace(/^http/, "ws"));
       if (!app.get().lobby.online) app.generate_game_id();
       //app.phasefinishfunction();
     },
@@ -2317,25 +2346,25 @@ var app = (function() {
 
   const file = "src\\App.html";
 
-  function tap_handler_13(event) {
+  function tap_handler_15(event) {
     const { component, ctx } = this._svelte;
 
     component.choosewrapper(ctx.option, "options");
   }
 
-  function click_handler_13(event) {
+  function click_handler_15(event) {
     const { component, ctx } = this._svelte;
 
     component.choosewrapper(ctx.option, "options");
   }
 
-  function tap_handler_12(event) {
+  function tap_handler_14(event) {
     const { component, ctx } = this._svelte;
 
     component.choosewrapper(ctx.option, "options");
   }
 
-  function click_handler_12(event) {
+  function click_handler_14(event) {
     const { component, ctx } = this._svelte;
 
     component.choosewrapper(ctx.option, "options");
@@ -2353,7 +2382,7 @@ var app = (function() {
     return child_ctx;
   }
 
-  function tap_handler_11(event) {
+  function tap_handler_13(event) {
     const { component, ctx } = this._svelte;
 
     component.choosewrapper(ctx.card, "hand");
@@ -2365,7 +2394,7 @@ var app = (function() {
     component.move(event, "./images/" + ctx.card.type + "100.png", "hand");
   }
 
-  function click_handler_11(event) {
+  function click_handler_13(event) {
     const { component, ctx } = this._svelte;
 
     component.choosewrapper(ctx.card, "hand");
@@ -2383,13 +2412,13 @@ var app = (function() {
     component.drag(event, ctx.card, "hand");
   }
 
-  function tap_handler_10(event) {
+  function tap_handler_12(event) {
     const { component, ctx } = this._svelte;
 
     component.choosewrapper(ctx.card, "hand");
   }
 
-  function click_handler_10(event) {
+  function click_handler_12(event) {
     const { component, ctx } = this._svelte;
 
     component.choosewrapper(ctx.card, "hand");
@@ -2419,40 +2448,64 @@ var app = (function() {
     return child_ctx;
   }
 
-  function tap_handler_9(event) {
+  function tap_handler_11(event) {
     const { component, ctx } = this._svelte;
 
     component.choose(ctx.game[ctx.game.displayinfo.choicelabel]);
+  }
+
+  function click_handler_11(event) {
+    const { component, ctx } = this._svelte;
+
+    component.choose(ctx.game[ctx.game.displayinfo.choicelabel]);
+  }
+
+  function tap_handler_10(event) {
+    const { component } = this._svelte;
+
+    component.pass_turn();
+  }
+
+  function click_handler_10(event) {
+    const { component } = this._svelte;
+
+    component.pass_turn();
+  }
+
+  function tap_handler_9(event) {
+    const { component } = this._svelte;
+
+    component.pass_priority();
   }
 
   function click_handler_9(event) {
-    const { component, ctx } = this._svelte;
+    const { component } = this._svelte;
 
-    component.choose(ctx.game[ctx.game.displayinfo.choicelabel]);
+    component.pass_priority();
   }
 
   function tap_handler_8(event) {
-    const { component } = this._svelte;
+    const { component, ctx } = this._svelte;
 
-    component.pass_turn();
+    component.unchoose(ctx.card);
   }
 
   function click_handler_8(event) {
-    const { component } = this._svelte;
+    const { component, ctx } = this._svelte;
 
-    component.pass_turn();
+    component.unchoose(ctx.card);
   }
 
   function tap_handler_7(event) {
-    const { component } = this._svelte;
+    const { component, ctx } = this._svelte;
 
-    component.pass_priority();
+    component.unchoose(ctx.card);
   }
 
   function click_handler_7(event) {
-    const { component } = this._svelte;
+    const { component, ctx } = this._svelte;
 
-    component.pass_priority();
+    component.unchoose(ctx.card);
   }
 
   function get_each1_context_1(ctx, list, i) {
@@ -3327,15 +3380,15 @@ var app = (function() {
         div3.className = "flex zone playedcards";
         addLoc(div3, file, 151, 5, 7901);
         div4.className = "messagetoplayer bordered";
-        addLoc(div4, file, 179, 5, 9447);
+        addLoc(div4, file, 179, 5, 9547);
         div5.className = "bordered deck";
-        addLoc(div5, file, 182, 6, 9610);
+        addLoc(div5, file, 182, 6, 9710);
         div6.className = "hand";
-        addLoc(div6, file, 183, 24, 9714);
+        addLoc(div6, file, 183, 24, 9814);
         div7.className = "bordered discard";
-        addLoc(div7, file, 200, 6, 11198);
+        addLoc(div7, file, 200, 6, 11298);
         div8.className = "flex zone ownedcards";
-        addLoc(div8, file, 181, 5, 9569);
+        addLoc(div8, file, 181, 5, 9669);
         div9.className = "bordered playingfield";
         addLoc(div9, file, 45, 4, 1888);
       },
@@ -3605,8 +3658,8 @@ var app = (function() {
         setStyle(div3, "width", "" + 100 / ctx.game.number_of_players + "%");
         div3.className = div3_class_value =
           "flex " +
-          (ctx.game.players[ctx.game.active_player_index] !== ctx.undefined &&
-          ctx.p.name == ctx.game.players[ctx.game.active_player_index].name
+          (ctx.game.players[ctx.game.acting_player_index] !== ctx.undefined &&
+          ctx.p.name == ctx.game.players[ctx.game.acting_player_index].name
             ? "selectable"
             : "bordered");
         addLoc(div3, file, 50, 7, 2039);
@@ -3654,9 +3707,9 @@ var app = (function() {
           div3_class_value !==
             (div3_class_value =
               "flex " +
-              (ctx.game.players[ctx.game.active_player_index] !==
+              (ctx.game.players[ctx.game.acting_player_index] !==
                 ctx.undefined &&
-              ctx.p.name == ctx.game.players[ctx.game.active_player_index].name
+              ctx.p.name == ctx.game.players[ctx.game.acting_player_index].name
                 ? "selectable"
                 : "bordered"))
         ) {
@@ -5084,12 +5137,16 @@ var app = (function() {
       c: function create() {
         div = createElement("div");
         img = createElement("img");
+        img._svelte = { component, ctx };
+
+        addListener(img, "click", click_handler_8);
+        addListener(img, "tap", tap_handler_8);
         img.className = "minicard";
         img.src = img_src_value = "./images/" + ctx.card.type + "100.png";
         img.alt = img_alt_value = ctx.card.name;
-        addLoc(img, file, 164, 10, 8618);
+        addLoc(img, file, 164, 10, 8668);
         div.className = "bordered";
-        addLoc(div, file, 163, 9, 8585);
+        addLoc(div, file, 163, 9, 8635);
       },
 
       m: function mount(target, anchor) {
@@ -5097,7 +5154,9 @@ var app = (function() {
         append(div, img);
       },
 
-      p: function update(changed, ctx) {
+      p: function update(changed, _ctx) {
+        ctx = _ctx;
+        img._svelte.ctx = ctx;
         if (
           changed.game &&
           img_src_value !==
@@ -5115,6 +5174,9 @@ var app = (function() {
         if (detach) {
           detachNode(div);
         }
+
+        removeListener(img, "click", click_handler_8);
+        removeListener(img, "tap", tap_handler_8);
       }
     };
   }
@@ -5127,6 +5189,10 @@ var app = (function() {
       c: function create() {
         div = createElement("div");
         img = createElement("img");
+        img._svelte = { component, ctx };
+
+        addListener(img, "click", click_handler_7);
+        addListener(img, "tap", tap_handler_7);
         img.className = "minicard";
         img.src = img_src_value = ctx.card.imgurl;
         img.alt = img_alt_value = ctx.card.name;
@@ -5140,7 +5206,9 @@ var app = (function() {
         append(div, img);
       },
 
-      p: function update(changed, ctx) {
+      p: function update(changed, _ctx) {
+        ctx = _ctx;
+        img._svelte.ctx = ctx;
         if (
           changed.game &&
           img_src_value !== (img_src_value = ctx.card.imgurl)
@@ -5157,6 +5225,9 @@ var app = (function() {
         if (detach) {
           detachNode(div);
         }
+
+        removeListener(img, "click", click_handler_7);
+        removeListener(img, "tap", tap_handler_7);
       }
     };
   }
@@ -5222,7 +5293,7 @@ var app = (function() {
         div = createElement("div");
         div.textContent = "[______]";
         div.className = "bordered pass";
-        addLoc(div, file, 176, 7, 9375);
+        addLoc(div, file, 176, 7, 9475);
       },
 
       m: function mount(target, anchor) {
@@ -5249,11 +5320,11 @@ var app = (function() {
         div.textContent = "[Choose Selected]";
         div._svelte = { component, ctx };
 
-        addListener(div, "click", click_handler_9);
-        addListener(div, "tap", tap_handler_9);
+        addListener(div, "click", click_handler_11);
+        addListener(div, "tap", tap_handler_11);
         setStyle(div, "margin-left", "auto");
         div.className = "selectable pass";
-        addLoc(div, file, 174, 7, 9170);
+        addLoc(div, file, 174, 7, 9270);
       },
 
       m: function mount(target, anchor) {
@@ -5270,8 +5341,8 @@ var app = (function() {
           detachNode(div);
         }
 
-        removeListener(div, "click", click_handler_9);
-        removeListener(div, "tap", tap_handler_9);
+        removeListener(div, "click", click_handler_11);
+        removeListener(div, "tap", tap_handler_11);
       }
     };
   }
@@ -5286,11 +5357,11 @@ var app = (function() {
         div.textContent = "[End Turn]";
         div._svelte = { component };
 
-        addListener(div, "click", click_handler_8);
-        addListener(div, "tap", tap_handler_8);
+        addListener(div, "click", click_handler_10);
+        addListener(div, "tap", tap_handler_10);
         setStyle(div, "margin-left", "auto");
         div.className = "selectable pass";
-        addLoc(div, file, 172, 7, 8963);
+        addLoc(div, file, 172, 7, 9063);
       },
 
       m: function mount(target, anchor) {
@@ -5304,8 +5375,8 @@ var app = (function() {
           detachNode(div);
         }
 
-        removeListener(div, "click", click_handler_8);
-        removeListener(div, "tap", tap_handler_8);
+        removeListener(div, "click", click_handler_10);
+        removeListener(div, "tap", tap_handler_10);
       }
     };
   }
@@ -5320,15 +5391,15 @@ var app = (function() {
         text0 = createText("[Pass to ");
         br = createElement("br");
         text1 = createText(" Next Player]");
-        addLoc(br, file, 170, 121, 8905);
+        addLoc(br, file, 170, 121, 9005);
 
         div._svelte = { component };
 
-        addListener(div, "click", click_handler_7);
-        addListener(div, "tap", tap_handler_7);
+        addListener(div, "click", click_handler_9);
+        addListener(div, "tap", tap_handler_9);
         setStyle(div, "margin-left", "auto");
         div.className = "selectable pass";
-        addLoc(div, file, 170, 7, 8791);
+        addLoc(div, file, 170, 7, 8891);
       },
 
       m: function mount(target, anchor) {
@@ -5345,8 +5416,8 @@ var app = (function() {
           detachNode(div);
         }
 
-        removeListener(div, "click", click_handler_7);
-        removeListener(div, "tap", tap_handler_7);
+        removeListener(div, "click", click_handler_9);
+        removeListener(div, "tap", tap_handler_9);
       }
     };
   }
@@ -5367,7 +5438,7 @@ var app = (function() {
               ? "selected"
               : "selectable"
             : "bordered");
-        addLoc(img, file, 195, 10, 10937);
+        addLoc(img, file, 195, 10, 11037);
       },
 
       m: function mount(target, anchor) {
@@ -5426,7 +5497,7 @@ var app = (function() {
               ? "selected"
               : "selectable"
             : "bordered");
-        addLoc(img, file, 193, 10, 10745);
+        addLoc(img, file, 193, 10, 10845);
       },
 
       m: function mount(target, anchor) {
@@ -5526,9 +5597,9 @@ var app = (function() {
 
         addListener(img, "touchstart", touchstart_handler_2);
         addListener(img, "touchend", touchend_handler_2);
-        addListener(img, "click", click_handler_11);
+        addListener(img, "click", click_handler_13);
         addListener(img, "touchmove", touchmove_handler_2);
-        addListener(img, "tap", tap_handler_11);
+        addListener(img, "tap", tap_handler_13);
         img.src = img_src_value = "./images/" + ctx.card.type + "100.png";
         img.alt = img_alt_value = ctx.card.name;
         img.className = img_class_value =
@@ -5538,7 +5609,7 @@ var app = (function() {
               ? "hidden"
               : "selectable"
             : "bordered");
-        addLoc(img, file, 189, 10, 10265);
+        addLoc(img, file, 189, 10, 10365);
       },
 
       m: function mount(target, anchor) {
@@ -5582,9 +5653,9 @@ var app = (function() {
 
         removeListener(img, "touchstart", touchstart_handler_2);
         removeListener(img, "touchend", touchend_handler_2);
-        removeListener(img, "click", click_handler_11);
+        removeListener(img, "click", click_handler_13);
         removeListener(img, "touchmove", touchmove_handler_2);
-        removeListener(img, "tap", tap_handler_11);
+        removeListener(img, "tap", tap_handler_13);
       }
     };
   }
@@ -5601,8 +5672,8 @@ var app = (function() {
         addListener(img, "touchstart", touchstart_handler_1);
         addListener(img, "touchend", touchend_handler_1);
         addListener(img, "touchmove", touchmove_handler_1);
-        addListener(img, "click", click_handler_10);
-        addListener(img, "tap", tap_handler_10);
+        addListener(img, "click", click_handler_12);
+        addListener(img, "tap", tap_handler_12);
         img.src = img_src_value = ctx.card.imgurl;
         img.alt = img_alt_value = ctx.card.name;
         img.className = img_class_value =
@@ -5612,7 +5683,7 @@ var app = (function() {
               ? "hidden"
               : "selectable"
             : "bordered");
-        addLoc(img, file, 187, 10, 9879);
+        addLoc(img, file, 187, 10, 9979);
       },
 
       m: function mount(target, anchor) {
@@ -5656,8 +5727,8 @@ var app = (function() {
         removeListener(img, "touchstart", touchstart_handler_1);
         removeListener(img, "touchend", touchend_handler_1);
         removeListener(img, "touchmove", touchmove_handler_1);
-        removeListener(img, "click", click_handler_10);
-        removeListener(img, "tap", tap_handler_10);
+        removeListener(img, "click", click_handler_12);
+        removeListener(img, "tap", tap_handler_12);
       }
     };
   }
@@ -5790,7 +5861,7 @@ var app = (function() {
           ctx.game.options[0].type !== ctx.undefined
             ? "talloptions"
             : "options";
-        addLoc(div, file, 207, 3, 11401);
+        addLoc(div, file, 207, 3, 11501);
       },
 
       m: function mount(target, anchor) {
@@ -5861,8 +5932,8 @@ var app = (function() {
         text1 = createText("\n\t\t\t\t\t\t");
         div._svelte = { component, ctx };
 
-        addListener(div, "click", click_handler_13);
-        addListener(div, "tap", tap_handler_13);
+        addListener(div, "click", click_handler_15);
+        addListener(div, "tap", tap_handler_15);
         div.className = div_class_value =
           "pass " +
           (ctx.game.displayinfo.selectionzone == "options"
@@ -5870,7 +5941,7 @@ var app = (function() {
               ? "selected"
               : "selectable"
             : "bordered");
-        addLoc(div, file, 267, 6, 13916);
+        addLoc(div, file, 267, 6, 14016);
       },
 
       m: function mount(target, anchor) {
@@ -5906,8 +5977,8 @@ var app = (function() {
           detachNode(div);
         }
 
-        removeListener(div, "click", click_handler_13);
-        removeListener(div, "tap", tap_handler_13);
+        removeListener(div, "click", click_handler_15);
+        removeListener(div, "tap", tap_handler_15);
       }
     };
   }
@@ -6044,16 +6115,16 @@ var app = (function() {
           ctx.option.type +
           " " +
           ctx.option.conquer_cost;
-        addLoc(img0, file, 213, 7, 11864);
-        addLoc(div0, file, 244, 8, 13220);
+        addLoc(img0, file, 213, 7, 11964);
+        addLoc(div0, file, 244, 8, 13320);
         img1.src = "./images/influenceicon.png";
         img1.alt = "influence";
-        addLoc(img1, file, 247, 8, 13283);
-        addLoc(div1, file, 249, 8, 13370);
+        addLoc(img1, file, 247, 8, 13383);
+        addLoc(div1, file, 249, 8, 13470);
         div2.className = "planetfrontinfo";
-        addLoc(div2, file, 216, 7, 12078);
+        addLoc(div2, file, 216, 7, 12178);
         div3.className = "planetfront";
-        addLoc(div3, file, 212, 6, 11829);
+        addLoc(div3, file, 212, 6, 11929);
         img2.src = img2_src_value =
           "./images/" + ctx.option.type + "back100.png";
         img2.alt = img2_alt_value =
@@ -6063,21 +6134,21 @@ var app = (function() {
           ctx.option.type +
           " " +
           ctx.option.conquer_cost;
-        addLoc(img2, file, 258, 8, 13556);
+        addLoc(img2, file, 258, 8, 13656);
         span0.className = "mini_settle_cost";
-        addLoc(span0, file, 260, 9, 13712);
+        addLoc(span0, file, 260, 9, 13812);
         span1.className = "mini_conquer_cost";
-        addLoc(span1, file, 261, 9, 13781);
+        addLoc(span1, file, 261, 9, 13881);
         div4.className = "unsettled_costs";
-        addLoc(div4, file, 259, 8, 13673);
+        addLoc(div4, file, 259, 8, 13773);
         div5.className = "mini_unsettled";
-        addLoc(div5, file, 257, 7, 13519);
-        addLoc(div6, file, 254, 6, 13447);
+        addLoc(div5, file, 257, 7, 13619);
+        addLoc(div6, file, 254, 6, 13547);
 
         div7._svelte = { component, ctx };
 
-        addListener(div7, "click", click_handler_12);
-        addListener(div7, "tap", tap_handler_12);
+        addListener(div7, "click", click_handler_14);
+        addListener(div7, "tap", tap_handler_14);
         div7.className = div7_class_value =
           "bordered flex " +
           (ctx.game.displayinfo.selectionzone == "options"
@@ -6085,7 +6156,7 @@ var app = (function() {
               ? "selected"
               : "selectable"
             : "bordered");
-        addLoc(div7, file, 211, 5, 11600);
+        addLoc(div7, file, 211, 5, 11700);
       },
 
       m: function mount(target, anchor) {
@@ -6335,8 +6406,8 @@ var app = (function() {
         destroyEach(each_blocks, detach);
 
         if (if_block6) if_block6.d();
-        removeListener(div7, "click", click_handler_12);
-        removeListener(div7, "tap", tap_handler_12);
+        removeListener(div7, "click", click_handler_14);
+        removeListener(div7, "tap", tap_handler_14);
       }
     };
   }
@@ -6351,8 +6422,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/surveyicon100.png";
         img.alt = "survey";
-        addLoc(img, file, 218, 9, 12155);
-        addLoc(br, file, 218, 61, 12207);
+        addLoc(img, file, 218, 9, 12255);
+        addLoc(br, file, 218, 61, 12307);
       },
 
       m: function mount(target, anchor) {
@@ -6379,8 +6450,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/warfareicon100.png";
         img.alt = "warfare";
-        addLoc(img, file, 221, 9, 12274);
-        addLoc(br, file, 221, 63, 12328);
+        addLoc(img, file, 221, 9, 12374);
+        addLoc(br, file, 221, 63, 12428);
       },
 
       m: function mount(target, anchor) {
@@ -6407,8 +6478,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/colonizeicon100.png";
         img.alt = "colonize";
-        addLoc(img, file, 224, 9, 12396);
-        addLoc(br, file, 224, 65, 12452);
+        addLoc(img, file, 224, 9, 12496);
+        addLoc(br, file, 224, 65, 12552);
       },
 
       m: function mount(target, anchor) {
@@ -6435,8 +6506,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/researchicon100.png";
         img.alt = "research";
-        addLoc(img, file, 227, 9, 12520);
-        addLoc(br, file, 227, 65, 12576);
+        addLoc(img, file, 227, 9, 12620);
+        addLoc(br, file, 227, 65, 12676);
       },
 
       m: function mount(target, anchor) {
@@ -6463,8 +6534,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/tradeicon100.png";
         img.alt = "trade";
-        addLoc(img, file, 230, 9, 12641);
-        addLoc(br, file, 230, 59, 12691);
+        addLoc(img, file, 230, 9, 12741);
+        addLoc(br, file, 230, 59, 12791);
       },
 
       m: function mount(target, anchor) {
@@ -6491,8 +6562,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/produceicon100.png";
         img.alt = "produce";
-        addLoc(img, file, 233, 9, 12758);
-        addLoc(br, file, 233, 63, 12812);
+        addLoc(img, file, 233, 9, 12858);
+        addLoc(br, file, 233, 63, 12912);
       },
 
       m: function mount(target, anchor) {
@@ -6520,8 +6591,8 @@ var app = (function() {
         img.src = img_src_value =
           "./images/" + ctx.zone.type + "productionzoneicon.png";
         img.alt = img_alt_value = "" + ctx.zone.type + " zone";
-        addLoc(img, file, 237, 9, 12922);
-        addLoc(br, file, 237, 87, 13000);
+        addLoc(img, file, 237, 9, 13022);
+        addLoc(br, file, 237, 87, 13100);
       },
 
       m: function mount(target, anchor) {
@@ -6566,8 +6637,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/handsizeicon100.png";
         img.alt = "produce";
-        addLoc(img, file, 241, 9, 13105);
-        addLoc(br, file, 241, 64, 13160);
+        addLoc(img, file, 241, 9, 13205);
+        addLoc(br, file, 241, 64, 13260);
       },
 
       m: function mount(target, anchor) {
@@ -8382,6 +8453,7 @@ var app = (function() {
               } else {
                 for (let i in cards) {
                   player.boostingicons[cards[i].type]++;
+                  cards[i].final_destination_label = "discard";
                   // check for permanent tech adaptability
                   // add one of each other icon to the player
                   // also change so that it will simply merge the card's icons with the player's, cuz this way doesnt count technology card's icons
