@@ -43,6 +43,8 @@ wss.on("connection", function connection(ws) {
     } else if (data.header == "fetchexisting") {
       data = games;
       ws.send(JSON.stringify(games));
+    } else if (data.header == "remove") {
+      games = games.splice(data.game_id,1);
     } else if (data.header == "enterexisting") {
       let game_id = data.game_id;
       let slot = data.slot;

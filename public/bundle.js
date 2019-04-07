@@ -321,7 +321,7 @@ var app = (function() {
         app.set({
           game: game
         });
-        app.phasefinishfunction(); //game.displayinfo.callback();
+        app.phasefinishfunction();
       }
     },
     offer(
@@ -2413,7 +2413,7 @@ var app = (function() {
     component.drag(event, ctx.card, "hand");
   }
 
-  function get_each1_context_1(ctx, list, i) {
+  function get_each2_context(ctx, list, i) {
     const child_ctx = Object.create(ctx);
     child_ctx.card = list[i];
     return child_ctx;
@@ -2455,7 +2455,7 @@ var app = (function() {
     component.pass_priority();
   }
 
-  function get_each0_context_1(ctx, list, i) {
+  function get_each1_context_1(ctx, list, i) {
     const child_ctx = Object.create(ctx);
     child_ctx.card = list[i];
     return child_ctx;
@@ -2509,7 +2509,7 @@ var app = (function() {
     component.choosewrapper(ctx.planet, "unsettled_planets");
   }
 
-  function get_each0_context(ctx, list, i) {
+  function get_each0_context_1(ctx, list, i) {
     const child_ctx = Object.create(ctx);
     child_ctx.planet = list[i];
     return child_ctx;
@@ -2585,6 +2585,12 @@ var app = (function() {
     const { component } = this._svelte;
 
     component.toggle_center_or_planets();
+  }
+
+  function get_each0_context(ctx, list, i) {
+    const child_ctx = Object.create(ctx);
+    child_ctx.p = list[i];
+    return child_ctx;
   }
 
   function get_each_context_1(ctx, list, i) {
@@ -3154,60 +3160,52 @@ var app = (function() {
 
   // (45:3) {#if game.players[game.acting_player_index]!==undefined && ((lobby.screenname==player.name && lobby.online) || (game.players[game.acting_player_index].id==player.id && !lobby.online)) }
   function create_if_block_15(component, ctx) {
-    var div12,
+    var div9,
       div0,
       text0,
-      div4,
       div1,
       text1,
-      text2_value = ctx.player.starfighters.small,
-      text2,
-      text3,
       div2,
-      text4,
-      text5_value = ctx.player.influence.length,
-      text5,
-      text6,
-      br,
-      text7,
-      text8_value = ctx.lobby.screenname,
-      text8,
-      text9,
-      div3,
-      text10,
-      text11_value = ctx.game.influence.length,
-      text11,
-      text12,
-      div5,
-      text13,
-      text14_value = ctx.game.displayinfo.center_or_planets
+      text2,
+      text3_value = ctx.game.displayinfo.center_or_planets
         ? "planets"
         : "center row",
-      text14,
-      text15,
-      text16,
-      text17,
-      div6,
-      text18,
-      text19,
-      text20,
-      div7,
-      text21_value =
+      text3,
+      text4,
+      text5,
+      text6,
+      div3,
+      text7,
+      text8,
+      text9,
+      div4,
+      text10_value =
         ctx.game.messagetoplayer[ctx.game.messagetoplayer.length - 1],
-      text21,
-      text22,
-      div11,
+      text10,
+      text11,
       div8,
-      text23,
-      text24_value = ctx.player.deck.length,
-      text24,
-      text25,
-      div9,
-      text26,
-      div10,
-      text27,
-      text28_value = ctx.player.discard.length,
-      text28;
+      div5,
+      text12,
+      text13_value = ctx.player.deck.length,
+      text13,
+      text14,
+      div6,
+      text15,
+      div7,
+      text16,
+      text17_value = ctx.player.discard.length,
+      text17;
+
+    var each0_value = ctx.game.players;
+
+    var each0_blocks = [];
+
+    for (var i = 0; i < each0_value.length; i += 1) {
+      each0_blocks[i] = create_each_block_12(
+        component,
+        get_each0_context(ctx, each0_value, i)
+      );
+    }
 
     function select_block_type_1(ctx) {
       if (ctx.game.displayinfo.selectionzone == "research")
@@ -3230,14 +3228,14 @@ var app = (function() {
     var current_block_type_1 = select_block_type_3(ctx);
     var if_block2 = current_block_type_1(component, ctx);
 
-    var each0_value_1 = ctx.game.players[ctx.game.acting_player_index].limbo;
+    var each1_value_1 = ctx.game.players[ctx.game.acting_player_index].limbo;
 
-    var each0_blocks = [];
+    var each1_blocks = [];
 
-    for (var i = 0; i < each0_value_1.length; i += 1) {
-      each0_blocks[i] = create_each_block_5(
+    for (var i = 0; i < each1_value_1.length; i += 1) {
+      each1_blocks[i] = create_each_block_5(
         component,
-        get_each0_context_1(ctx, each0_value_1, i)
+        get_each1_context_1(ctx, each1_value_1, i)
       );
     }
 
@@ -3255,213 +3253,173 @@ var app = (function() {
     var current_block_type_2 = select_block_type_5(ctx);
     var if_block3 = current_block_type_2(component, ctx);
 
-    var each1_value_1 = ctx.player.hand;
+    var each2_value = ctx.player.hand;
 
-    var each1_blocks = [];
+    var each2_blocks = [];
 
-    for (var i = 0; i < each1_value_1.length; i += 1) {
-      each1_blocks[i] = create_each_block_4(
+    for (var i = 0; i < each2_value.length; i += 1) {
+      each2_blocks[i] = create_each_block_4(
         component,
-        get_each1_context_1(ctx, each1_value_1, i)
+        get_each2_context(ctx, each2_value, i)
       );
     }
 
     return {
       c: function create() {
-        div12 = createElement("div");
+        div9 = createElement("div");
         div0 = createElement("div");
         text0 = createText("\n\t\t\t\t\t");
-        div4 = createElement("div");
         div1 = createElement("div");
-        text1 = createText("Military Might ");
-        text2 = createText(text2_value);
-        text3 = createText("\n\t\t\t\t\t\t");
-        div2 = createElement("div");
-        text4 = createText("Galactic Influence ");
-        text5 = createText(text5_value);
-        text6 = createText(" ");
-        br = createElement("br");
-        text7 = createText(" ");
-        text8 = createText(text8_value);
-        text9 = createText("\n\t\t\t\t\t\t");
-        div3 = createElement("div");
-        text10 = createText("Remaining Influence throughout the Galaxy ");
-        text11 = createText(text11_value);
-        text12 = createText("\n\t\t\t\t\t\n\t\t\t\t\t");
-        div5 = createElement("div");
-        text13 = createText("show ");
-        text14 = createText(text14_value);
-        text15 = createText("\n\t\t\t\t\t\n\t\t\t\t\t");
-        if (if_block0) if_block0.c();
-        text16 = createText("\n\t\t\t\t\t");
-        if (if_block1) if_block1.c();
-        text17 = createText("\n\t\t\t\t\t\n\t\t\t\t\t");
-        div6 = createElement("div");
-        if_block2.c();
-        text18 = createText("\n\t\t\t\t\t\t");
 
         for (var i = 0; i < each0_blocks.length; i += 1) {
           each0_blocks[i].c();
         }
 
-        text19 = createText("\n\t\t\t\t\t\t");
-        if_block3.c();
-        text20 = createText("\n\t\t\t\t\t");
-        div7 = createElement("div");
-        text21 = createText(text21_value);
-        text22 = createText("\n\t\t\t\t\t\n\t\t\t\t\t");
-        div11 = createElement("div");
-        div8 = createElement("div");
-        text23 = createText("cards remaining in deck: ");
-        text24 = createText(text24_value);
-        text25 = createText("\n                        ");
-        div9 = createElement("div");
+        text1 = createText("\n\t\t\t\t\t\n\t\t\t\t\t");
+        div2 = createElement("div");
+        text2 = createText("show ");
+        text3 = createText(text3_value);
+        text4 = createText("\n\t\t\t\t\t\n\t\t\t\t\t");
+        if (if_block0) if_block0.c();
+        text5 = createText("\n\t\t\t\t\t");
+        if (if_block1) if_block1.c();
+        text6 = createText("\n\t\t\t\t\t\n\t\t\t\t\t");
+        div3 = createElement("div");
+        if_block2.c();
+        text7 = createText("\n\t\t\t\t\t\t");
 
         for (var i = 0; i < each1_blocks.length; i += 1) {
           each1_blocks[i].c();
         }
 
-        text26 = createText("\n\t\t\t\t\t\t");
-        div10 = createElement("div");
-        text27 = createText("cards in discard pile: ");
-        text28 = createText(text28_value);
+        text8 = createText("\n\t\t\t\t\t\t");
+        if_block3.c();
+        text9 = createText("\n\t\t\t\t\t");
+        div4 = createElement("div");
+        text10 = createText(text10_value);
+        text11 = createText("\n\t\t\t\t\t\n\t\t\t\t\t");
+        div8 = createElement("div");
+        div5 = createElement("div");
+        text12 = createText("cards remaining in deck: ");
+        text13 = createText(text13_value);
+        text14 = createText("\n                        ");
+        div6 = createElement("div");
+
+        for (var i = 0; i < each2_blocks.length; i += 1) {
+          each2_blocks[i].c();
+        }
+
+        text15 = createText("\n\t\t\t\t\t\t");
+        div7 = createElement("div");
+        text16 = createText("cards in discard pile: ");
+        text17 = createText(text17_value);
         div0.id = "dragged";
-        addLoc(div0, file, 47, 5, 1972);
-        setStyle(div1, "width", "33%");
-        setStyle(div1, "text-align", "center");
-        div1.className = "bordered";
-        addLoc(div1, file, 49, 6, 2042);
-        addLoc(br, file, 50, 113, 2266);
-        setStyle(div2, "width", "33%");
-        setStyle(div2, "text-align", "center");
-        div2.className = "bordered";
-        addLoc(div2, file, 50, 6, 2159);
-        setStyle(div3, "width", "33%");
-        setStyle(div3, "text-align", "center");
-        div3.className = "bordered";
-        addLoc(div3, file, 51, 6, 2302);
-        div4.className = "playerinfo bordered";
-        addLoc(div4, file, 48, 5, 2002);
+        addLoc(div0, file, 46, 5, 1929);
+        div1.className = "playerinfo bordered";
+        addLoc(div1, file, 47, 5, 1959);
 
-        div5._svelte = { component };
+        div2._svelte = { component };
 
-        addListener(div5, "click", click_handler_1);
-        addListener(div5, "tap", tap_handler_1);
-        addLoc(div5, file, 54, 5, 2491);
-        div6.id = "playedcards";
-        div6.className = "flex zone playedcards";
-        addLoc(div6, file, 146, 5, 7600);
-        div7.className = "messagetoplayer bordered";
-        addLoc(div7, file, 174, 5, 9146);
-        div8.className = "bordered deck";
-        addLoc(div8, file, 177, 6, 9309);
-        div9.className = "hand";
-        addLoc(div9, file, 178, 24, 9413);
-        div10.className = "bordered discard";
-        addLoc(div10, file, 195, 6, 10897);
-        div11.className = "flex zone ownedcards";
-        addLoc(div11, file, 176, 5, 9268);
-        div12.className = "bordered playingfield";
-        addLoc(div12, file, 45, 4, 1889);
+        addListener(div2, "click", click_handler_1);
+        addListener(div2, "tap", tap_handler_1);
+        addLoc(div2, file, 59, 5, 2792);
+        div3.id = "playedcards";
+        div3.className = "flex zone playedcards";
+        addLoc(div3, file, 151, 5, 7901);
+        div4.className = "messagetoplayer bordered";
+        addLoc(div4, file, 179, 5, 9447);
+        div5.className = "bordered deck";
+        addLoc(div5, file, 182, 6, 9610);
+        div6.className = "hand";
+        addLoc(div6, file, 183, 24, 9714);
+        div7.className = "bordered discard";
+        addLoc(div7, file, 200, 6, 11198);
+        div8.className = "flex zone ownedcards";
+        addLoc(div8, file, 181, 5, 9569);
+        div9.className = "bordered playingfield";
+        addLoc(div9, file, 45, 4, 1888);
       },
 
       m: function mount(target, anchor) {
-        insert(target, div12, anchor);
-        append(div12, div0);
-        append(div12, text0);
-        append(div12, div4);
-        append(div4, div1);
-        append(div1, text1);
-        append(div1, text2);
-        append(div4, text3);
-        append(div4, div2);
-        append(div2, text4);
-        append(div2, text5);
-        append(div2, text6);
-        append(div2, br);
-        append(div2, text7);
-        append(div2, text8);
-        append(div4, text9);
-        append(div4, div3);
-        append(div3, text10);
-        append(div3, text11);
-        append(div12, text12);
-        append(div12, div5);
-        append(div5, text13);
-        append(div5, text14);
-        append(div12, text15);
-        if (if_block0) if_block0.m(div12, null);
-        append(div12, text16);
-        if (if_block1) if_block1.m(div12, null);
-        append(div12, text17);
-        append(div12, div6);
-        if_block2.m(div6, null);
-        append(div6, text18);
+        insert(target, div9, anchor);
+        append(div9, div0);
+        append(div9, text0);
+        append(div9, div1);
 
         for (var i = 0; i < each0_blocks.length; i += 1) {
-          each0_blocks[i].m(div6, null);
+          each0_blocks[i].m(div1, null);
         }
 
-        append(div6, text19);
-        if_block3.m(div6, null);
-        append(div12, text20);
-        append(div12, div7);
-        append(div7, text21);
-        append(div12, text22);
-        append(div12, div11);
-        append(div11, div8);
-        append(div8, text23);
-        append(div8, text24);
-        append(div11, text25);
-        append(div11, div9);
+        append(div9, text1);
+        append(div9, div2);
+        append(div2, text2);
+        append(div2, text3);
+        append(div9, text4);
+        if (if_block0) if_block0.m(div9, null);
+        append(div9, text5);
+        if (if_block1) if_block1.m(div9, null);
+        append(div9, text6);
+        append(div9, div3);
+        if_block2.m(div3, null);
+        append(div3, text7);
 
         for (var i = 0; i < each1_blocks.length; i += 1) {
-          each1_blocks[i].m(div9, null);
+          each1_blocks[i].m(div3, null);
         }
 
-        append(div11, text26);
-        append(div11, div10);
-        append(div10, text27);
-        append(div10, text28);
+        append(div3, text8);
+        if_block3.m(div3, null);
+        append(div9, text9);
+        append(div9, div4);
+        append(div4, text10);
+        append(div9, text11);
+        append(div9, div8);
+        append(div8, div5);
+        append(div5, text12);
+        append(div5, text13);
+        append(div8, text14);
+        append(div8, div6);
+
+        for (var i = 0; i < each2_blocks.length; i += 1) {
+          each2_blocks[i].m(div6, null);
+        }
+
+        append(div8, text15);
+        append(div8, div7);
+        append(div7, text16);
+        append(div7, text17);
       },
 
       p: function update(changed, ctx) {
-        if (
-          changed.game &&
-          text2_value !== (text2_value = ctx.player.starfighters.small)
-        ) {
-          setData(text2, text2_value);
+        if (changed.game || changed.undefined) {
+          each0_value = ctx.game.players;
+
+          for (var i = 0; i < each0_value.length; i += 1) {
+            const child_ctx = get_each0_context(ctx, each0_value, i);
+
+            if (each0_blocks[i]) {
+              each0_blocks[i].p(changed, child_ctx);
+            } else {
+              each0_blocks[i] = create_each_block_12(component, child_ctx);
+              each0_blocks[i].c();
+              each0_blocks[i].m(div1, null);
+            }
+          }
+
+          for (; i < each0_blocks.length; i += 1) {
+            each0_blocks[i].d(1);
+          }
+          each0_blocks.length = each0_value.length;
         }
 
         if (
           changed.game &&
-          text5_value !== (text5_value = ctx.player.influence.length)
-        ) {
-          setData(text5, text5_value);
-        }
-
-        if (
-          changed.lobby &&
-          text8_value !== (text8_value = ctx.lobby.screenname)
-        ) {
-          setData(text8, text8_value);
-        }
-
-        if (
-          changed.game &&
-          text11_value !== (text11_value = ctx.game.influence.length)
-        ) {
-          setData(text11, text11_value);
-        }
-
-        if (
-          changed.game &&
-          text14_value !==
-            (text14_value = ctx.game.displayinfo.center_or_planets
+          text3_value !==
+            (text3_value = ctx.game.displayinfo.center_or_planets
               ? "planets"
               : "center row")
         ) {
-          setData(text14, text14_value);
+          setData(text3, text3_value);
         }
 
         if (
@@ -3474,7 +3432,7 @@ var app = (function() {
           if (if_block0) if_block0.d(1);
           if_block0 = current_block_type && current_block_type(component, ctx);
           if (if_block0) if_block0.c();
-          if (if_block0) if_block0.m(div12, text16);
+          if (if_block0) if_block0.m(div9, text5);
         }
 
         if (!ctx.game.displayinfo.center_or_planets) {
@@ -3483,7 +3441,7 @@ var app = (function() {
           } else {
             if_block1 = create_if_block_25(component, ctx);
             if_block1.c();
-            if_block1.m(div12, text17);
+            if_block1.m(div9, text6);
           }
         } else if (if_block1) {
           if_block1.d(1);
@@ -3497,28 +3455,28 @@ var app = (function() {
           if_block2.d(1);
           if_block2 = current_block_type_1(component, ctx);
           if_block2.c();
-          if_block2.m(div6, text18);
+          if_block2.m(div3, text7);
         }
 
         if (changed.game || changed.undefined) {
-          each0_value_1 = ctx.game.players[ctx.game.acting_player_index].limbo;
+          each1_value_1 = ctx.game.players[ctx.game.acting_player_index].limbo;
 
-          for (var i = 0; i < each0_value_1.length; i += 1) {
-            const child_ctx = get_each0_context_1(ctx, each0_value_1, i);
+          for (var i = 0; i < each1_value_1.length; i += 1) {
+            const child_ctx = get_each1_context_1(ctx, each1_value_1, i);
 
-            if (each0_blocks[i]) {
-              each0_blocks[i].p(changed, child_ctx);
+            if (each1_blocks[i]) {
+              each1_blocks[i].p(changed, child_ctx);
             } else {
-              each0_blocks[i] = create_each_block_5(component, child_ctx);
-              each0_blocks[i].c();
-              each0_blocks[i].m(div6, text19);
+              each1_blocks[i] = create_each_block_5(component, child_ctx);
+              each1_blocks[i].c();
+              each1_blocks[i].m(div3, text8);
             }
           }
 
-          for (; i < each0_blocks.length; i += 1) {
-            each0_blocks[i].d(1);
+          for (; i < each1_blocks.length; i += 1) {
+            each1_blocks[i].d(1);
           }
-          each0_blocks.length = each0_value_1.length;
+          each1_blocks.length = each1_value_1.length;
         }
 
         if (
@@ -3531,75 +3489,190 @@ var app = (function() {
           if_block3.d(1);
           if_block3 = current_block_type_2(component, ctx);
           if_block3.c();
-          if_block3.m(div6, null);
+          if_block3.m(div3, null);
         }
 
         if (
           changed.game &&
-          text21_value !==
-            (text21_value =
+          text10_value !==
+            (text10_value =
               ctx.game.messagetoplayer[ctx.game.messagetoplayer.length - 1])
         ) {
-          setData(text21, text21_value);
+          setData(text10, text10_value);
         }
 
         if (
           changed.game &&
-          text24_value !== (text24_value = ctx.player.deck.length)
+          text13_value !== (text13_value = ctx.player.deck.length)
         ) {
-          setData(text24, text24_value);
+          setData(text13, text13_value);
         }
 
         if (changed.game || changed.undefined) {
-          each1_value_1 = ctx.player.hand;
+          each2_value = ctx.player.hand;
 
-          for (var i = 0; i < each1_value_1.length; i += 1) {
-            const child_ctx = get_each1_context_1(ctx, each1_value_1, i);
+          for (var i = 0; i < each2_value.length; i += 1) {
+            const child_ctx = get_each2_context(ctx, each2_value, i);
 
-            if (each1_blocks[i]) {
-              each1_blocks[i].p(changed, child_ctx);
+            if (each2_blocks[i]) {
+              each2_blocks[i].p(changed, child_ctx);
             } else {
-              each1_blocks[i] = create_each_block_4(component, child_ctx);
-              each1_blocks[i].c();
-              each1_blocks[i].m(div9, null);
+              each2_blocks[i] = create_each_block_4(component, child_ctx);
+              each2_blocks[i].c();
+              each2_blocks[i].m(div6, null);
             }
           }
 
-          for (; i < each1_blocks.length; i += 1) {
-            each1_blocks[i].d(1);
+          for (; i < each2_blocks.length; i += 1) {
+            each2_blocks[i].d(1);
           }
-          each1_blocks.length = each1_value_1.length;
+          each2_blocks.length = each2_value.length;
         }
 
         if (
           changed.game &&
-          text28_value !== (text28_value = ctx.player.discard.length)
+          text17_value !== (text17_value = ctx.player.discard.length)
         ) {
-          setData(text28, text28_value);
+          setData(text17, text17_value);
         }
       },
 
       d: function destroy(detach) {
         if (detach) {
-          detachNode(div12);
+          detachNode(div9);
         }
 
-        removeListener(div5, "click", click_handler_1);
-        removeListener(div5, "tap", tap_handler_1);
+        destroyEach(each0_blocks, detach);
+
+        removeListener(div2, "click", click_handler_1);
+        removeListener(div2, "tap", tap_handler_1);
         if (if_block0) if_block0.d();
         if (if_block1) if_block1.d();
         if_block2.d();
 
-        destroyEach(each0_blocks, detach);
+        destroyEach(each1_blocks, detach);
 
         if_block3.d();
 
-        destroyEach(each1_blocks, detach);
+        destroyEach(each2_blocks, detach);
       }
     };
   }
 
-  // (67:49)
+  // (50:6) {#each game.players as p}
+  function create_each_block_12(component, ctx) {
+    var div3,
+      div0,
+      text0,
+      text1_value = ctx.p.starfighters.small,
+      text1,
+      text2,
+      div1,
+      text3,
+      text4_value = ctx.p.influence.length,
+      text4,
+      text5,
+      div2,
+      text6_value = ctx.p.name,
+      text6,
+      div3_class_value;
+
+    return {
+      c: function create() {
+        div3 = createElement("div");
+        div0 = createElement("div");
+        text0 = createText("Military Might ");
+        text1 = createText(text1_value);
+        text2 = createText("\n\t\t\t\t\t\t\t\t");
+        div1 = createElement("div");
+        text3 = createText("Galactic Influence ");
+        text4 = createText(text4_value);
+        text5 = createText("\n\t\t\t\t\t\t\t\t");
+        div2 = createElement("div");
+        text6 = createText(text6_value);
+        setStyle(div0, "width", "33%");
+        setStyle(div0, "text-align", "center");
+        div0.className = "bordered";
+        addLoc(div0, file, 51, 8, 2252);
+        setStyle(div1, "width", "33%");
+        setStyle(div1, "text-align", "center");
+        div1.className = "bordered";
+        addLoc(div1, file, 52, 8, 2366);
+        setStyle(div2, "width", "33%");
+        setStyle(div2, "text-align", "center");
+        div2.className = "bordered";
+        addLoc(div2, file, 53, 8, 2482);
+        setStyle(div3, "width", "" + 100 / ctx.game.number_of_players + "%");
+        div3.className = div3_class_value =
+          "flex " +
+          (ctx.game.players[ctx.game.active_player_index] !== ctx.undefined &&
+          ctx.p.name == ctx.game.players[ctx.game.active_player_index].name
+            ? "selectable"
+            : "bordered");
+        addLoc(div3, file, 50, 7, 2039);
+      },
+
+      m: function mount(target, anchor) {
+        insert(target, div3, anchor);
+        append(div3, div0);
+        append(div0, text0);
+        append(div0, text1);
+        append(div3, text2);
+        append(div3, div1);
+        append(div1, text3);
+        append(div1, text4);
+        append(div3, text5);
+        append(div3, div2);
+        append(div2, text6);
+      },
+
+      p: function update(changed, ctx) {
+        if (
+          changed.game &&
+          text1_value !== (text1_value = ctx.p.starfighters.small)
+        ) {
+          setData(text1, text1_value);
+        }
+
+        if (
+          changed.game &&
+          text4_value !== (text4_value = ctx.p.influence.length)
+        ) {
+          setData(text4, text4_value);
+        }
+
+        if (changed.game && text6_value !== (text6_value = ctx.p.name)) {
+          setData(text6, text6_value);
+        }
+
+        if (changed.game) {
+          setStyle(div3, "width", "" + 100 / ctx.game.number_of_players + "%");
+        }
+
+        if (
+          (changed.game || changed.undefined) &&
+          div3_class_value !==
+            (div3_class_value =
+              "flex " +
+              (ctx.game.players[ctx.game.active_player_index] !==
+                ctx.undefined &&
+              ctx.p.name == ctx.game.players[ctx.game.active_player_index].name
+                ? "selectable"
+                : "bordered"))
+        ) {
+          div3.className = div3_class_value;
+        }
+      },
+
+      d: function destroy(detach) {
+        if (detach) {
+          detachNode(div3);
+        }
+      }
+    };
+  }
+
+  // (72:49)
   function create_if_block_34(component, ctx) {
     var div;
 
@@ -3617,7 +3690,7 @@ var app = (function() {
         div = createElement("div");
         if_block.c();
         div.className = "flex zone centerrow";
-        addLoc(div, file, 67, 6, 3236);
+        addLoc(div, file, 72, 6, 3537);
       },
 
       m: function mount(target, anchor) {
@@ -3650,7 +3723,7 @@ var app = (function() {
     };
   }
 
-  // (59:5) {#if game.displayinfo.selectionzone=='research'}
+  // (64:5) {#if game.displayinfo.selectionzone=='research'}
   function create_if_block_33(component, ctx) {
     var div;
 
@@ -3673,7 +3746,7 @@ var app = (function() {
           each_blocks[i].c();
         }
         div.className = "zone researchrow";
-        addLoc(div, file, 59, 24, 2759);
+        addLoc(div, file, 64, 24, 3060);
       },
 
       m: function mount(target, anchor) {
@@ -3717,7 +3790,7 @@ var app = (function() {
     };
   }
 
-  // (76:7) {:else}
+  // (81:7) {:else}
   function create_else_block_6(component, ctx) {
     var each_anchor;
 
@@ -3782,7 +3855,7 @@ var app = (function() {
     };
   }
 
-  // (69:7) {#if game.displayinfo.selectionzone=='rolecards'}
+  // (74:7) {#if game.displayinfo.selectionzone=='rolecards'}
   function create_if_block_35(component, ctx) {
     var each_anchor;
 
@@ -3847,7 +3920,7 @@ var app = (function() {
     };
   }
 
-  // (77:8) {#each game.stacks.rolecards as card}
+  // (82:8) {#each game.stacks.rolecards as card}
   function create_each_block_11(component, ctx) {
     var div1,
       img,
@@ -3874,10 +3947,10 @@ var app = (function() {
             : "bordered";
         img.src = img_src_value = "./images/" + ctx.card.type + "100.png";
         img.alt = img_alt_value = ctx.card.name;
-        addLoc(img, file, 78, 9, 4000);
+        addLoc(img, file, 83, 9, 4301);
         div0.className = "pilecount";
-        addLoc(div0, file, 79, 9, 4185);
-        addLoc(div1, file, 77, 8, 3985);
+        addLoc(div0, file, 84, 9, 4486);
+        addLoc(div1, file, 82, 8, 4286);
       },
 
       m: function mount(target, anchor) {
@@ -3931,7 +4004,7 @@ var app = (function() {
     };
   }
 
-  // (70:8) {#each game.stacks.rolecards as card}
+  // (75:8) {#each game.stacks.rolecards as card}
   function create_each_block_10(component, ctx) {
     var div1,
       img,
@@ -3965,10 +4038,10 @@ var app = (function() {
             : "bordered";
         img.src = img_src_value = "./images/" + ctx.card.type + "100.png";
         img.alt = img_alt_value = ctx.card.name;
-        addLoc(img, file, 71, 9, 3396);
+        addLoc(img, file, 76, 9, 3697);
         div0.className = "pilecount";
-        addLoc(div0, file, 72, 9, 3820);
-        addLoc(div1, file, 70, 8, 3381);
+        addLoc(div0, file, 77, 9, 4121);
+        addLoc(div1, file, 75, 8, 3682);
       },
 
       m: function mount(target, anchor) {
@@ -4030,7 +4103,7 @@ var app = (function() {
     };
   }
 
-  // (61:7) {#each game.research_deck as card}
+  // (66:7) {#each game.research_deck as card}
   function create_each_block_9(component, ctx) {
     var div, img, img_src_value, img_class_value, img_alt_value;
 
@@ -4050,8 +4123,8 @@ var app = (function() {
               : "selectable"
             : "bordered";
         img.alt = img_alt_value = ctx.card.name;
-        addLoc(img, file, 62, 32, 2877);
-        addLoc(div, file, 61, 7, 2839);
+        addLoc(img, file, 67, 32, 3178);
+        addLoc(div, file, 66, 7, 3140);
       },
 
       m: function mount(target, anchor) {
@@ -4098,18 +4171,18 @@ var app = (function() {
     };
   }
 
-  // (86:5) {#if !game.displayinfo.center_or_planets}
+  // (91:5) {#if !game.displayinfo.center_or_planets}
   function create_if_block_25(component, ctx) {
     var div, text;
 
-    var each0_value = ctx.player.unsettled_planets;
+    var each0_value_1 = ctx.player.unsettled_planets;
 
     var each0_blocks = [];
 
-    for (var i = 0; i < each0_value.length; i += 1) {
+    for (var i = 0; i < each0_value_1.length; i += 1) {
       each0_blocks[i] = create_each_block_8(
         component,
-        get_each0_context(ctx, each0_value, i)
+        get_each0_context_1(ctx, each0_value_1, i)
       );
     }
 
@@ -4141,7 +4214,7 @@ var app = (function() {
           each1_blocks[i].c();
         }
         div.className = "flex zone centerrow";
-        addLoc(div, file, 86, 6, 4371);
+        addLoc(div, file, 91, 6, 4672);
       },
 
       m: function mount(target, anchor) {
@@ -4160,10 +4233,10 @@ var app = (function() {
 
       p: function update(changed, ctx) {
         if (changed.game) {
-          each0_value = ctx.player.unsettled_planets;
+          each0_value_1 = ctx.player.unsettled_planets;
 
-          for (var i = 0; i < each0_value.length; i += 1) {
-            const child_ctx = get_each0_context(ctx, each0_value, i);
+          for (var i = 0; i < each0_value_1.length; i += 1) {
+            const child_ctx = get_each0_context_1(ctx, each0_value_1, i);
 
             if (each0_blocks[i]) {
               each0_blocks[i].p(changed, child_ctx);
@@ -4177,7 +4250,7 @@ var app = (function() {
           for (; i < each0_blocks.length; i += 1) {
             each0_blocks[i].d(1);
           }
-          each0_blocks.length = each0_value.length;
+          each0_blocks.length = each0_value_1.length;
         }
 
         if (changed.game) {
@@ -4217,7 +4290,7 @@ var app = (function() {
     };
   }
 
-  // (88:7) {#each player.unsettled_planets as planet}
+  // (93:7) {#each player.unsettled_planets as planet}
   function create_each_block_8(component, ctx) {
     var div3,
       img,
@@ -4260,13 +4333,13 @@ var app = (function() {
           ctx.planet.type +
           " " +
           ctx.planet.conquer_cost;
-        addLoc(img, file, 89, 9, 4745);
+        addLoc(img, file, 94, 9, 5046);
         div0.className = "settle_cost";
-        addLoc(div0, file, 90, 36, 4890);
+        addLoc(div0, file, 95, 36, 5191);
         div1.className = "conquer_cost";
-        addLoc(div1, file, 91, 36, 4979);
+        addLoc(div1, file, 96, 36, 5280);
         div2.className = "hosted_colonies";
-        addLoc(div2, file, 92, 9, 5043);
+        addLoc(div2, file, 97, 9, 5344);
 
         div3._svelte = { component, ctx };
 
@@ -4279,7 +4352,7 @@ var app = (function() {
               ? "selected"
               : "selectable"
             : "bordered");
-        addLoc(div3, file, 88, 32, 4487);
+        addLoc(div3, file, 93, 32, 4788);
       },
 
       m: function mount(target, anchor) {
@@ -4369,7 +4442,7 @@ var app = (function() {
     };
   }
 
-  // (105:11) {#if planet.icons.survey > 0}
+  // (110:11) {#if planet.icons.survey > 0}
   function create_if_block_32(component, ctx) {
     var img, br;
 
@@ -4379,8 +4452,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/surveyicon100.png";
         img.alt = "survey";
-        addLoc(img, file, 105, 12, 6103);
-        addLoc(br, file, 105, 64, 6155);
+        addLoc(img, file, 110, 12, 6404);
+        addLoc(br, file, 110, 64, 6456);
       },
 
       m: function mount(target, anchor) {
@@ -4397,7 +4470,7 @@ var app = (function() {
     };
   }
 
-  // (108:11) {#if planet.icons.warfare > 0}
+  // (113:11) {#if planet.icons.warfare > 0}
   function create_if_block_31(component, ctx) {
     var img, br;
 
@@ -4407,8 +4480,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/warfareicon100.png";
         img.alt = "warfare";
-        addLoc(img, file, 108, 12, 6231);
-        addLoc(br, file, 108, 66, 6285);
+        addLoc(img, file, 113, 12, 6532);
+        addLoc(br, file, 113, 66, 6586);
       },
 
       m: function mount(target, anchor) {
@@ -4425,7 +4498,7 @@ var app = (function() {
     };
   }
 
-  // (111:11) {#if planet.icons.colonize > 0}
+  // (116:11) {#if planet.icons.colonize > 0}
   function create_if_block_30(component, ctx) {
     var img, br;
 
@@ -4435,8 +4508,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/colonizeicon100.png";
         img.alt = "colonize";
-        addLoc(img, file, 111, 12, 6362);
-        addLoc(br, file, 111, 68, 6418);
+        addLoc(img, file, 116, 12, 6663);
+        addLoc(br, file, 116, 68, 6719);
       },
 
       m: function mount(target, anchor) {
@@ -4453,7 +4526,7 @@ var app = (function() {
     };
   }
 
-  // (114:11) {#if planet.icons.research > 0}
+  // (119:11) {#if planet.icons.research > 0}
   function create_if_block_29(component, ctx) {
     var img, br;
 
@@ -4463,8 +4536,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/researchicon100.png";
         img.alt = "research";
-        addLoc(img, file, 114, 12, 6495);
-        addLoc(br, file, 114, 68, 6551);
+        addLoc(img, file, 119, 12, 6796);
+        addLoc(br, file, 119, 68, 6852);
       },
 
       m: function mount(target, anchor) {
@@ -4481,7 +4554,7 @@ var app = (function() {
     };
   }
 
-  // (117:11) {#if planet.icons.trade > 0}
+  // (122:11) {#if planet.icons.trade > 0}
   function create_if_block_28(component, ctx) {
     var img, br;
 
@@ -4491,8 +4564,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/tradeicon100.png";
         img.alt = "trade";
-        addLoc(img, file, 117, 12, 6625);
-        addLoc(br, file, 117, 62, 6675);
+        addLoc(img, file, 122, 12, 6926);
+        addLoc(br, file, 122, 62, 6976);
       },
 
       m: function mount(target, anchor) {
@@ -4509,7 +4582,7 @@ var app = (function() {
     };
   }
 
-  // (120:11) {#if planet.icons.produce > 0}
+  // (125:11) {#if planet.icons.produce > 0}
   function create_if_block_27(component, ctx) {
     var img, br;
 
@@ -4519,8 +4592,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/produceicon100.png";
         img.alt = "produce";
-        addLoc(img, file, 120, 12, 6751);
-        addLoc(br, file, 120, 66, 6805);
+        addLoc(img, file, 125, 12, 7052);
+        addLoc(br, file, 125, 66, 7106);
       },
 
       m: function mount(target, anchor) {
@@ -4537,7 +4610,7 @@ var app = (function() {
     };
   }
 
-  // (124:11) {#each planet.production_zones as zone}
+  // (129:11) {#each planet.production_zones as zone}
   function create_each_block_7(component, ctx) {
     var img, img_src_value, img_alt_value, br;
 
@@ -4548,8 +4621,8 @@ var app = (function() {
         img.src = img_src_value =
           "./images/" + ctx.zone.type + "productionzoneicon.png";
         img.alt = img_alt_value = "" + ctx.zone.type + " zone";
-        addLoc(img, file, 124, 12, 6927);
-        addLoc(br, file, 124, 90, 7005);
+        addLoc(img, file, 129, 12, 7228);
+        addLoc(br, file, 129, 90, 7306);
       },
 
       m: function mount(target, anchor) {
@@ -4584,7 +4657,7 @@ var app = (function() {
     };
   }
 
-  // (128:11) {#if planet.handsize_modifier > 0}
+  // (133:11) {#if planet.handsize_modifier > 0}
   function create_if_block_26(component, ctx) {
     var img, br;
 
@@ -4594,8 +4667,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/handsizeicon100.png";
         img.alt = "produce";
-        addLoc(img, file, 128, 12, 7122);
-        addLoc(br, file, 128, 67, 7177);
+        addLoc(img, file, 133, 12, 7423);
+        addLoc(br, file, 133, 67, 7478);
       },
 
       m: function mount(target, anchor) {
@@ -4612,7 +4685,7 @@ var app = (function() {
     };
   }
 
-  // (96:7) {#each [...player.settled_planets, ...player.conquered_planets] as planet}
+  // (101:7) {#each [...player.settled_planets, ...player.conquered_planets] as planet}
   function create_each_block_6(component, ctx) {
     var div4,
       div3,
@@ -4716,17 +4789,17 @@ var app = (function() {
           ctx.planet.type +
           " " +
           ctx.planet.conquer_cost;
-        addLoc(img0, file, 100, 10, 5797);
-        addLoc(div0, file, 131, 11, 7246);
+        addLoc(img0, file, 105, 10, 6098);
+        addLoc(div0, file, 136, 11, 7547);
         img1.src = "./images/influenceicon.png";
         img1.alt = "influence";
-        addLoc(img1, file, 134, 11, 7318);
-        addLoc(div1, file, 136, 11, 7411);
+        addLoc(img1, file, 139, 11, 7619);
+        addLoc(div1, file, 141, 11, 7712);
         div2.className = "planetfrontinfo";
-        addLoc(div2, file, 103, 10, 6020);
+        addLoc(div2, file, 108, 10, 6321);
         div3.className = "planetfront";
         setStyle(div3, "font-size", "160%");
-        addLoc(div3, file, 99, 9, 5735);
+        addLoc(div3, file, 104, 9, 6036);
 
         div4._svelte = { component, ctx };
 
@@ -4738,7 +4811,7 @@ var app = (function() {
               ? "selected"
               : "selectable"
             : "bordered";
-        addLoc(div4, file, 98, 8, 5458);
+        addLoc(div4, file, 103, 8, 5759);
       },
 
       m: function mount(target, anchor) {
@@ -4946,7 +5019,7 @@ var app = (function() {
     };
   }
 
-  // (150:6) {:else}
+  // (155:6) {:else}
   function create_else_block_5(component, ctx) {
     var div;
 
@@ -4956,7 +5029,7 @@ var app = (function() {
         div.textContent = "[____]";
         setStyle(div, "margin-right", "auto");
         div.className = "bordered pass";
-        addLoc(div, file, 150, 7, 7871);
+        addLoc(div, file, 155, 7, 8172);
       },
 
       m: function mount(target, anchor) {
@@ -4971,7 +5044,7 @@ var app = (function() {
     };
   }
 
-  // (148:6) {#if game.displayinfo.showoptiontoskip}
+  // (153:6) {#if game.displayinfo.showoptiontoskip}
   function create_if_block_24(component, ctx) {
     var div;
 
@@ -4985,7 +5058,7 @@ var app = (function() {
         addListener(div, "tap", tap_handler_6);
         setStyle(div, "margin-right", "auto");
         div.className = "selectable pass";
-        addLoc(div, file, 148, 7, 7707);
+        addLoc(div, file, 153, 7, 8008);
       },
 
       m: function mount(target, anchor) {
@@ -5003,7 +5076,7 @@ var app = (function() {
     };
   }
 
-  // (158:94)
+  // (163:94)
   function create_if_block_23(component, ctx) {
     var div, img, img_src_value, img_alt_value;
 
@@ -5014,9 +5087,9 @@ var app = (function() {
         img.className = "minicard";
         img.src = img_src_value = "./images/" + ctx.card.type + "100.png";
         img.alt = img_alt_value = ctx.card.name;
-        addLoc(img, file, 159, 10, 8317);
+        addLoc(img, file, 164, 10, 8618);
         div.className = "bordered";
-        addLoc(div, file, 158, 9, 8284);
+        addLoc(div, file, 163, 9, 8585);
       },
 
       m: function mount(target, anchor) {
@@ -5046,7 +5119,7 @@ var app = (function() {
     };
   }
 
-  // (154:8) {#if card.research_cost !== undefined}
+  // (159:8) {#if card.research_cost !== undefined}
   function create_if_block_22(component, ctx) {
     var div, img, img_src_value, img_alt_value;
 
@@ -5057,9 +5130,9 @@ var app = (function() {
         img.className = "minicard";
         img.src = img_src_value = ctx.card.imgurl;
         img.alt = img_alt_value = ctx.card.name;
-        addLoc(img, file, 155, 9, 8103);
+        addLoc(img, file, 160, 9, 8404);
         div.className = "bordered";
-        addLoc(div, file, 154, 8, 8071);
+        addLoc(div, file, 159, 8, 8372);
       },
 
       m: function mount(target, anchor) {
@@ -5088,7 +5161,7 @@ var app = (function() {
     };
   }
 
-  // (153:6) {#each game.players[game.acting_player_index].limbo as card}
+  // (158:6) {#each game.players[game.acting_player_index].limbo as card}
   function create_each_block_5(component, ctx) {
     var if_block_anchor;
 
@@ -5140,7 +5213,7 @@ var app = (function() {
     };
   }
 
-  // (171:6) {:else}
+  // (176:6) {:else}
   function create_else_block_4(component, ctx) {
     var div;
 
@@ -5149,7 +5222,7 @@ var app = (function() {
         div = createElement("div");
         div.textContent = "[______]";
         div.className = "bordered pass";
-        addLoc(div, file, 171, 7, 9074);
+        addLoc(div, file, 176, 7, 9375);
       },
 
       m: function mount(target, anchor) {
@@ -5166,7 +5239,7 @@ var app = (function() {
     };
   }
 
-  // (169:84)
+  // (174:84)
   function create_if_block_21(component, ctx) {
     var div;
 
@@ -5180,7 +5253,7 @@ var app = (function() {
         addListener(div, "tap", tap_handler_9);
         setStyle(div, "margin-left", "auto");
         div.className = "selectable pass";
-        addLoc(div, file, 169, 7, 8869);
+        addLoc(div, file, 174, 7, 9170);
       },
 
       m: function mount(target, anchor) {
@@ -5203,7 +5276,7 @@ var app = (function() {
     };
   }
 
-  // (167:26)
+  // (172:26)
   function create_if_block_20(component, ctx) {
     var div;
 
@@ -5217,7 +5290,7 @@ var app = (function() {
         addListener(div, "tap", tap_handler_8);
         setStyle(div, "margin-left", "auto");
         div.className = "selectable pass";
-        addLoc(div, file, 167, 7, 8662);
+        addLoc(div, file, 172, 7, 8963);
       },
 
       m: function mount(target, anchor) {
@@ -5237,7 +5310,7 @@ var app = (function() {
     };
   }
 
-  // (165:6) {#if game.passp }
+  // (170:6) {#if game.passp }
   function create_if_block_19(component, ctx) {
     var div, text0, br, text1;
 
@@ -5247,7 +5320,7 @@ var app = (function() {
         text0 = createText("[Pass to ");
         br = createElement("br");
         text1 = createText(" Next Player]");
-        addLoc(br, file, 165, 121, 8604);
+        addLoc(br, file, 170, 121, 8905);
 
         div._svelte = { component };
 
@@ -5255,7 +5328,7 @@ var app = (function() {
         addListener(div, "tap", tap_handler_7);
         setStyle(div, "margin-left", "auto");
         div.className = "selectable pass";
-        addLoc(div, file, 165, 7, 8490);
+        addLoc(div, file, 170, 7, 8791);
       },
 
       m: function mount(target, anchor) {
@@ -5278,7 +5351,7 @@ var app = (function() {
     };
   }
 
-  // (190:9) {:else}
+  // (195:9) {:else}
   function create_else_block_3(component, ctx) {
     var img, img_src_value, img_alt_value, img_class_value;
 
@@ -5294,7 +5367,7 @@ var app = (function() {
               ? "selected"
               : "selectable"
             : "bordered");
-        addLoc(img, file, 190, 10, 10636);
+        addLoc(img, file, 195, 10, 10937);
       },
 
       m: function mount(target, anchor) {
@@ -5337,7 +5410,7 @@ var app = (function() {
     };
   }
 
-  // (188:9) {#if card.research_cost !== undefined}
+  // (193:9) {#if card.research_cost !== undefined}
   function create_if_block_18(component, ctx) {
     var img, img_src_value, img_alt_value, img_class_value;
 
@@ -5353,7 +5426,7 @@ var app = (function() {
               ? "selected"
               : "selectable"
             : "bordered");
-        addLoc(img, file, 188, 10, 10444);
+        addLoc(img, file, 193, 10, 10745);
       },
 
       m: function mount(target, anchor) {
@@ -5395,7 +5468,7 @@ var app = (function() {
     };
   }
 
-  // (181:8) {#if game.displayinfo.selectionzone=='hand'}
+  // (186:8) {#if game.displayinfo.selectionzone=='hand'}
   function create_if_block_16(component, ctx) {
     var if_block_anchor;
 
@@ -5442,7 +5515,7 @@ var app = (function() {
     };
   }
 
-  // (184:9) {:else}
+  // (189:9) {:else}
   function create_else_block_2(component, ctx) {
     var img, img_src_value, img_alt_value, img_class_value;
 
@@ -5465,7 +5538,7 @@ var app = (function() {
               ? "hidden"
               : "selectable"
             : "bordered");
-        addLoc(img, file, 184, 10, 9964);
+        addLoc(img, file, 189, 10, 10265);
       },
 
       m: function mount(target, anchor) {
@@ -5516,7 +5589,7 @@ var app = (function() {
     };
   }
 
-  // (182:9) {#if card.research_cost !== undefined}
+  // (187:9) {#if card.research_cost !== undefined}
   function create_if_block_17(component, ctx) {
     var img, img_src_value, img_alt_value, img_class_value;
 
@@ -5539,7 +5612,7 @@ var app = (function() {
               ? "hidden"
               : "selectable"
             : "bordered");
-        addLoc(img, file, 182, 10, 9578);
+        addLoc(img, file, 187, 10, 9879);
       },
 
       m: function mount(target, anchor) {
@@ -5589,7 +5662,7 @@ var app = (function() {
     };
   }
 
-  // (180:7) {#each player.hand as card}
+  // (185:7) {#each player.hand as card}
   function create_each_block_4(component, ctx) {
     var if_block_anchor;
 
@@ -5690,7 +5763,7 @@ var app = (function() {
     };
   }
 
-  // (202:2) {#if game.displayinfo.selectionzone=='options'}
+  // (207:2) {#if game.displayinfo.selectionzone=='options'}
   function create_if_block_6(component, ctx) {
     var div, div_class_value;
 
@@ -5717,7 +5790,7 @@ var app = (function() {
           ctx.game.options[0].type !== ctx.undefined
             ? "talloptions"
             : "options";
-        addLoc(div, file, 202, 3, 11100);
+        addLoc(div, file, 207, 3, 11401);
       },
 
       m: function mount(target, anchor) {
@@ -5773,7 +5846,7 @@ var app = (function() {
     };
   }
 
-  // (262:5) {:else}
+  // (267:5) {:else}
   function create_else_block_1(component, ctx) {
     var div,
       text0_value = ctx.option.name,
@@ -5797,7 +5870,7 @@ var app = (function() {
               ? "selected"
               : "selectable"
             : "bordered");
-        addLoc(div, file, 262, 6, 13615);
+        addLoc(div, file, 267, 6, 13916);
       },
 
       m: function mount(target, anchor) {
@@ -5839,7 +5912,7 @@ var app = (function() {
     };
   }
 
-  // (205:5) {#if option.type !== undefined}
+  // (210:5) {#if option.type !== undefined}
   function create_if_block_7(component, ctx) {
     var div7,
       div3,
@@ -5971,16 +6044,16 @@ var app = (function() {
           ctx.option.type +
           " " +
           ctx.option.conquer_cost;
-        addLoc(img0, file, 208, 7, 11563);
-        addLoc(div0, file, 239, 8, 12919);
+        addLoc(img0, file, 213, 7, 11864);
+        addLoc(div0, file, 244, 8, 13220);
         img1.src = "./images/influenceicon.png";
         img1.alt = "influence";
-        addLoc(img1, file, 242, 8, 12982);
-        addLoc(div1, file, 244, 8, 13069);
+        addLoc(img1, file, 247, 8, 13283);
+        addLoc(div1, file, 249, 8, 13370);
         div2.className = "planetfrontinfo";
-        addLoc(div2, file, 211, 7, 11777);
+        addLoc(div2, file, 216, 7, 12078);
         div3.className = "planetfront";
-        addLoc(div3, file, 207, 6, 11528);
+        addLoc(div3, file, 212, 6, 11829);
         img2.src = img2_src_value =
           "./images/" + ctx.option.type + "back100.png";
         img2.alt = img2_alt_value =
@@ -5990,16 +6063,16 @@ var app = (function() {
           ctx.option.type +
           " " +
           ctx.option.conquer_cost;
-        addLoc(img2, file, 253, 8, 13255);
+        addLoc(img2, file, 258, 8, 13556);
         span0.className = "mini_settle_cost";
-        addLoc(span0, file, 255, 9, 13411);
+        addLoc(span0, file, 260, 9, 13712);
         span1.className = "mini_conquer_cost";
-        addLoc(span1, file, 256, 9, 13480);
+        addLoc(span1, file, 261, 9, 13781);
         div4.className = "unsettled_costs";
-        addLoc(div4, file, 254, 8, 13372);
+        addLoc(div4, file, 259, 8, 13673);
         div5.className = "mini_unsettled";
-        addLoc(div5, file, 252, 7, 13218);
-        addLoc(div6, file, 249, 6, 13146);
+        addLoc(div5, file, 257, 7, 13519);
+        addLoc(div6, file, 254, 6, 13447);
 
         div7._svelte = { component, ctx };
 
@@ -6012,7 +6085,7 @@ var app = (function() {
               ? "selected"
               : "selectable"
             : "bordered");
-        addLoc(div7, file, 206, 5, 11299);
+        addLoc(div7, file, 211, 5, 11600);
       },
 
       m: function mount(target, anchor) {
@@ -6268,7 +6341,7 @@ var app = (function() {
     };
   }
 
-  // (213:8) {#if option.icons.survey > 0}
+  // (218:8) {#if option.icons.survey > 0}
   function create_if_block_14(component, ctx) {
     var img, br;
 
@@ -6278,8 +6351,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/surveyicon100.png";
         img.alt = "survey";
-        addLoc(img, file, 213, 9, 11854);
-        addLoc(br, file, 213, 61, 11906);
+        addLoc(img, file, 218, 9, 12155);
+        addLoc(br, file, 218, 61, 12207);
       },
 
       m: function mount(target, anchor) {
@@ -6296,7 +6369,7 @@ var app = (function() {
     };
   }
 
-  // (216:8) {#if option.icons.warfare > 0}
+  // (221:8) {#if option.icons.warfare > 0}
   function create_if_block_13(component, ctx) {
     var img, br;
 
@@ -6306,8 +6379,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/warfareicon100.png";
         img.alt = "warfare";
-        addLoc(img, file, 216, 9, 11973);
-        addLoc(br, file, 216, 63, 12027);
+        addLoc(img, file, 221, 9, 12274);
+        addLoc(br, file, 221, 63, 12328);
       },
 
       m: function mount(target, anchor) {
@@ -6324,7 +6397,7 @@ var app = (function() {
     };
   }
 
-  // (219:8) {#if option.icons.colonize > 0}
+  // (224:8) {#if option.icons.colonize > 0}
   function create_if_block_12(component, ctx) {
     var img, br;
 
@@ -6334,8 +6407,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/colonizeicon100.png";
         img.alt = "colonize";
-        addLoc(img, file, 219, 9, 12095);
-        addLoc(br, file, 219, 65, 12151);
+        addLoc(img, file, 224, 9, 12396);
+        addLoc(br, file, 224, 65, 12452);
       },
 
       m: function mount(target, anchor) {
@@ -6352,7 +6425,7 @@ var app = (function() {
     };
   }
 
-  // (222:8) {#if option.icons.research > 0}
+  // (227:8) {#if option.icons.research > 0}
   function create_if_block_11(component, ctx) {
     var img, br;
 
@@ -6362,8 +6435,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/researchicon100.png";
         img.alt = "research";
-        addLoc(img, file, 222, 9, 12219);
-        addLoc(br, file, 222, 65, 12275);
+        addLoc(img, file, 227, 9, 12520);
+        addLoc(br, file, 227, 65, 12576);
       },
 
       m: function mount(target, anchor) {
@@ -6380,7 +6453,7 @@ var app = (function() {
     };
   }
 
-  // (225:8) {#if option.icons.trade > 0}
+  // (230:8) {#if option.icons.trade > 0}
   function create_if_block_10(component, ctx) {
     var img, br;
 
@@ -6390,8 +6463,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/tradeicon100.png";
         img.alt = "trade";
-        addLoc(img, file, 225, 9, 12340);
-        addLoc(br, file, 225, 59, 12390);
+        addLoc(img, file, 230, 9, 12641);
+        addLoc(br, file, 230, 59, 12691);
       },
 
       m: function mount(target, anchor) {
@@ -6408,7 +6481,7 @@ var app = (function() {
     };
   }
 
-  // (228:8) {#if option.icons.produce > 0}
+  // (233:8) {#if option.icons.produce > 0}
   function create_if_block_9(component, ctx) {
     var img, br;
 
@@ -6418,8 +6491,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/produceicon100.png";
         img.alt = "produce";
-        addLoc(img, file, 228, 9, 12457);
-        addLoc(br, file, 228, 63, 12511);
+        addLoc(img, file, 233, 9, 12758);
+        addLoc(br, file, 233, 63, 12812);
       },
 
       m: function mount(target, anchor) {
@@ -6436,7 +6509,7 @@ var app = (function() {
     };
   }
 
-  // (232:8) {#each option.production_zones as zone}
+  // (237:8) {#each option.production_zones as zone}
   function create_each_block_2(component, ctx) {
     var img, img_src_value, img_alt_value, br;
 
@@ -6447,8 +6520,8 @@ var app = (function() {
         img.src = img_src_value =
           "./images/" + ctx.zone.type + "productionzoneicon.png";
         img.alt = img_alt_value = "" + ctx.zone.type + " zone";
-        addLoc(img, file, 232, 9, 12621);
-        addLoc(br, file, 232, 87, 12699);
+        addLoc(img, file, 237, 9, 12922);
+        addLoc(br, file, 237, 87, 13000);
       },
 
       m: function mount(target, anchor) {
@@ -6483,7 +6556,7 @@ var app = (function() {
     };
   }
 
-  // (236:8) {#if option.handsize_modifier > 0}
+  // (241:8) {#if option.handsize_modifier > 0}
   function create_if_block_8(component, ctx) {
     var img, br;
 
@@ -6493,8 +6566,8 @@ var app = (function() {
         br = createElement("br");
         img.src = "./images/handsizeicon100.png";
         img.alt = "produce";
-        addLoc(img, file, 236, 9, 12804);
-        addLoc(br, file, 236, 64, 12859);
+        addLoc(img, file, 241, 9, 13105);
+        addLoc(br, file, 241, 64, 13160);
       },
 
       m: function mount(target, anchor) {
@@ -6511,7 +6584,7 @@ var app = (function() {
     };
   }
 
-  // (204:4) {#each game.options as option}
+  // (209:4) {#each game.options as option}
   function create_each_block_1(component, ctx) {
     var if_block_anchor;
 
