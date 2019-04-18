@@ -794,9 +794,11 @@ var app = (function () {
 			// afterloop, append arg planets
 			for (let i in planets){
 				let p = planets[i];
-				game.players[game.acting_player_index].planets = game.players[game.acting_player_index].planets.filter((e)=>{return e.identifier!=p.identifier}); 
+				game.players[game.acting_player_index].settled_planets = game.players[game.acting_player_index].settled_planets.filter((e)=>{return e.identifier!=p.identifier}); 
+				game.players[game.acting_player_index].conquered_planets = game.players[game.acting_player_index].conquered_planets.filter((e)=>{return e.identifier!=p.identifier}); 
 			}
-			game.players[game.acting_player_index].planets = [...game.players[game.acting_player_index].planets,...planets];
+			game.players[game.acting_player_index].settled_planets = [...game.players[game.acting_player_index].settled_planets,...planets];
+			game.players[game.acting_player_index].conquered_planets = [...game.players[game.acting_player_index].conquered_planets,...planets];
 			app.set({'game':game});
 			return prd;
 		},

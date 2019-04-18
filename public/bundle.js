@@ -1104,7 +1104,10 @@ var app = function () {
 
       var _loop = function _loop(_i8) {
         var p = planets[_i8];
-        game.players[game.acting_player_index].planets = game.players[game.acting_player_index].planets.filter(function (e) {
+        game.players[game.acting_player_index].settled_planets = game.players[game.acting_player_index].settled_planets.filter(function (e) {
+          return e.identifier != p.identifier;
+        });
+        game.players[game.acting_player_index].conquered_planets = game.players[game.acting_player_index].conquered_planets.filter(function (e) {
           return e.identifier != p.identifier;
         });
       };
@@ -1113,7 +1116,8 @@ var app = function () {
         _loop(_i8);
       }
 
-      game.players[game.acting_player_index].planets = [].concat(_toConsumableArray(game.players[game.acting_player_index].planets), _toConsumableArray(planets));
+      game.players[game.acting_player_index].settled_planets = [].concat(_toConsumableArray(game.players[game.acting_player_index].settled_planets), _toConsumableArray(planets));
+      game.players[game.acting_player_index].conquered_planets = [].concat(_toConsumableArray(game.players[game.acting_player_index].conquered_planets), _toConsumableArray(planets));
       app.set({
         'game': game
       });
