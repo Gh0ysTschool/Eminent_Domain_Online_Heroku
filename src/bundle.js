@@ -6744,9 +6744,19 @@ var app = (function () {
 	              }
 	            } = app$1.get();
 	            if (game.stacks.pilecount[card.type] >= 1) {
-	              game.players[app$1.get().game.acting_player_index].boostingicons[
-	                card.type
-	              ]++;
+	              if (card.type=="producetrade"){
+	                game.players[app$1.get().game.acting_player_index].boostingicons[
+	                  "produce"
+	                ]++;
+	                game.players[app$1.get().game.acting_player_index].boostingicons[
+	                  "trade"
+	                ]++;
+	              }
+	              else {
+	                game.players[app$1.get().game.acting_player_index].boostingicons[
+	                  card.type
+	                ]++;
+	              }
 	              let newcard = Object.assign(
 	                {
 	                  identifier: app$1.generate_unique_identifier(),
@@ -6827,6 +6837,13 @@ var app = (function () {
 	              app$1.phasefinishfunction();
 	            } else {
 	              for (let i in cards) {
+	                if (card.type=="producetrade"){
+	                  player.boostingicons["trade"]++;
+	                  player.boostingicons["produce"]++;
+	                }
+	                else {
+	                  player.boostingicons[cards[i].type]++;
+	                }
 	                player.boostingicons[cards[i].type]++;
 	                cards[i].final_destination_label='discard';
 	                // check for permanent tech adaptability
@@ -7552,7 +7569,13 @@ var app = (function () {
 	                app$1.phasefinishfunction();
 	              } else {
 	                for (let i in cards) {
-	                  player.boostingicons[cards[i].type]++;
+	                  if (card.type=="producetrade"){
+	                    player.boostingicons["trade"]++;
+	                    player.boostingicons["produce"]++;
+	                  }
+	                  else {
+	                    player.boostingicons[cards[i].type]++;
+	                  }
 	                  // check for permanent tech adaptability
 	                  // add one of each other icon to the player
 	                  // also change so that it will simply merge the card's icons with the player's, cuz this way doesnt count technology card's icons

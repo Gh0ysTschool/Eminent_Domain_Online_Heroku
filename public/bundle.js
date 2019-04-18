@@ -1389,12 +1389,12 @@ var app = function () {
       var iterations = player.limbo.length;
 
       for (var i = 0; i >= iterations; i++) {
-        var card = player.limbo.pop();
+        var _card3 = player.limbo.pop();
 
-        if (card.final_destination_label = 'planetdeck') {
-          game.planet_deck.push(card);
+        if (_card3.final_destination_label = 'planetdeck') {
+          game.planet_deck.push(_card3);
         } else {
-          temparray.push(card);
+          temparray.push(_card3);
         }
       }
 
@@ -5902,21 +5902,21 @@ var app = function () {
                 limbo = _app$1$get$game$actin.limbo,
                 hand = _app$1$get$game$actin.hand,
                 _app$1$get$game$choic = _slicedToArray(_app$1$get$game.choices, 1),
-                card = _app$1$get$game$choic[0];
+                _card4 = _app$1$get$game$choic[0];
 
             player = _game9.players[_game9.acting_player_index];
             limbo = player.limbo;
             hand = player.hand;
-            player.activeaction = card.type;
+            player.activeaction = _card4.type;
             limbo = limbo.filter(function (el) {
-              return card.identifier != el.identifier;
+              return _card4.identifier != el.identifier;
             });
             limbo.push({
               final_destination_label: "discard",
-              ...card
+              ..._card4
             });
             hand = hand.filter(function (el) {
-              return card.identifier != el.identifier;
+              return _card4.identifier != el.identifier;
             });
             player.limbo = limbo;
             player.hand = hand;
@@ -6942,7 +6942,13 @@ var app = function () {
               card = _app$1$get6$game$choi[0];
 
           if (game.stacks.pilecount[card.type] >= 1) {
-            game.players[app$1.get().game.acting_player_index].boostingicons[card.type]++;
+            if (card.type == "producetrade") {
+              game.players[app$1.get().game.acting_player_index].boostingicons["produce"]++;
+              game.players[app$1.get().game.acting_player_index].boostingicons["trade"]++;
+            } else {
+              game.players[app$1.get().game.acting_player_index].boostingicons[card.type]++;
+            }
+
             var newcard = Object.assign({
               identifier: app$1.generate_unique_identifier(),
               final_destination_label: "discard",
@@ -7017,6 +7023,13 @@ var app = function () {
             app$1.phasefinishfunction();
           } else {
             for (var i in cards) {
+              if (card.type == "producetrade") {
+                player.boostingicons["trade"]++;
+                player.boostingicons["produce"]++;
+              } else {
+                player.boostingicons[cards[i].type]++;
+              }
+
               player.boostingicons[cards[i].type]++;
               cards[i].final_destination_label = 'discard'; // check for permanent tech adaptability
               // add one of each other icon to the player
@@ -7514,21 +7527,21 @@ var app = function () {
             var _app$1$get8 = app$1.get(),
                 _game20 = _app$1$get8.game,
                 _app$1$get8$game$choi = _slicedToArray(_app$1$get8.game.choices, 1),
-                card = _app$1$get8$game$choi[0];
+                _card5 = _app$1$get8$game$choi[0];
 
-            if (_game20.stacks.pilecount[card.name] >= 1) {
-              _game20.players[app$1.get().game.acting_player_index].boostingicons[card.name]++;
+            if (_game20.stacks.pilecount[_card5.name] >= 1) {
+              _game20.players[app$1.get().game.acting_player_index].boostingicons[_card5.name]++;
               var newcard = Object.assign({
                 identifier: app$1.generate_unique_identifier(),
                 final_destination_label: "discard",
                 selected: true
-              }, _game20.stacks.rolecards[_game20.stacks[card.name]]);
+              }, _game20.stacks.rolecards[_game20.stacks[_card5.name]]);
 
               _game20.players[app$1.get().game.acting_player_index].limbo.push(newcard);
 
-              _game20.stacks.pilecount[card.name]--;
-            } else if (card.name != "colonize") {
-              _game20.players[_game20.acting_player_index].boostingicons[card.name]++;
+              _game20.stacks.pilecount[_card5.name]--;
+            } else if (_card5.name != "colonize") {
+              _game20.players[_game20.acting_player_index].boostingicons[_card5.name]++;
             }
 
             app$1.set({
@@ -7588,7 +7601,12 @@ var app = function () {
               app$1.phasefinishfunction();
             } else {
               for (var i in cards) {
-                player.boostingicons[cards[i].type]++; // check for permanent tech adaptability
+                if (card.type == "producetrade") {
+                  player.boostingicons["trade"]++;
+                  player.boostingicons["produce"]++;
+                } else {
+                  player.boostingicons[cards[i].type]++;
+                } // check for permanent tech adaptability
                 // add one of each other icon to the player
                 // also change so that it will simply merge the card's icons with the player's, cuz this way doesnt count technology card's icons
                 // limbo.push(
@@ -7601,6 +7619,7 @@ var app = function () {
                 // hand = hand.filter(
                 //     (el)=>{return cards[i].identifier != el.identifier}
                 // );
+
               }
 
               player.hand = hand; //TODO: tally up icons on planets
