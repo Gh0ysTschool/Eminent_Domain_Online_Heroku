@@ -11,16 +11,20 @@
     "test": "node test.js"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.4.3",
     "ejs": "^2.5.6",
     "express": "^4.15.2",
     "socket.io": "^2.2.0",
     "ws": "^6.2.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
     "request": "^2.81.0",
-    "tape": "^4.7.0",
     "sirv-cli": "^0.2.3",
-    "svelte": "^2.16.1"
+    "svelte": "^2.16.1",
+    "tape": "^4.7.0"
   },
   "repository": {
     "type": "git",
