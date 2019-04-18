@@ -6837,7 +6837,7 @@ var app = (function () {
 	              app$1.phasefinishfunction();
 	            } else {
 	              for (let i in cards) {
-	                if (card.type=="producetrade"){
+	                if (cards[i].type=="producetrade"){
 	                  player.boostingicons["trade"]++;
 	                  player.boostingicons["produce"]++;
 	                }
@@ -7569,7 +7569,7 @@ var app = (function () {
 	                app$1.phasefinishfunction();
 	              } else {
 	                for (let i in cards) {
-	                  if (card.type=="producetrade"){
+	                  if (cards[i].type=="producetrade"){
 	                    player.boostingicons["trade"]++;
 	                    player.boostingicons["produce"]++;
 	                  }
